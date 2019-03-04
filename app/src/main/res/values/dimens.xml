@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="inner_view_margin">8dp</dimen>
+    <dimen name="item_section_title">20sp</dimen>
+    <dimen name="item_detailed_title">24sp</dimen>
+    <dimen name="progress_bar_width">48dp</dimen>
+    <dimen name="progress_bar_height">48dp</dimen>
+    <dimen name="list_item_height">176dp</dimen>
+    <dimen name="text_margin">4dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+</resources>

@@ -1,0 +1,76 @@
+<resources>
+    <string name="app_name">CatalogueMovieFinal</string>
+
+    <!-- Set values for Movie data placeholder -->
+    <string name="movie_title_text">Judul Film</string>
+    <string name="movie_ratings_text">Nilai</string>
+    <string name="movie_release_date_text">Tanggal Rilis</string>
+    <string name="movie_language_text">Bahasa</string>
+
+    <!-- Set values for TV Show data placeholder -->
+    <string name="tv_show_name_text">Nama Acara TV</string>
+    <string name="tv_show_ratings_text">Nilai</string>
+    <string name="tv_show_first_air_date_text">Tanggal Pertama Kali Keluar</string>
+    <string name="tv_show_language_text">Bahasa</string>
+
+    <!-- Set action bar title -->
+    <string name="movie">Film</string>
+    <string name="tv_show">Acara TV</string>
+    <string name="favorite_movie">Film Favorit</string>
+    <string name="favorite_tv_show">Acara TV Favorit</string>
+    <string name="favorite">Favorit</string>
+
+    <!-- Set Detailed Movie section value placeholder -->
+    <string name="detailed_movie_rating_text">Teks Nilai dari Detil Film</string>
+    <string name="detailed_movie_status_text">Teks Status dari Detil Film</string>
+    <string name="detailed_movie_tagline_text">Teks Kutipan dari Detil Film</string>
+    <string name="detailed_movie_title_text">Teks Judul dari Detil Film</string>
+    <string name="detailed_movie_overview_text">Peninjauan Luas Detil Film</string>
+    <string name="detailed_movie_release_date_text">yyyy-MM-dd</string>
+
+    <!-- Set Detailed Movie section title -->
+    <string name="detailed_movie_overview_title">Peninjauan Luas</string>
+    <string name="detailed_movie_release_date_title">Tanggal Rilis</string>
+    <string name="detailed_movie_genres_title">Jenis Film</string>
+    <string name="detailed_movie_languages_text">Teks Bahasa dari Detil Film</string>
+    <string name="detailed_movie_languages_title">Bahasa</string>
+    <string name="detailed_movie_genres_text">Teks Jenis dari Detil Film</string>
+
+    <!-- Set Detailed TV Show section title -->
+    <string name="detailed_tv_show_overview_title">Peninjauan Luas</string>
+    <string name="detailed_tv_show_first_air_date_title">Tanggal Pertama Kali Keluar</string>
+    <string name="detailed_tv_show_genres_title">Jenis Acara TV</string>
+    <string name="detailed_tv_show_networks_title">Channel</string>
+
+    <!-- Set Span movie item section title -->
+    <string name="span_movie_item_ratings">Nilai :</string>
+    <string name="span_movie_item_language">Bahasa :</string>
+    <string name="span_movie_item_release_date">Tanggal Rilis :</string>
+
+    <!-- Set Span TV Show item section title -->
+    <string name="span_tv_show_item_ratings">Nilai :</string>
+    <string name="span_tv_show_item_language">Bahasa :</string>
+    <string name="span_tv_show_item_first_air_date">Tanggal Pertama Kali Keluar :</string>
+
+    <!-- Set Span movie item section title -->
+    <string name="span_movie_detail_status">Status :</string>
+    <string name="span_movie_detail_rating">Nilai :</string>
+    <string name="span_movie_detail_from">dari</string>
+    <string name="span_movie_detail_votes">suara</string>
+
+    <!-- Set Span detailed TV Show item section title -->
+    <string name="span_tv_show_detail_number_of_seasons">Jumlah Musim :</string>
+    <string name="span_tv_show_detail_number_of_episodes">Jumlah Episode :</string>
+    <string name="span_tv_show_detail_rating">Nilai :</string>
+    <string name="span_tv_show_detail_from">dari</string>
+    <string name="span_tv_show_detail_votes">suara</string>
+
+    <!-- Set Title for app menu -->
+    <string name="catalogue_movie_final">Catalogue Movie Final</string>
+
+    <string name="change_language_settings">Ubah Pengaturan Bahasa</string>
+
+    <string name="mark_as_favorite">Tandai sebagai Favorit</string>
+
+
+</resources>

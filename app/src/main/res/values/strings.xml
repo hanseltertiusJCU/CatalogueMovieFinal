@@ -1,3 +1,76 @@
 <resources>
     <string name="app_name">CatalogueMovieFinal</string>
+
+    <!-- Set values for Movie data placeholder -->
+    <string name="movie_title_text">Movie Title</string>
+    <string name="movie_ratings_text">Ratings</string>
+    <string name="movie_release_date_text">Release Date</string>
+    <string name="movie_language_text">Language</string>
+
+    <!-- Set values for TV Show data placeholder -->
+    <string name="tv_show_name_text">TV Show Name</string>
+    <string name="tv_show_ratings_text">Ratings</string>
+    <string name="tv_show_first_air_date_text">First Air Date</string>
+    <string name="tv_show_language_text">Language</string>
+
+    <!-- Set action bar title -->
+    <string name="movie">Movie</string>
+    <string name="tv_show">TV Show</string>
+    <string name="favorite_movie">Favorite Movie</string>
+    <string name="favorite_tv_show">Favorite TV Show</string>
+    <string name="favorite">Favorite</string>
+
+    <!-- Set Detailed Movie section value placeholder -->
+    <string name="detailed_movie_rating_text">Detailed Movie Rating Text</string>
+    <string name="detailed_movie_status_text">Detailed Movie Status Text</string>
+    <string name="detailed_movie_tagline_text">Detailed Movie Tagline Text</string>
+    <string name="detailed_movie_title_text">Detailed Movie Title Text</string>
+    <string name="detailed_movie_overview_text">Detailed Overview</string>
+    <string name="detailed_movie_release_date_text">yyyy-MM-dd</string>
+
+    <!-- Set Detailed Movie section title -->
+    <string name="detailed_movie_overview_title">Overview</string>
+    <string name="detailed_movie_release_date_title">Release Date</string>
+    <string name="detailed_movie_genres_title">Genre(s)</string>
+    <string name="detailed_movie_languages_text">Detailed Movie Language(s) Text</string>
+    <string name="detailed_movie_languages_title">Language(s) spoken</string>
+    <string name="detailed_movie_genres_text">Detailed Movie Genre(s) Text</string>
+
+    <!-- Set Detailed TV Show section title -->
+    <string name="detailed_tv_show_overview_title">Overview</string>
+    <string name="detailed_tv_show_first_air_date_title">First Air Date</string>
+    <string name="detailed_tv_show_genres_title">Genre(s)</string>
+    <string name="detailed_tv_show_networks_title">Network(s)</string>
+
+    <!-- Set Span movie item section title -->
+    <string name="span_movie_item_ratings">Ratings :</string>
+    <string name="span_movie_item_language">Language :</string>
+    <string name="span_movie_item_release_date">Release Date :</string>
+
+    <!-- Set Span TV Show item section title -->
+    <string name="span_tv_show_item_ratings">Ratings :</string>
+    <string name="span_tv_show_item_language">Language :</string>
+    <string name="span_tv_show_item_first_air_date">First Air Date :</string>
+
+    <!-- Set Span detailed movie item section title -->
+    <string name="span_movie_detail_status">Status :</string>
+    <string name="span_movie_detail_rating">Rating :</string>
+    <string name="span_movie_detail_from">from</string>
+    <string name="span_movie_detail_votes">vote(s)</string>
+
+    <!-- Set Span detailed TV Show item section title -->
+    <string name="span_tv_show_detail_number_of_seasons">Number of Seasons :</string>
+    <string name="span_tv_show_detail_number_of_episodes">Number of Episodes :</string>
+    <string name="span_tv_show_detail_rating">Rating :</string>
+    <string name="span_tv_show_detail_from">from</string>
+    <string name="span_tv_show_detail_votes">vote(s)</string>
+
+    <string name="change_language_settings">Change Language Settings</string>
+
+    <!-- Set Title for app menu -->
+    <string name="catalogue_movie_final">Catalogue Movie Final</string>
+
+    <string name="mark_as_favorite">Mark as Favorite</string>
+
+
 </resources>
