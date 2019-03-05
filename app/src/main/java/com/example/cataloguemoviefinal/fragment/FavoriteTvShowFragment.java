@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.example.cataloguemoviefinal.DetailActivity;
@@ -43,6 +44,9 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 	RecyclerView recyclerView;
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
+	// LinearLayout untuk atur visibility dari Search keyword
+	@BindView(R.id.tv_show_search_keyword_result)
+	LinearLayout tvShowSearchKeywordResult;
 	private TvShowAdapter tvShowAdapter;
 	// Helper untuk membuka koneksi ke DB
 	private FavoriteItemsHelper favoriteItemsHelper;
@@ -79,6 +83,9 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 		// Initialize tv show adapter
 		tvShowAdapter = new TvShowAdapter(getContext());
 		tvShowAdapter.notifyDataSetChanged();
+		
+		// Set visibility dari LinearLayout jadi GONE supaya tidak memakan tempat + tidak ada keyword result
+		tvShowSearchKeywordResult.setVisibility(View.GONE);
 		
 		// Attach adapter ke RecyclerView agar bisa menghandle data untuk situasi orientation changes
 		recyclerView.setAdapter(tvShowAdapter);

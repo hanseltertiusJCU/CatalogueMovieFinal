@@ -4,6 +4,8 @@ package com.example.cataloguemoviefinal.fragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,6 +30,10 @@ public class SearchMovieFragment extends Fragment {
 	@BindView(R.id.movie_search_keyword_content)
 	TextView movieSearchKeyword;
 	
+	private static final String MOVIE_KEYWORD_RESULT = "movie_keyword_result";
+	
+	private String moviekeywordResult;
+	
 	public SearchMovieFragment() {
 		// Required empty public constructor
 	}
@@ -44,22 +50,31 @@ public class SearchMovieFragment extends Fragment {
 	}
 	
 	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		if(savedInstanceState != null){
+			moviekeywordResult = savedInstanceState.getString(MOVIE_KEYWORD_RESULT);
+			movieSearchKeyword.setText(moviekeywordResult);
+		}
+	}
+	
+	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.menu_search, menu);
 		
 		if(getActivity() != null){
 			// Line ini berguna untuk memasang listener untuk SearchView
-			SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-			if(searchManager != null){
+			SearchManager movieSearchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+			if(movieSearchManager != null){
 				SearchView movieSearchView  = (SearchView) (menu.findItem(R.id.search)).getActionView();
-				movieSearchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+				movieSearchView.setSearchableInfo(movieSearchManager.getSearchableInfo(getActivity().getComponentName()));
 				movieSearchView.setQueryHint(getResources().getString(R.string.search));
 				// Listener untuk text dari searchview
 				movieSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 					@Override
 					public boolean onQueryTextSubmit(String query) {
-						// todo: querynya itu dibikin keyword search d horizontal linear layout
-						movieSearchKeyword.setText(query);
+						moviekeywordResult = query;
+						movieSearchKeyword.setText(moviekeywordResult);
 						return true;
 					}
 					
@@ -73,5 +88,11 @@ public class SearchMovieFragment extends Fragment {
 		
 		
 		super.onCreateOptionsMenu(menu, inflater);
+	}
+	
+	@Override
+	public void onSaveInstanceState(@NonNull Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString(MOVIE_KEYWORD_RESULT, moviekeywordResult);
 	}
 }

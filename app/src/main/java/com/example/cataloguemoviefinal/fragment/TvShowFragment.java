@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.example.cataloguemoviefinal.DetailActivity;
@@ -51,6 +52,9 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 	RecyclerView recyclerView;
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
+	// LinearLayout untuk atur visibility dari Search keyword
+	@BindView(R.id.tv_show_search_keyword_result)
+	LinearLayout tvShowSearchKeywordResult;
 	private TvShowAdapter tvShowAdapter;
 	// Bikin parcelable yang berguna untuk menyimpan lalu merestore position
 	private Parcelable mTvShowListState = null;
@@ -96,6 +100,10 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 		recyclerView.setHasFixedSize(true);
 		// Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
 		recyclerView.setLayoutManager(tvShowLinearLayoutManager);
+		
+		// Set visibility dari LinearLayout jadi GONE supaya tidak memakan tempat + tidak ada keyword result
+		tvShowSearchKeywordResult.setVisibility(View.GONE);
+		
 		// Set empty adapter agar dapat di rotate
 		recyclerView.setAdapter(tvShowAdapter);
 		
