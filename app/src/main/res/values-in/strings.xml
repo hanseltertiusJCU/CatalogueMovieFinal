@@ -19,6 +19,8 @@
     <string name="favorite_movie">Film Favorit</string>
     <string name="favorite_tv_show">Acara TV Favorit</string>
     <string name="favorite">Favorit</string>
+    <string name="search_movie">Pencarian Movie</string>
+    <string name="search_tv_show">Pencarian Acara TV</string>
 
     <!-- Set Detailed Movie section value placeholder -->
     <string name="detailed_movie_rating_text">Teks Nilai dari Detil Film</string>
@@ -72,5 +74,7 @@
 
     <string name="mark_as_favorite">Tandai sebagai Favorit</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -168,6 +168,7 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA, movieTitleItem);
 		// Cek jika ArrayList ada data
 		if(FavoriteMovieFragment.favMovieListData.size() > 0) {
+			// todo: mungkin bawa if statement yg menandakan bahwa valuenya itu 1
 			intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA, FavoriteMovieFragment.favMovieListData.get(itemPosition).getFavoriteBooleanState());
 		}
 		intentWithMovieIdData.putExtra(MODE_INTENT, modeItem);

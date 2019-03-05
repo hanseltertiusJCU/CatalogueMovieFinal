@@ -18,6 +18,8 @@ import com.example.cataloguemoviefinal.adapter.ItemSectionsFragmentPagerAdapter;
 import com.example.cataloguemoviefinal.fragment.FavoriteMovieFragment;
 import com.example.cataloguemoviefinal.fragment.FavoriteTvShowFragment;
 import com.example.cataloguemoviefinal.fragment.MovieFragment;
+import com.example.cataloguemoviefinal.fragment.SearchMovieFragment;
+import com.example.cataloguemoviefinal.fragment.SearchTvShowFragment;
 import com.example.cataloguemoviefinal.fragment.TvShowFragment;
 
 import java.util.Objects;
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
 	private TextView tabTvShow;
 	private TextView tabFavoriteMovie;
 	private TextView tabFavoriteTvShow;
+	private TextView tabSearchMovie;
+	private TextView tabSearchTvShow;
 	// Set drawable array beserta drawable untuk icon dr TabLayout
 	private Drawable[] movieDrawables;
 	private Drawable movieDrawable;
@@ -50,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
 	private Drawable favoriteMovieDrawable;
 	private Drawable[] favoriteTvShowDrawables;
 	private Drawable favoriteTvShowDrawable;
+	private Drawable[] searchMovieDrawables;
+	private Drawable searchMovieDrawable;
+	private Drawable[] searchTvShowDrawables;
+	private Drawable searchTvShowDrawable;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
 		
 		// Panggil method ini untuk saving Fragment state di ViewPager, kesannya kyk simpen
 		// fragment ketika sebuah fragment sedang tidak di display.
-		// Kita menggunakan value 3 sebagai parameter karena kita punya 4 fragments, dan kita
-		// hanya butuh simpan 3 fragments (1 lg untuk display).
-		viewPager.setOffscreenPageLimit(3);
+		// Kita menggunakan value 5 sebagai parameter karena kita punya 6 fragments, dan kita
+		// hanya butuh simpan 5 fragments (1 lg untuk display).
+		viewPager.setOffscreenPageLimit(5);
 		
 		// Panggil method tsb untuk membuat fragment yang akan disimpan ke ViewPager
 		createViewPagerContent(viewPager);
@@ -117,6 +125,18 @@ public class MainActivity extends AppCompatActivity {
 						favoriteTvShowDrawable.setTint(getResources().getColor(R.color.colorAccent));
 						tabFavoriteTvShow.setTextColor(getResources().getColor(R.color.colorAccent));
 						break;
+					case 4:
+						searchMovieDrawables = tabSearchMovie.getCompoundDrawables();
+						searchMovieDrawable = searchMovieDrawables[1];
+						searchMovieDrawable.setTint(getResources().getColor(R.color.colorAccent));
+						tabSearchMovie.setTextColor(getResources().getColor(R.color.colorAccent));
+						break;
+					case 5:
+						searchTvShowDrawables = tabSearchTvShow.getCompoundDrawables();
+						searchTvShowDrawable = searchTvShowDrawables[1];
+						searchTvShowDrawable.setTint(getResources().getColor(R.color.colorAccent));
+						tabSearchTvShow.setTextColor(getResources().getColor(R.color.colorAccent));
+						break;
 					default:
 						break;
 				}
@@ -151,6 +171,18 @@ public class MainActivity extends AppCompatActivity {
 						favoriteTvShowDrawable = favoriteTvShowDrawables[1];
 						favoriteTvShowDrawable.setTint(getResources().getColor(R.color.colorBlack));
 						tabFavoriteTvShow.setTextColor(getResources().getColor(R.color.colorBlack));
+						break;
+					case 4:
+						searchMovieDrawables = tabSearchMovie.getCompoundDrawables();
+						searchMovieDrawable = searchMovieDrawables[1];
+						searchMovieDrawable.setTint(getResources().getColor(R.color.colorBlack));
+						tabSearchMovie.setTextColor(getResources().getColor(R.color.colorBlack));
+						break;
+					case 5:
+						searchTvShowDrawables = tabSearchTvShow.getCompoundDrawables();
+						searchTvShowDrawable = searchTvShowDrawables[1];
+						searchTvShowDrawable.setTint(getResources().getColor(R.color.colorBlack));
+						tabSearchTvShow.setTextColor(getResources().getColor(R.color.colorBlack));
 						break;
 					default:
 						break;
@@ -192,14 +224,24 @@ public class MainActivity extends AppCompatActivity {
 		Objects.requireNonNull(tabLayout.getTabAt(1)).setCustomView(tabTvShow);
 		
 		tabFavoriteMovie = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-		tabFavoriteMovie.setText(getString(R.string.favorite));
+		tabFavoriteMovie.setText(getString(R.string.favorite_movie));
 		tabFavoriteMovie.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_movie_favorite, 0, 0);
 		Objects.requireNonNull(tabLayout.getTabAt(2)).setCustomView(tabFavoriteMovie);
 		
 		tabFavoriteTvShow = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-		tabFavoriteTvShow.setText(getString(R.string.favorite));
+		tabFavoriteTvShow.setText(getString(R.string.favorite_tv_show));
 		tabFavoriteTvShow.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_tv_show_favorite, 0, 0);
 		Objects.requireNonNull(tabLayout.getTabAt(3)).setCustomView(tabFavoriteTvShow);
+		
+		tabSearchMovie = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+		tabSearchMovie.setText(getString(R.string.search_movie));
+		tabSearchMovie.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_search_movie, 0,0);
+		Objects.requireNonNull(tabLayout.getTabAt(4)).setCustomView(tabSearchMovie);
+		
+		tabSearchTvShow = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+		tabSearchTvShow.setText(getString(R.string.search_tv_show));
+		tabSearchTvShow.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_search_tv_show, 0, 0);
+		Objects.requireNonNull(tabLayout.getTabAt(5)).setCustomView(tabSearchTvShow);
 	}
 	
 	// Method tsb berguna untuk membuat isi dari ViewPager
@@ -213,6 +255,8 @@ public class MainActivity extends AppCompatActivity {
 		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new TvShowFragment(), getString(R.string.tv_show));
 		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new FavoriteMovieFragment(), getString(R.string.favorite_movie));
 		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new FavoriteTvShowFragment(), getString(R.string.favorite_tv_show));
+		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new SearchMovieFragment(), getString(R.string.search_movie));
+		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new SearchTvShowFragment(), getString(R.string.search_tv_show));
 		
 		// Set FragmentPagerAdapter ke ViewPager
 		viewPager.setAdapter(itemSectionsFragmentPagerAdapter);
