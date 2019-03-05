@@ -168,7 +168,7 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 		}
 		// Tentukan bahwa kita ingin membuka data Movie
 		String modeItem = "open_movie_detail";
-		
+		// Create intent object agar ke DetailActivity yg merupakan activity tujuan
 		Intent intentWithMovieIdData = new Intent(getActivity(), DetailActivity.class);
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
 		intentWithMovieIdData.putExtra(MOVIE_ID_DATA, movieIdItem);
@@ -270,6 +270,7 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 						}
 					}
 				});
+				// todo: mungkin pake placeholder ketika size datanya itu 0
 			}
 		};
 	}
