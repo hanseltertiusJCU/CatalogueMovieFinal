@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.example.cataloguemoviefinal.DetailActivity;
@@ -46,6 +47,9 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	MovieAdapter movieAdapter;
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
+	// LinearLayout untuk atur visibility dari Search keyword
+	@BindView(R.id.movie_search_keyword_result)
+	LinearLayout movieSearchKeywordResult;
 	// Helper untuk membuka koneksi ke DB
 	FavoriteItemsHelper favoriteItemsHelper;
 	
@@ -80,6 +84,9 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		// Initialize movie adapter
 		movieAdapter = new MovieAdapter(getContext());
 		movieAdapter.notifyDataSetChanged();
+		
+		// Set visibility dari LinearLayout jadi GONE supaya tidak memakan tempat + tidak ada keyword result
+		movieSearchKeywordResult.setVisibility(View.GONE);
 		
 		// Attach adapter ke RecyclerView agar bisa menghandle data untuk situasi orientation changes
 		recyclerView.setAdapter(movieAdapter);

@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">CatalogueMovieFinal</string>
 
+    <!-- Set values for search as well as hints -->
+    <string name="search">Cari</string>
+
+    <!-- Set keyword value title -->
+    <string name="keyword_title">Kata Kunci :</string>
+
     <!-- Set values for Movie data placeholder -->
     <string name="movie_title_text">Judul Film</string>
     <string name="movie_ratings_text">Nilai</string>

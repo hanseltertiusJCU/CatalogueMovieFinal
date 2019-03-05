@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">CatalogueMovieFinal</string>
 
+    <!-- Set values for search as well as hints -->
+    <string name="search">Search</string>
+
+    <!-- Set keyword value title -->
+    <string name="keyword_title">Keyword :</string>
+
     <!-- Set values for Movie data placeholder -->
     <string name="movie_title_text">Movie Title</string>
     <string name="movie_ratings_text">Ratings</string>
