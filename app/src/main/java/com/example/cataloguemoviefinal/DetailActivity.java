@@ -324,7 +324,7 @@ public class DetailActivity extends AppCompatActivity {
 					// Set menu clickable into true, literally setelah asynctask kelar,
 					// maka menu bs d click
 					menuClickable = true;
-					// Update option menu to recall onPrepareOptionMenu method
+					// Update option menu to searchMovieRecall onPrepareOptionMenu method
 					invalidateOptionsMenu();
 				}
 			}
@@ -398,7 +398,7 @@ public class DetailActivity extends AppCompatActivity {
 					// maka menu bs d click
 					menuClickable = true;
 					
-					// Update option menu to recall onPrepareOptionMenu method
+					// Update option menu to searchMovieRecall onPrepareOptionMenu method
 					invalidateOptionsMenu();
 				}
 			}

@@ -25,28 +25,28 @@ public class SearchMovieViewModel extends AndroidViewModel {
 	// Gunakan beberapa informasi dari Build Config untuk melindungi credential
 	private String apiKey = BuildConfig.API_KEY;
 	private String searchMovieUrlBase = BuildConfig.BASE_MOVIE_SEARCH_URL;
-	private String movieSearchQuery = BuildConfig.MOVIE_SEARCH_QUERY;
+	private String movieSearchQuery = BuildConfig.SEARCH_QUERY;
 	
 	private MovieSearchLiveData movieSearchLiveData;
-	private String mMovieSearch;
+	private String mMovieSearchKeyword;
 	
-	public SearchMovieViewModel(@NonNull Application application, String movieSearch){
+	public SearchMovieViewModel(@NonNull Application application, String movieSearchKeyword){
 		super(application);
-		this.mMovieSearch = movieSearch;
-		movieSearchLiveData = new MovieSearchLiveData(application, movieSearch);
+		this.mMovieSearchKeyword = movieSearchKeyword;
+		movieSearchLiveData = new MovieSearchLiveData(application, movieSearchKeyword);
 	}
 	
-	public LiveData<ArrayList<MovieItem>> getSearchMovie(){
+	public LiveData<ArrayList<MovieItem>> getSearchMovies(){
 		return movieSearchLiveData;
 	}
 	
-	public void setMovieSearch(String movieSearch){
-		this.mMovieSearch = movieSearch;
+	public void setMovieSearchKeyword(String movieSearchKeyword){
+		this.mMovieSearchKeyword = movieSearchKeyword;
 	}
 	
-	public void recall(){
+	public void searchMovieRecall(){
 		// Panggil live data dengan search keyword yang baru
-		movieSearchLiveData = new MovieSearchLiveData(getApplication(), mMovieSearch);
+		movieSearchLiveData = new MovieSearchLiveData(getApplication(), mMovieSearchKeyword);
 	}
 	
 	private class MovieSearchLiveData extends LiveData<ArrayList<MovieItem>>{
@@ -54,7 +54,7 @@ public class SearchMovieViewModel extends AndroidViewModel {
 		private final Context context;
 		private String movieSearchKeyword;
 		
-		// Buat constructor untuk mengakomodasi parameter yang ada dari {@link SearchViewModel}
+		// Buat constructor untuk mengakomodasi parameter yang ada dari {@link SearchMovieViewModel}
 		
 		public MovieSearchLiveData(Context context, String movieSearchKeyword){
 			this.context = context;
@@ -75,7 +75,7 @@ public class SearchMovieViewModel extends AndroidViewModel {
 					
 					final ArrayList<MovieItem> movieItems = new ArrayList<>();
 					
-					String movieSearchUrl = searchMovieUrlBase + apiKey + movieSearchQuery + mMovieSearch;
+					String movieSearchUrl = searchMovieUrlBase + apiKey + movieSearchQuery + mMovieSearchKeyword;
 					
 					syncHttpClient.get(movieSearchUrl, new AsyncHttpResponseHandler() {
 						

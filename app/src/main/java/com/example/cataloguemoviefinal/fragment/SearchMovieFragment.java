@@ -23,18 +23,15 @@ import android.view.ViewGroup;
 import android.support.v7.widget.SearchView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.cataloguemoviefinal.DetailActivity;
 import com.example.cataloguemoviefinal.LoadFavoriteMoviesCallback;
-import com.example.cataloguemoviefinal.MainActivity;
 import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.adapter.MovieAdapter;
 import com.example.cataloguemoviefinal.async.LoadFavoriteMoviesAsync;
 import com.example.cataloguemoviefinal.database.FavoriteItemsHelper;
 import com.example.cataloguemoviefinal.entity.MovieItem;
 import com.example.cataloguemoviefinal.factory.SearchMovieViewModelFactory;
-import com.example.cataloguemoviefinal.model.MovieViewModel;
 import com.example.cataloguemoviefinal.model.SearchMovieViewModel;
 import com.example.cataloguemoviefinal.support.ItemClickSupport;
 
@@ -155,7 +152,7 @@ public class SearchMovieFragment extends Fragment implements LoadFavoriteMoviesC
 			
 			searchMovieObserver = createObserver();
 			
-			searchMovieViewModel.getSearchMovie().observe(this, searchMovieObserver);
+			searchMovieViewModel.getSearchMovies().observe(this, searchMovieObserver);
 		}
 		
 	}
@@ -183,16 +180,16 @@ public class SearchMovieFragment extends Fragment implements LoadFavoriteMoviesC
 						progressBar.setVisibility(View.VISIBLE);
 						
 						// Call setter method untuk merubah value parameter di ViewModel
-						searchMovieViewModel.setMovieSearch(moviekeywordResult);
+						searchMovieViewModel.setMovieSearchKeyword(moviekeywordResult);
 						
 						// Recall live data, kesannya itu kyk merubah parameter dari ViewModelFactory
-						searchMovieViewModel.recall();
+						searchMovieViewModel.searchMovieRecall();
 						
 						// Buat Observer object untuk dapat merespon changes dengan mengupdate UI
 						searchMovieObserver = createObserver();
 						
 						// Replace sebuah observer ke observer yang baru untuk menampilkan LiveData yang baru
-						searchMovieViewModel.getSearchMovie().observe(SearchMovieFragment.this, searchMovieObserver);
+						searchMovieViewModel.getSearchMovies().observe(SearchMovieFragment.this, searchMovieObserver);
 						
 						return true;
 					}

@@ -18,7 +18,7 @@ android {
         buildConfigField("String", "BASE_TV_SHOW_DETAILED_URL", "\"https://api.themoviedb.org/3/tv/\"")
         buildConfigField("String", "DETAILED_ITEM_API_KEY_FILLER", "\"?api_key=\"")
         buildConfigField("String", "POSTER_IMAGE_ITEM_URL", "\"https://image.tmdb.org/t/p/w185\"")
-        buildConfigField("String", "MOVIE_SEARCH_QUERY", "\"&query=\"")
+        buildConfigField("String", "SEARCH_QUERY", "\"&query=\"")
         buildConfigField("String", "LANGUAGE_US", "\"&language=en-US\"")
     }
     buildTypes {
