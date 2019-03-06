@@ -85,7 +85,7 @@ public class FavoriteItemsHelper {
 				movieItem.setMovieReleaseDate(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.RELEASE_DATE_COLUMN)));
 				movieItem.setMoviePosterPath(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.FILE_PATH_COLUMN)));
 				movieItem.setDateAddedFavorite(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.DATE_ADDED_COLUMN)));
-				movieItem.setMovieFavorite(cursor.getInt(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.FAVORITE_COLUMN)) == movieItem.getFavoriteBooleanState()); // movieitems getfavoritestate
+				movieItem.setFavoriteBooleanState(cursor.getInt(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.FAVORITE_COLUMN)));
 				// Add movie item data ke ArrayList
 				favoriteMovieItemArrayList.add(movieItem);
 				// Memindahkan Cursor ke baris selanjutnya
@@ -149,7 +149,7 @@ public class FavoriteItemsHelper {
 				tvShowItem.setTvShowFirstAirDate(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteTvShowItemColumns.FIRST_AIR_DATE_COLUMN)));
 				tvShowItem.setTvShowPosterPath(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteTvShowItemColumns.FILE_PATH_COLUMN)));
 				tvShowItem.setDateAddedFavorite(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteTvShowItemColumns.DATE_ADDED_COLUMN)));
-				tvShowItem.setTvShowFavorite(cursor.getInt(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteTvShowItemColumns.FAVORITE_COLUMN)) == tvShowItem.getFavoriteBooleanState());
+				tvShowItem.setFavoriteBooleanState(cursor.getInt(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteTvShowItemColumns.FAVORITE_COLUMN)));
 				// Add tv show item data ke ArrayList
 				favoriteTvShowItemsArrayList.add(tvShowItem);
 				// Memindahkan Cursor ke baris selanjutnya

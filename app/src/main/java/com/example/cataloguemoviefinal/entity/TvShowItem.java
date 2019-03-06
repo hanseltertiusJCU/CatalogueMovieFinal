@@ -35,7 +35,6 @@ public class TvShowItem implements Parcelable {
 	// Nilai untuk mengetahui waktu dimana sebuah data di add menjadi favorite
 	private String dateAddedFavorite;
 	// Nilai untuk tahu bahwa tv show item itu termasuk dalam kategori favorit ato tidak
-	private boolean isTvShowFavorite;
 	private int favoriteBooleanState;
 	
 	public TvShowItem(JSONObject object, boolean isTvShowDetailed) {
@@ -170,7 +169,6 @@ public class TvShowItem implements Parcelable {
 		tvShowOverview = in.readString();
 		tvShowPosterPath = in.readString();
 		dateAddedFavorite = in.readString();
-		isTvShowFavorite = in.readByte() != 0;
 		favoriteBooleanState = in.readInt();
 	}
 	
@@ -279,10 +277,6 @@ public class TvShowItem implements Parcelable {
 		this.dateAddedFavorite = dateAddedFavorite;
 	}
 	
-	public void setTvShowFavorite(boolean tvShowFavorite) {
-		isTvShowFavorite = tvShowFavorite;
-	}
-	
 	public int getFavoriteBooleanState() {
 		return favoriteBooleanState;
 	}
@@ -312,7 +306,6 @@ public class TvShowItem implements Parcelable {
 		dest.writeString(tvShowOverview);
 		dest.writeString(tvShowPosterPath);
 		dest.writeString(dateAddedFavorite);
-		dest.writeByte((byte) (isTvShowFavorite?1:0));
 		dest.writeInt(favoriteBooleanState);
 	}
 }

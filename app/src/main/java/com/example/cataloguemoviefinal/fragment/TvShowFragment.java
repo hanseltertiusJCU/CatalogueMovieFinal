@@ -152,16 +152,12 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 		// Dapatkan id dan title bedasarkan ListView item
 		int tvShowIdItem = tvShowItem.getId();
 		String tvShowNameItem = tvShowItem.getTvShowName();
-		// Item position untuk mengakses arraylist specific position
-		int itemPosition = 0;
-		// if statement untuk tahu bahwa idnya itu termasuk d dalam tabel ato tidak, looping pake arraylist
-		// Cek jika size dari ArrayList itu lebih dari 0
-		if(FavoriteTvShowFragment.favTvShowListData.size() > 0) {
-			for(int i = 0 ; i < FavoriteTvShowFragment.favTvShowListData.size() ; i++) {
-				if(tvShowIdItem == FavoriteTvShowFragment.favTvShowListData.get(i).getId()) {
-					FavoriteTvShowFragment.favTvShowListData.get(i).setFavoriteBooleanState(1);
-					// Dapatin position dari arraylist jika idnya itu sama kyk id yg tersedia
-					itemPosition = i;
+		int tvShowBooleanStateItem = 0;
+		if(FavoriteTvShowFragment.favTvShowListData.size() > 0){
+			for(int i = 0; i < FavoriteTvShowFragment.favTvShowListData.size(); i++){
+				// Cek jika tvShowIdItem itu cocok dengan item id yg ada di ArrayList
+				if(tvShowIdItem == FavoriteTvShowFragment.favTvShowListData.get(i).getId()){
+					tvShowBooleanStateItem = FavoriteTvShowFragment.favTvShowListData.get(i).getFavoriteBooleanState();
 					break;
 				}
 			}
@@ -173,10 +169,7 @@ public class TvShowFragment extends Fragment implements LoadFavoriteTvShowCallba
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
 		intentWithTvShowIdData.putExtra(TV_SHOW_ID_DATA, tvShowIdItem);
 		intentWithTvShowIdData.putExtra(TV_SHOW_NAME_DATA, tvShowNameItem);
-		// Cek jika ArrayList ada data
-		if(FavoriteTvShowFragment.favTvShowListData.size() > 0) {
-			intentWithTvShowIdData.putExtra(TV_SHOW_BOOLEAN_STATE_DATA, FavoriteTvShowFragment.favTvShowListData.get(itemPosition).getFavoriteBooleanState());
-		}
+		intentWithTvShowIdData.putExtra(TV_SHOW_BOOLEAN_STATE_DATA, tvShowBooleanStateItem);
 		intentWithTvShowIdData.putExtra(MODE_INTENT, modeItem);
 		// Start activity tujuan bedasarkan intent object dan bawa request code
 		// REQUEST_CHANGE untuk onActivityResult

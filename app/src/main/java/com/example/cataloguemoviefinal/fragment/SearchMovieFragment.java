@@ -213,17 +213,13 @@ public class SearchMovieFragment extends Fragment implements LoadFavoriteMoviesC
 		// Dapatkan id dan title bedasarkan ListView item
 		int movieIdItem = movieItem.getId();
 		String movieTitleItem = movieItem.getMovieTitle();
-		//todo: modify value untuk state (bawaannya) kyk: getmoviestateboolean (tp mesti ganti structurenya itu)
-		// Item position untuk mengakses arraylist specific position
-		int itemPosition = 0;
-		// if statement untuk tahu bahwa idnya itu termasuk d dalam tabel ato tidak, looping pake arraylist
-		// Cek jika size dari ArrayList itu lebih dari 0
-		if(FavoriteMovieFragment.favMovieListData.size() > 0) {
-			for(int i = 0 ; i < FavoriteMovieFragment.favMovieListData.size() ; i++) {
-				if(movieIdItem == FavoriteMovieFragment.favMovieListData.get(i).getId()) {
-					FavoriteMovieFragment.favMovieListData.get(i).setFavoriteBooleanState(1);
-					// Dapatin position dari arraylist jika idnya itu sama kyk id yg tersedia
-					itemPosition = i;
+		int movieBooleanStateItem = 0;
+		if(FavoriteMovieFragment.favMovieListData.size() > 0){
+			for(int i = 0; i < FavoriteMovieFragment.favMovieListData.size(); i ++){
+				// Cek jika movieIdItem itu cocok dengan item id yg ada di arraylist
+				if(movieIdItem == FavoriteMovieFragment.favMovieListData.get(i).getId()){
+					// Get favorite boolean state value untuk transfer ke variable movieBooleanStateItem
+					movieBooleanStateItem = FavoriteMovieFragment.favMovieListData.get(i).getFavoriteBooleanState();
 					break;
 				}
 			}
@@ -235,10 +231,7 @@ public class SearchMovieFragment extends Fragment implements LoadFavoriteMoviesC
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
 		intentWithMovieIdData.putExtra(MOVIE_ID_DATA, movieIdItem);
 		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA, movieTitleItem);
-		// Cek jika ArrayList ada data
-		if(FavoriteMovieFragment.favMovieListData.size() > 0){
-			intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA, FavoriteMovieFragment.favMovieListData.get(itemPosition).getFavoriteBooleanState());
-		}
+		intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA, movieBooleanStateItem);
 		intentWithMovieIdData.putExtra(MODE_INTENT, modeItem);
 		// Start activity tujuan bedasarkan intent object dan bawa request code
 		// REQUEST_CHANGE untuk onActivityResult

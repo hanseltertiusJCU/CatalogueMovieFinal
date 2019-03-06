@@ -35,7 +35,6 @@ public class MovieItem implements Parcelable {
 	// Nilai untuk mengetahui waktu dimana sebuah data di add menjadi favorite
 	private String dateAddedFavorite;
 	// Nilai untuk tahu bahwa movie item itu termasuk dalam kategori favorit ato tidak
-	private boolean isMovieFavorite;
 	private int favoriteBooleanState;
 	
 	public MovieItem(JSONObject object, boolean isMovieDetailed) {
@@ -170,7 +169,6 @@ public class MovieItem implements Parcelable {
 		movieOverview = in.readString();
 		moviePosterPath = in.readString();
 		dateAddedFavorite = in.readString();
-		isMovieFavorite = in.readByte() != 0;
 		favoriteBooleanState = in.readInt();
 	}
 	
@@ -294,10 +292,6 @@ public class MovieItem implements Parcelable {
 		this.dateAddedFavorite = dateAddedFavorite;
 	}
 	
-	public void setMovieFavorite(boolean movieFavorite) {
-		isMovieFavorite = movieFavorite;
-	}
-	
 	public int getFavoriteBooleanState() {
 		return favoriteBooleanState;
 	}
@@ -328,7 +322,6 @@ public class MovieItem implements Parcelable {
 		dest.writeString(movieOverview);
 		dest.writeString(moviePosterPath);
 		dest.writeString(dateAddedFavorite);
-		dest.writeByte((byte) (isMovieFavorite?1:0));
 		dest.writeInt(favoriteBooleanState);
 	}
 }

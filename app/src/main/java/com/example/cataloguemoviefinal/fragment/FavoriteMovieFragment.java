@@ -146,33 +146,15 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		// Dapatkan id dan title bedasarkan item di ArrayList
 		int movieIdItem = movieItem.getId();
 		String movieTitleItem = movieItem.getMovieTitle();
-		// Item position untuk mengakses arraylist specific position
-		int itemPosition = 0;
-		
-		// Cek jika size dari ArrayList itu lebih dari 0
-		if(favMovieListData.size() > 0) {
-			// Loop until getting exact position
-			for(int i = 0 ; i < favMovieListData.size() ; i++) {
-				if(movieIdItem == favMovieListData.get(i).getId()) {
-					favMovieListData.get(i).setFavoriteBooleanState(1);
-					// Dapatin position dari arraylist jika idnya itu sama kyk id yg tersedia
-					itemPosition = i;
-					break;
-				}
-			}
-		}
+		int movieBooleanStateItem = movieItem.getFavoriteBooleanState();
 		// Tentukan bahwa kita ingin membuka data Movie
 		String modeItem = "open_movie_detail";
-		
 		// Initiate intent
 		Intent intentWithMovieIdData = new Intent(getActivity(), DetailActivity.class);
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
 		intentWithMovieIdData.putExtra(MOVIE_ID_DATA, movieIdItem);
 		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA, movieTitleItem);
-		// Cek jika ArrayList ada data
-		if(favMovieListData.size() > 0) {
-			intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA, favMovieListData.get(itemPosition).getFavoriteBooleanState());
-		}
+		intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA, movieBooleanStateItem);
 		intentWithMovieIdData.putExtra(MODE_INTENT, modeItem);
 		// Start activity tujuan bedasarkan intent object
 		startActivityForResult(intentWithMovieIdData, DetailActivity.REQUEST_CHANGE);

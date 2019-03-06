@@ -180,33 +180,15 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 		// Dapatkan id dan title bedasarkan item di ArrayList
 		int tvShowIdItem = tvShowItem.getId();
 		String tvShowNameItem = tvShowItem.getTvShowName();
-		// Item position untuk mengakses arraylist specific position
-		int itemPosition = 0;
-		
-		// Cek jika size dari ArrayList itu lebih dari 0
-		if(favTvShowListData.size() > 0) {
-			// Loop until getting exact position
-			for(int i = 0 ; i < favTvShowListData.size() ; i++) {
-				if(tvShowIdItem == favTvShowListData.get(i).getId()) {
-					favTvShowListData.get(i).setFavoriteBooleanState(1);
-					// Dapatin position dari arraylist jika idnya itu sama kyk id yg tersedia
-					itemPosition = i;
-					break;
-				}
-			}
-		}
+		int tvBooleanStateItem = tvShowItem.getFavoriteBooleanState();
 		// Tentukan bahwa kita ingin membuka data TV Show
 		String modeItem = "open_tv_show_detail";
-		
 		// Initiate intent
 		Intent intentWithTvShowIdData = new Intent(getActivity(), DetailActivity.class);
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
 		intentWithTvShowIdData.putExtra(TV_SHOW_ID_DATA, tvShowIdItem);
 		intentWithTvShowIdData.putExtra(TV_SHOW_NAME_DATA, tvShowNameItem);
-		// Cek jika ArrayList ada data
-		if(favTvShowListData.size() > 0) {
-			intentWithTvShowIdData.putExtra(TV_SHOW_BOOLEAN_STATE_DATA, favTvShowListData.get(itemPosition).getFavoriteBooleanState());
-		}
+		intentWithTvShowIdData.putExtra(TV_SHOW_BOOLEAN_STATE_DATA, tvBooleanStateItem);
 		intentWithTvShowIdData.putExtra(MODE_INTENT, modeItem);
 		// Start activity tujuan bedasarkan intent object dan bawa request code
 		// REQUEST_CHANGE untuk onActivityResult

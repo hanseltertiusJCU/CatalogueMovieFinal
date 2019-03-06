@@ -140,7 +140,6 @@ public class DetailActivity extends AppCompatActivity {
 			detailedMovieId = getIntent().getIntExtra(MovieFragment.MOVIE_ID_DATA, 0);
 			detailedMovieTitle = getIntent().getStringExtra(MovieFragment.MOVIE_TITLE_DATA);
 			detailedMovieFavoriteStateValueComparison = getIntent().getIntExtra(MovieFragment.MOVIE_BOOLEAN_STATE_DATA, 0);
-			Log.d("comparison", String.valueOf(detailedMovieFavoriteStateValueComparison));
 		} else if(accessItemMode.equals("open_tv_show_detail")) {
 			// Get intent untuk mendapatkan id, title serta favorite tv show state dari {@link MainActivity}
 			detailedTvShowId = getIntent().getIntExtra(TvShowFragment.TV_SHOW_ID_DATA, 0);
