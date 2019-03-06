@@ -57,6 +57,39 @@ public class FavoriteItemsHelper {
 			favoriteDatabase.close();
 	}
 	
+	// Method untuk read seluruh data dari DB dengan menggunakan SQLiteDatabase query method (table movie item)
+	public Cursor queryFavoriteMovieProvider(){
+		return favoriteDatabase.query(DATABASE_MOVIE_TABLE,
+			null,
+			null,
+			null,
+			null,
+			null,
+			FavoriteDatabaseContract.FavoriteMovieItemColumns.DATE_ADDED_COLUMN + " DESC");
+	}
+	
+	// Method untuk read satu column data dari DB dengan menggunakan SQLiteDatabase query method (table movie item)
+	public Cursor queryFavoriteMovieProviderById(String id){
+		return favoriteDatabase.query(DATABASE_MOVIE_TABLE,
+			null,
+			_ID + " = ?",
+			new String[]{id},
+			null,
+			null,
+			null);
+	}
+	
+	// Method untuk insert data ke DB dengan menggunakan SQLiteDatabase insert method (table movie item)
+	public long insertFavoriteMovieProvider(ContentValues values){
+		return favoriteDatabase.insert(DATABASE_MOVIE_TABLE, null, values);
+	}
+	
+	// Method untuk delete data dari DB dengan menggunakan SQLiteDatabase delete method (table movie item)
+	public long deleteFavoriteMovieProvider(String id) {
+		return favoriteDatabase.delete(DATABASE_MOVIE_TABLE, _ID + " = ?", new String[]{id});
+	}
+	
+	
 	// Method untuk read data dari DB dengan menggunakan SQLiteDatabase query method (table movie item)
 	public ArrayList<MovieItem> getAllFavoriteMovieItems() {
 		ArrayList<MovieItem> favoriteMovieItemArrayList = new ArrayList<>();
