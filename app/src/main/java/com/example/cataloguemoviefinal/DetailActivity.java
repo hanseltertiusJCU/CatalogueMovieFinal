@@ -520,6 +520,7 @@ public class DetailActivity extends AppCompatActivity {
 						changedState = detailedTvShowFavoriteStateValue != detailedTvShowFavoriteStateValueComparison;
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState) {
+							//todo: pake content values for shits (mungkin aja: pake conditional gt2 klo misalnya uri null ato ga)
 							// Insert based on data
 							long newIdItem = favoriteItemsHelper.insertFavoriteTvShowItem(detailedTvShowItem);
 							detailedTvShowFavoriteStateValueComparison = 1; // Ganti value untuk mengupdate comparison
