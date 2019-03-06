@@ -85,7 +85,7 @@ public class FavoriteItemsHelper {
 	}
 	
 	// Method untuk delete data dari DB dengan menggunakan SQLiteDatabase delete method (table movie item)
-	public long deleteFavoriteMovieProvider(String id) {
+	public int deleteFavoriteMovieProvider(String id) {
 		return favoriteDatabase.delete(DATABASE_MOVIE_TABLE, _ID + " = ?", new String[]{id});
 	}
 	

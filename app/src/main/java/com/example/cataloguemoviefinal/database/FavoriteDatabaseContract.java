@@ -5,7 +5,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 // Kelas ini berguna untuk membangun struktur tabel dari database
-class FavoriteDatabaseContract {
+public class FavoriteDatabaseContract {
 	
 	// Create variables for URI components
 	public static final String URI_AUTHORITY = "com.example.cataloguemoviefinal";
@@ -13,17 +13,17 @@ class FavoriteDatabaseContract {
 	
 	// Class tsb berguna untuk membuat nama tabel serta columnnya dan
 	// tidak perlu initiate _ID krn ud otomatis dr sananya (buat table nama "favorite_movies")
-	static final class FavoriteMovieItemColumns implements BaseColumns {
+	public static final class FavoriteMovieItemColumns implements BaseColumns {
 		// Nama tabel dari database
-		static String MOVIE_TABLE_NAME = "favorite_movies";
+		public static String MOVIE_TABLE_NAME = "favorite_movies";
 		// Nama columns dari database
-		static String TITLE_COLUMN = "title";
-		static String RATINGS_COLUMN = "ratings";
-		static String RELEASE_DATE_COLUMN = "release_date";
-		static String ORIGINAL_LANGUAGE_COLUMN = "original_language";
-		static String FILE_PATH_COLUMN = "file_path";
-		static String DATE_ADDED_COLUMN = "date_added";
-		static String FAVORITE_COLUMN = "favorite";
+		public static String TITLE_COLUMN = "title";
+		public static String RATINGS_COLUMN = "ratings";
+		public static String RELEASE_DATE_COLUMN = "release_date";
+		public static String ORIGINAL_LANGUAGE_COLUMN = "original_language";
+		public static String FILE_PATH_COLUMN = "file_path";
+		public static String DATE_ADDED_COLUMN = "date_added";
+		public static String FAVORITE_COLUMN = "favorite";
 		// Build an URI for Favorite Movie
 		public static final Uri MOVIE_FAVORITE_CONTENT_URI = new Uri.Builder().scheme(URI_SCHEME)
 			.authority(URI_AUTHORITY)
