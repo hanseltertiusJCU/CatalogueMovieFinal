@@ -1,10 +1,17 @@
 package com.example.cataloguemoviefinal.entity;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.cataloguemoviefinal.database.FavoriteDatabaseContract;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import static android.provider.BaseColumns._ID;
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.getColumnInt;
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.getColumnString;
 
 public class MovieItem implements Parcelable {
 	
@@ -153,6 +160,30 @@ public class MovieItem implements Parcelable {
 	
 	public MovieItem() {
 	
+	}
+	
+	// Constructor untuk menampung value columns yang ada
+	public MovieItem(int id, String movieTitle, String movieRatings, String movieOriginalLanguage, String movieReleaseDate, String moviePosterPath, String dateAddedFavorite, int favoriteBooleanState) {
+		this.id = id;
+		this.movieTitle = movieTitle;
+		this.movieRatings = movieRatings;
+		this.movieOriginalLanguage = movieOriginalLanguage;
+		this.movieReleaseDate = movieReleaseDate;
+		this.moviePosterPath = moviePosterPath;
+		this.dateAddedFavorite = dateAddedFavorite;
+		this.favoriteBooleanState = favoriteBooleanState;
+	}
+	
+	// Constructor untuk menampung Cursor
+	public MovieItem(Cursor cursor){
+		this.id = getColumnInt(cursor, _ID);
+		this.movieTitle = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.TITLE_COLUMN);
+		this.movieRatings = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.RATINGS_COLUMN);
+		this.movieOriginalLanguage = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN);
+		this.movieReleaseDate = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.RELEASE_DATE_COLUMN);
+		this.moviePosterPath = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.FILE_PATH_COLUMN);
+		this.dateAddedFavorite = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.DATE_ADDED_COLUMN);
+		this.favoriteBooleanState = getColumnInt(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.FAVORITE_COLUMN);
 	}
 	
 	protected MovieItem(Parcel in) {
