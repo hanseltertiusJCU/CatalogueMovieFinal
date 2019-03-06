@@ -69,7 +69,7 @@ public class SearchMovieFragment extends Fragment implements LoadFavoriteMoviesC
 	private LinearLayoutManager searchMovieLinearLayoutManager;
 	// Constant untuk key untuk keyword search result di movie
 	private static final String MOVIE_KEYWORD_RESULT = "movie_keyword_result";
-	// Keywordnya
+	// Value untuk keyword di search movie
 	private String moviekeywordResult;
 	// Initiate Viewmodel dan componentnya
 	SearchMovieViewModel searchMovieViewModel;
@@ -191,6 +191,9 @@ public class SearchMovieFragment extends Fragment implements LoadFavoriteMoviesC
 						// Replace sebuah observer ke observer yang baru untuk menampilkan LiveData yang baru
 						searchMovieViewModel.getSearchMovies().observe(SearchMovieFragment.this, searchMovieObserver);
 						
+						// Reset recyclerview position ke awal setelah retrieve keyword baru
+						recyclerView.smoothScrollToPosition(0);
+						
 						return true;
 					}
 					
@@ -210,6 +213,7 @@ public class SearchMovieFragment extends Fragment implements LoadFavoriteMoviesC
 		// Dapatkan id dan title bedasarkan ListView item
 		int movieIdItem = movieItem.getId();
 		String movieTitleItem = movieItem.getMovieTitle();
+		//todo: modify value untuk state (bawaannya) kyk: getmoviestateboolean (tp mesti ganti structurenya itu)
 		// Item position untuk mengakses arraylist specific position
 		int itemPosition = 0;
 		// if statement untuk tahu bahwa idnya itu termasuk d dalam tabel ato tidak, looping pake arraylist
