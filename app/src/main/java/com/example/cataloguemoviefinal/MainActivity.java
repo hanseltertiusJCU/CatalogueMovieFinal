@@ -1,13 +1,18 @@
 package com.example.cataloguemoviefinal;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,19 +20,26 @@ import android.widget.TextView;
 
 
 import com.example.cataloguemoviefinal.adapter.ItemSectionsFragmentPagerAdapter;
+import com.example.cataloguemoviefinal.async.LoadFavoriteMoviesAsync;
+import com.example.cataloguemoviefinal.entity.MovieItem;
 import com.example.cataloguemoviefinal.fragment.FavoriteMovieFragment;
 import com.example.cataloguemoviefinal.fragment.FavoriteTvShowFragment;
 import com.example.cataloguemoviefinal.fragment.MovieFragment;
 import com.example.cataloguemoviefinal.fragment.SearchMovieFragment;
 import com.example.cataloguemoviefinal.fragment.SearchTvShowFragment;
 import com.example.cataloguemoviefinal.fragment.TvShowFragment;
+import com.example.cataloguemoviefinal.observer.FavoriteMovieDataObserver;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
+import static com.example.cataloguemoviefinal.helper.FavoriteMovieMappingHelper.mapCursorToFavoriteMovieArrayList;
+
+public class MainActivity extends AppCompatActivity implements LoadFavoriteMoviesCallback{
 	
 	// Create ViewPager untuk swipe Fragments
 	@BindView(R.id.item_viewPager)
@@ -58,6 +70,14 @@ public class MainActivity extends AppCompatActivity {
 	private Drawable searchMovieDrawable;
 	private Drawable[] searchTvShowDrawables;
 	private Drawable searchTvShowDrawable;
+	// ArrayList object
+	public static ArrayList<MovieItem> favoriteMovieItemArrayList;
+	// Initiate HandlerThread object
+	public static HandlerThread movieHandlerThread;
+	// Initiate Handler object
+	public static Handler movieHandler;
+	// Initiate ContentObserver object (mungkin public biar bs communicate ke Fragment lainnya)
+	public static FavoriteMovieDataObserver myFavoriteMovieObserver;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +89,21 @@ public class MainActivity extends AppCompatActivity {
 		
 		setSupportActionBar(mainToolbar);
 		
+		if(savedInstanceState == null){
+			new LoadFavoriteMoviesAsync(this, this).execute();
+		}
+		
 		// Cek kalo ada action bar
 		if(getSupportActionBar() != null) {
 			// Set default action bar title, yaitu "Movie"
 			getSupportActionBar().setTitle(getString(R.string.movie));
 		}
+		
+		movieHandlerThread = new HandlerThread("FavoriteMovieDataObserver");
+		movieHandlerThread.start();
+		movieHandler = new Handler(movieHandlerThread.getLooper());
+		myFavoriteMovieObserver = new FavoriteMovieDataObserver(movieHandler, this);
+		getContentResolver().registerContentObserver(MOVIE_FAVORITE_CONTENT_URI, true, myFavoriteMovieObserver);
 		
 		// Panggil method ini untuk saving Fragment state di ViewPager, kesannya kyk simpen
 		// fragment ketika sebuah fragment sedang tidak di display.
@@ -290,4 +320,17 @@ public class MainActivity extends AppCompatActivity {
 			getSupportActionBar().setTitle(title);
 		}
 	}
+	
+	// Method dari LoadFavoriteMoviesCallback interface dan kita coba implement dari method tsb
+	@Override
+	public void preExecute() {
+		// Do nothing
+	}
+	
+	@Override
+	public void postExecute(Cursor movieItems) {
+		favoriteMovieItemArrayList = mapCursorToFavoriteMovieArrayList(movieItems); // Change cursor to ArrayList that contains MovieItems
+	}
+	
+	
 }

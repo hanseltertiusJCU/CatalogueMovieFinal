@@ -1,7 +1,11 @@
 package com.example.cataloguemoviefinal.fragment;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,11 +21,12 @@ import android.widget.ProgressBar;
 
 import com.example.cataloguemoviefinal.DetailActivity;
 import com.example.cataloguemoviefinal.LoadFavoriteMoviesCallback;
+import com.example.cataloguemoviefinal.MainActivity;
 import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.adapter.MovieAdapter;
 import com.example.cataloguemoviefinal.async.LoadFavoriteMoviesAsync;
-import com.example.cataloguemoviefinal.database.FavoriteItemsHelper;
 import com.example.cataloguemoviefinal.entity.MovieItem;
+import com.example.cataloguemoviefinal.observer.FavoriteMovieDataObserver;
 import com.example.cataloguemoviefinal.support.ItemClickSupport;
 
 import java.util.ArrayList;
@@ -29,6 +34,9 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
+import static com.example.cataloguemoviefinal.helper.FavoriteMovieMappingHelper.mapCursorToFavoriteMovieArrayList;
 
 public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMoviesCallback {
 	
@@ -40,8 +48,6 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	public static final String MODE_INTENT = "mode_intent";
 	// Bikin constant (key) yang merepresent Parcelable object
 	private static final String MOVIE_LIST_STATE = "movieListState";
-	// Array list untuk menyimpan data bedasarkan Database
-	static ArrayList<MovieItem> favMovieListData;
 	@BindView(R.id.rv_movie_item_list)
 	RecyclerView recyclerView;
 	MovieAdapter movieAdapter;
@@ -50,18 +56,6 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	// LinearLayout untuk atur visibility dari Search keyword
 	@BindView(R.id.movie_search_keyword_result)
 	LinearLayout movieSearchKeywordResult;
-	// Helper untuk membuka koneksi ke DB
-	FavoriteItemsHelper favoriteItemsHelper;
-	
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		// Buka koneksi terhadap database ketika Fragment dibuat
-		if(Objects.requireNonNull(getActivity()).getApplicationContext() != null) {
-			favoriteItemsHelper = FavoriteItemsHelper.getInstance(getActivity().getApplicationContext());
-			favoriteItemsHelper.open();
-		}
-	}
 	
 	@Nullable
 	@Override
@@ -107,6 +101,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
 		// Cek jika bundle savedInstanceState itu ada
 		if(savedInstanceState != null) {
 			// Retrieve array list parcelable
@@ -137,7 +132,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 			}
 		} else {
 			// Lakukan AsyncTask utk meretrieve ArrayList yg isinya data dari database
-			new LoadFavoriteMoviesAsync(favoriteItemsHelper, this).execute();
+			new LoadFavoriteMoviesAsync(getActivity(), this).execute();
 		}
 	}
 	
@@ -149,13 +144,17 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		int movieBooleanStateItem = movieItem.getFavoriteBooleanState();
 		// Tentukan bahwa kita ingin membuka data Movie
 		String modeItem = "open_movie_detail";
+		// Create URI untuk bawa URI ke data di intent dengan row id value
+		// content://com.example.cataloguemoviefinal/favorite_movies/id
+		Uri movieUriItem = Uri.parse(MOVIE_FAVORITE_CONTENT_URI + "/" + movieIdItem);
 		// Initiate intent
-		Intent intentWithMovieIdData = new Intent(getActivity(), DetailActivity.class);
+		Intent intentWithMovieIdData = new Intent(getContext(), DetailActivity.class);
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
 		intentWithMovieIdData.putExtra(MOVIE_ID_DATA, movieIdItem);
 		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA, movieTitleItem);
 		intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA, movieBooleanStateItem);
 		intentWithMovieIdData.putExtra(MODE_INTENT, modeItem);
+		intentWithMovieIdData.setData(movieUriItem);
 		// Start activity tujuan bedasarkan intent object
 		startActivityForResult(intentWithMovieIdData, DetailActivity.REQUEST_CHANGE);
 	}
@@ -170,33 +169,29 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	}
 	
 	@Override
-	public void postExecute(final ArrayList<MovieItem> movieItems) {
-		// Bikin ArrayList global variable sama dengan hasil dari AsyncTask class
-		favMovieListData = movieItems;
-		if(movieItems.size() > 0) {
+	public void postExecute(Cursor movieItems) {
+		
+		if(MainActivity.favoriteMovieItemArrayList.size() > 0){
 			// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
 			// yang menandakan bahwa loadingnya sudah selesai
 			progressBar.setVisibility(View.GONE);
 			recyclerView.setVisibility(View.VISIBLE);
 			// Set data into adapter
-			movieAdapter.setData(movieItems);
+			movieAdapter.setData(MainActivity.favoriteMovieItemArrayList);
 			// Set item click listener di dalam recycler view
 			ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 				@Override
 				public void onItemClicked(RecyclerView recyclerView, int position, View view) {
-					// Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
-					showSelectedMovieItems(movieItems.get(position));
+					showSelectedMovieItems(MainActivity.favoriteMovieItemArrayList.get(position));
 				}
 			});
 		} else {
 			// Ketika tidak ada data untuk display, set RecyclerView ke
 			// invisible dan progress bar menjadi tidak ada
-			movieAdapter.setData(movieItems);
+			movieAdapter.setData(MainActivity.favoriteMovieItemArrayList);
 			progressBar.setVisibility(View.GONE);
 			recyclerView.setVisibility(View.INVISIBLE);
 		}
-		
-		
 	}
 	
 	
@@ -216,23 +211,21 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 			if(requestCode == DetailActivity.REQUEST_CHANGE) {
 				// Check for result code
 				if(resultCode == DetailActivity.RESULT_CHANGE) {
+					// Retrieve value dari boolean changedState {@link DetailActivity}
 					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_CHANGED_STATE, false);
 					// Cek jika ada perubahan di movie item data state
 					if(changedDataState) {
-						// Execute AsyncTask kembali
-						new LoadFavoriteMoviesAsync(favoriteItemsHelper, this).execute();
+						// Execute AsyncTask kembali dengan getActivity() method sbg parameter karena
+						// getActivity() return Activity (MainActivity) dan memanggil AsyncTask
+						// ke Activity; Fragment ini berkomunikasi dgn MainActivity. Plus,
+						// Activity extends Context yg merupakan parameter dari AsyncTask sehingga
+						// Activity represent Context
+						new LoadFavoriteMoviesAsync(getActivity(), this).execute();
 						// Reset scroll position ke paling atas
 						recyclerView.smoothScrollToPosition(0);
 					}
 				}
 			}
 		}
-	}
-	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		// Menutup koneksi terhadap SQL
-		favoriteItemsHelper.close();
 	}
 }

@@ -18,7 +18,7 @@ import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.
 // Kelas ini berguna untuk convert Cursor ke ArrayList since
 // query method utk ContentProvider return Cursor instead of ArrayList
 public class FavoriteMovieMappingHelper {
-	public static ArrayList<MovieItem> mapCursorToArrayList(Cursor movieItemCursor){
+	public static ArrayList<MovieItem> mapCursorToFavoriteMovieArrayList(Cursor movieItemCursor){
 		ArrayList<MovieItem> movieItemsList = new ArrayList<>();
 		
 		while(movieItemCursor.moveToNext()){

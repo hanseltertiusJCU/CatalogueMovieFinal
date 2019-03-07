@@ -3,7 +3,11 @@ package com.example.cataloguemoviefinal.fragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +25,14 @@ import android.widget.ProgressBar;
 
 import com.example.cataloguemoviefinal.DetailActivity;
 import com.example.cataloguemoviefinal.LoadFavoriteMoviesCallback;
+import com.example.cataloguemoviefinal.MainActivity;
 import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.adapter.MovieAdapter;
 import com.example.cataloguemoviefinal.async.LoadFavoriteMoviesAsync;
 import com.example.cataloguemoviefinal.database.FavoriteItemsHelper;
 import com.example.cataloguemoviefinal.entity.MovieItem;
 import com.example.cataloguemoviefinal.model.MovieViewModel;
+import com.example.cataloguemoviefinal.observer.FavoriteMovieDataObserver;
 import com.example.cataloguemoviefinal.support.ItemClickSupport;
 
 import java.util.ArrayList;
@@ -34,10 +41,13 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
+import static com.example.cataloguemoviefinal.helper.FavoriteMovieMappingHelper.mapCursorToFavoriteMovieArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallback {
+public class MovieFragment extends Fragment{
 	
 	// Key untuk membawa data ke intent (data tidak d private untuk dapat diapplikasikan di berbagai Fragments dan diakses ke {@link DetailActivity})
 	public static final String MOVIE_ID_DATA = "MOVIE_ID_DATA";
@@ -61,20 +71,13 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 	private FavoriteItemsHelper favoriteItemsHelper;
 	// Bikin linearlayout manager untuk dapat call onsaveinstancestate method
 	private LinearLayoutManager movieLinearLayoutManager;
+	// Initiate ViewModel dan Componentnya
+	MovieViewModel movieViewModel;
+	Observer<ArrayList<MovieItem>> movieObserver;
+	
 	
 	public MovieFragment() {
 		// Required empty public constructor
-	}
-	
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		// Cek jika ada ApplicationContext, jika ada maka buka koneksi ke ItemHelper
-		if(Objects.requireNonNull(getActivity()).getApplicationContext() != null) {
-			favoriteItemsHelper = FavoriteItemsHelper.getInstance(getActivity().getApplicationContext());
-			favoriteItemsHelper.open();
-		}
-		
 	}
 	
 	@Override
@@ -132,16 +135,13 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 		// list/item positions (scroll position)
 		if(savedInstanceState != null) {
 			mMovieListState = savedInstanceState.getParcelable(MOVIE_LIST_STATE);
-		} else {
-			// Lakukan AsyncTask utk meretrieve ArrayList yg isinya data dari database (table movie item)
-			new LoadFavoriteMoviesAsync(favoriteItemsHelper, this).execute();
 		}
 		
 		// Dapatkan ViewModel yang tepat dari ViewModelProviders
-		MovieViewModel movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+		movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
 		
 		// Panggil method createObserver untuk return Observer object
-		Observer<ArrayList<MovieItem>> movieObserver = createObserver();
+		movieObserver = createObserver();
 		
 		// Tempelkan Observer ke LiveData object
 		movieViewModel.getMovies().observe(this, movieObserver);
@@ -153,10 +153,13 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 		int movieIdItem = movieItem.getId();
 		String movieTitleItem = movieItem.getMovieTitle();
 		int movieBooleanStateItem = 0;
-		if(FavoriteMovieFragment.favMovieListData.size() > 0){
-			for(int i = 0; i < FavoriteMovieFragment.favMovieListData.size(); i ++){
-				if(movieIdItem == FavoriteMovieFragment.favMovieListData.get(i).getId()){
-					movieBooleanStateItem = FavoriteMovieFragment.favMovieListData.get(i).getFavoriteBooleanState();
+		Uri movieUriItem = null;
+		// Cek jika ArrayList dari MainActivity itu ada isinya
+		if(MainActivity.favoriteMovieItemArrayList.size() > 0){
+			for(int i = 0; i < MainActivity.favoriteMovieItemArrayList.size(); i ++){
+				if(movieIdItem == MainActivity.favoriteMovieItemArrayList.get(i).getId()){
+					movieBooleanStateItem = MainActivity.favoriteMovieItemArrayList.get(i).getFavoriteBooleanState();
+					movieUriItem = Uri.parse(MOVIE_FAVORITE_CONTENT_URI + "/" + movieIdItem);
 					break;
 				}
 			}
@@ -164,12 +167,14 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 		// Tentukan bahwa kita ingin membuka data Movie
 		String modeItem = "open_movie_detail";
 		// Create intent object agar ke DetailActivity yg merupakan activity tujuan
-		Intent intentWithMovieIdData = new Intent(getActivity(), DetailActivity.class);
+		Intent intentWithMovieIdData = new Intent(getContext(), DetailActivity.class);
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
 		intentWithMovieIdData.putExtra(MOVIE_ID_DATA, movieIdItem);
 		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA, movieTitleItem);
 		intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA, movieBooleanStateItem);
 		intentWithMovieIdData.putExtra(MODE_INTENT, modeItem);
+		// Set Uri ke Intent
+		intentWithMovieIdData.setData(movieUriItem);
 		// Start activity tujuan bedasarkan intent object dan bawa request code
 		// REQUEST_CHANGE untuk onActivityResult
 		startActivityForResult(intentWithMovieIdData, DetailActivity.REQUEST_CHANGE);
@@ -198,17 +203,8 @@ public class MovieFragment extends Fragment implements LoadFavoriteMoviesCallbac
 		
 	}
 	
-	// Callback method dari Interface LoadFavoriteMoviesCallback
-	@Override
-	public void preExecute() {
-		// Method tsb tidak melakukan apa2
-	}
 	
-	@Override
-	public void postExecute(ArrayList<MovieItem> movieItems) {
-		// Bikin ArrayList global variable sama dengan hasil dari AsyncTask class
-		FavoriteMovieFragment.favMovieListData = movieItems;
-	}
+	// Refractor code layaknya menggunakan hal yg sama
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {

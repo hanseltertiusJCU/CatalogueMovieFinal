@@ -6,7 +6,11 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,6 +30,7 @@ import android.widget.TextView;
 
 import com.example.cataloguemoviefinal.DetailActivity;
 import com.example.cataloguemoviefinal.LoadFavoriteMoviesCallback;
+import com.example.cataloguemoviefinal.MainActivity;
 import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.adapter.MovieAdapter;
 import com.example.cataloguemoviefinal.async.LoadFavoriteMoviesAsync;
@@ -33,6 +38,7 @@ import com.example.cataloguemoviefinal.database.FavoriteItemsHelper;
 import com.example.cataloguemoviefinal.entity.MovieItem;
 import com.example.cataloguemoviefinal.factory.SearchMovieViewModelFactory;
 import com.example.cataloguemoviefinal.model.SearchMovieViewModel;
+import com.example.cataloguemoviefinal.observer.FavoriteMovieDataObserver;
 import com.example.cataloguemoviefinal.support.ItemClickSupport;
 
 import java.util.ArrayList;
@@ -41,10 +47,13 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
+import static com.example.cataloguemoviefinal.helper.FavoriteMovieMappingHelper.mapCursorToFavoriteMovieArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchMovieFragment extends Fragment implements LoadFavoriteMoviesCallback {
+public class SearchMovieFragment extends Fragment{
 	
 	// Key untuk membawa data ke intent (data tidak d private untuk dapat diapplikasikan di berbagai Fragments dan diakses ke {@link DetailActivity})
 	public static final String MOVIE_ID_DATA = "MOVIE_ID_DATA";
@@ -63,8 +72,6 @@ public class SearchMovieFragment extends Fragment implements LoadFavoriteMoviesC
 	private MovieAdapter movieAdapter;
 	// Bikin parcelable yang berguna untuk menyimpan lalu merestore position
 	private Parcelable mMovieListState = null;
-	// Helper untuk membuka koneksi ke DB
-	private FavoriteItemsHelper favoriteItemsHelper;
 	// Bikin linearlayout manager untuk dapat call onsaveinstancestate method
 	private LinearLayoutManager searchMovieLinearLayoutManager;
 	// Constant untuk key untuk keyword search result di movie
@@ -77,16 +84,6 @@ public class SearchMovieFragment extends Fragment implements LoadFavoriteMoviesC
 	
 	public SearchMovieFragment() {
 		// Required empty public constructor
-	}
-	
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		// Cek jika ada ApplicationContext, jika ada maka buka koneksi ke ItemHelper
-		if(Objects.requireNonNull(getActivity()).getApplicationContext() != null){
-			favoriteItemsHelper = FavoriteItemsHelper.getInstance(getActivity().getApplicationContext());
-			favoriteItemsHelper.open();
-		}
 	}
 	
 	@Override
@@ -137,6 +134,7 @@ public class SearchMovieFragment extends Fragment implements LoadFavoriteMoviesC
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
 		if(savedInstanceState != null){
 			moviekeywordResult = savedInstanceState.getString(MOVIE_KEYWORD_RESULT);
 			movieSearchKeyword.setText(moviekeywordResult);
@@ -144,7 +142,6 @@ public class SearchMovieFragment extends Fragment implements LoadFavoriteMoviesC
 		} else {
 			moviekeywordResult = "avenger"; // Default value
 			movieSearchKeyword.setText(moviekeywordResult);
-			new LoadFavoriteMoviesAsync(favoriteItemsHelper, this).execute();
 		}
 		
 		if(Objects.requireNonNull(getActivity()).getApplication() != null){
@@ -214,12 +211,14 @@ public class SearchMovieFragment extends Fragment implements LoadFavoriteMoviesC
 		int movieIdItem = movieItem.getId();
 		String movieTitleItem = movieItem.getMovieTitle();
 		int movieBooleanStateItem = 0;
-		if(FavoriteMovieFragment.favMovieListData.size() > 0){
-			for(int i = 0; i < FavoriteMovieFragment.favMovieListData.size(); i ++){
+		Uri movieUriItem = null;
+		if(MainActivity.favoriteMovieItemArrayList.size() > 0){
+			for(int i = 0; i < MainActivity.favoriteMovieItemArrayList.size(); i ++){
 				// Cek jika movieIdItem itu cocok dengan item id yg ada di arraylist
-				if(movieIdItem == FavoriteMovieFragment.favMovieListData.get(i).getId()){
+				if(movieIdItem == MainActivity.favoriteMovieItemArrayList.get(i).getId()){
 					// Get favorite boolean state value untuk transfer ke variable movieBooleanStateItem
-					movieBooleanStateItem = FavoriteMovieFragment.favMovieListData.get(i).getFavoriteBooleanState();
+					movieBooleanStateItem = MainActivity.favoriteMovieItemArrayList.get(i).getFavoriteBooleanState();
+					movieUriItem = Uri.parse(MOVIE_FAVORITE_CONTENT_URI + "/"  + movieIdItem);
 					break;
 				}
 			}
@@ -227,12 +226,14 @@ public class SearchMovieFragment extends Fragment implements LoadFavoriteMoviesC
 		// Tentukan bahwa kita ingin membuka data Movie
 		String modeItem = "open_movie_detail";
 		// Create intent object agar ke DetailActivity yg merupakan activity tujuan
-		Intent intentWithMovieIdData = new Intent(getActivity(), DetailActivity.class);
+		Intent intentWithMovieIdData = new Intent(getContext(), DetailActivity.class);
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
 		intentWithMovieIdData.putExtra(MOVIE_ID_DATA, movieIdItem);
 		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA, movieTitleItem);
 		intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA, movieBooleanStateItem);
 		intentWithMovieIdData.putExtra(MODE_INTENT, modeItem);
+		// Bawa Uri ke Intent
+		intentWithMovieIdData.setData(movieUriItem);
 		// Start activity tujuan bedasarkan intent object dan bawa request code
 		// REQUEST_CHANGE untuk onActivityResult
 		startActivityForResult(intentWithMovieIdData, DetailActivity.REQUEST_CHANGE);
@@ -259,17 +260,6 @@ public class SearchMovieFragment extends Fragment implements LoadFavoriteMoviesC
 			outState.putString(MOVIE_KEYWORD_RESULT, moviekeywordResult);
 		}
 		
-	}
-	
-	@Override
-	public void preExecute() {
-	
-	}
-	
-	@Override
-	public void postExecute(ArrayList<MovieItem> movieItems) {
-		// Bikin ArrayList global variable sama dengan hasil dari AsyncTask class
-		FavoriteMovieFragment.favMovieListData = movieItems;
 	}
 	
 	@Override

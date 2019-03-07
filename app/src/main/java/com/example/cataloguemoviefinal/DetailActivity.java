@@ -2,9 +2,12 @@ package com.example.cataloguemoviefinal;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -46,6 +49,16 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.provider.BaseColumns._ID;
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.DATE_ADDED_COLUMN;
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.FAVORITE_COLUMN;
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.FILE_PATH_COLUMN;
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN;
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.RATINGS_COLUMN;
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.RELEASE_DATE_COLUMN;
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.TITLE_COLUMN;
+
 public class DetailActivity extends AppCompatActivity {
 	// Request code
 	public static final int REQUEST_CHANGE = 100;
@@ -55,7 +68,11 @@ public class DetailActivity extends AppCompatActivity {
 	public static final String EXTRA_CHANGED_STATE = "extra_changed_state";
 	// Constant untuk key dri drawable dan boolean state, as well as its comparisons
 	private static final String KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE = "drawable_favorite_state";
-	private static final String KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE_COMPARISON = "drawable_favorite_state_comparison";
+	// Constant untuk key dari URI
+	private static final String EXTRA_URI = "extra_uri";
+	// Constant untuk key object Movie
+	private static final String EXTRA_MOVIE_ITEM = "extra_movie_item";
+	// Constant untuk key object TV Show
 	// Setup views bedasarkan id yang ada di layout xml
 	@BindView(R.id.detailed_poster_image)
 	ImageView imageViewDetailedPosterImage;
@@ -120,6 +137,9 @@ public class DetailActivity extends AppCompatActivity {
 	// Boolean value untuk extra di Intent
 	private boolean changedState;
 	
+	// Uri value
+	private Uri uri;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -147,11 +167,32 @@ public class DetailActivity extends AppCompatActivity {
 			detailedTvShowFavoriteStateValueComparison = getIntent().getIntExtra(TvShowFragment.TV_SHOW_BOOLEAN_STATE_DATA, 0);
 		}
 		
+		uri = getIntent().getData();
+		
+		if(uri != null){
+			Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+			
+			if(cursor != null){
+				if(cursor.moveToFirst()){
+					// todo: if condition to accomodate object creation
+					if(accessItemMode.equals("open_movie_detail")){
+						detailedMovieItem = new MovieItem(cursor);
+						cursor.close();
+					}
+				}
+			}
+		}
+		
+		
 		// Cek jika savedInstanceState itu ada, jika iya, restore drawable marked as favorite icon state
 		if(savedInstanceState != null) {
 			if(accessItemMode.equals("open_movie_detail")) {
 				detailedMovieFavoriteStateValue = savedInstanceState.getInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE);
 				changedState = savedInstanceState.getBoolean(EXTRA_CHANGED_STATE);
+				// Bawa object Uri agar Uri tidak null pada saat rotate, sehingga mencegah run time error
+				uri = savedInstanceState.getParcelable(EXTRA_URI);
+				// Bawa object MovieItem agar MovieItem tidak null pada saat rotate, sehingga mencegah run time error (NullPointerException)
+				detailedMovieItem = savedInstanceState.getParcelable(EXTRA_MOVIE_ITEM);
 				// Tujuannya agar bs bawa ke result serta handle comparison value
 				// dimana kedua hal tsb dapat menghandle situasi orientation changes
 				if(changedState) { // Cek jika value dr changedState itu true
@@ -318,8 +359,11 @@ public class DetailActivity extends AppCompatActivity {
 					
 					textViewDetailedEighthInfoText.setText(detailedMovieItems.get(0).getMovieOverview());
 					
-					// Set value dari Item bedasarkan parameter lalu akses object pertama
-					detailedMovieItem = detailedMovieItems.get(0);
+					if(uri == null){
+						// Set value dari Item bedasarkan parameter lalu akses object pertama
+						detailedMovieItem = detailedMovieItems.get(0);
+					}
+					
 					// Set menu clickable into true, literally setelah asynctask kelar,
 					// maka menu bs d click
 					menuClickable = true;
@@ -469,16 +513,28 @@ public class DetailActivity extends AppCompatActivity {
 						
 						// Cek jika value dari detailedMovieFavoriteStateValue sama dengan value bawaan intent dengan key MOVIE_BOOLEAN_STATE_EXTRA
 						changedState = detailedMovieFavoriteStateValue != detailedMovieFavoriteStateValueComparison;
+						
+						ContentValues values = new ContentValues();
+						// Put columns values in content values
+						values.put(_ID, detailedMovieItem.getId());
+						values.put(TITLE_COLUMN, detailedMovieItem.getMovieTitle());
+						values.put(RATINGS_COLUMN, detailedMovieItem.getMovieRatings());
+						values.put(ORIGINAL_LANGUAGE_COLUMN, detailedMovieItem.getMovieOriginalLanguage());
+						values.put(RELEASE_DATE_COLUMN, detailedMovieItem.getMovieReleaseDate());
+						values.put(FILE_PATH_COLUMN, detailedMovieItem.getMoviePosterPath());
+						values.put(DATE_ADDED_COLUMN, detailedMovieItem.getDateAddedFavorite());
+						values.put(FAVORITE_COLUMN, detailedMovieItem.getFavoriteBooleanState());
+						
+						
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState) {
-							// Insert based on data
-							long newIdItem = favoriteItemsHelper.insertFavoriteMovieItem(detailedMovieItem);
-							detailedMovieFavoriteStateValueComparison = 1; // Ganti value untuk mengupdate comparison
-							if(newIdItem > 0) {
+							uri = getContentResolver().insert(MOVIE_FAVORITE_CONTENT_URI, values);
+							if(uri != null){
 								// Bawa nilai ke intent
 								resultIntent.putExtra(EXTRA_CHANGED_STATE, changedState);
 								setResult(RESULT_CHANGE, resultIntent); // Set result that brings result code and intent
 							}
+							detailedMovieFavoriteStateValueComparison = 1; // Ganti value untuk mengupdate comparison
 						}
 						
 						// Update option menu
@@ -493,8 +549,7 @@ public class DetailActivity extends AppCompatActivity {
 						changedState = detailedMovieFavoriteStateValue != detailedMovieFavoriteStateValueComparison;
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState) {
-							// Remove from database
-							long deletedIdItem = favoriteItemsHelper.deleteFavoriteMovieItem(detailedMovieItem.getId());
+							int deletedIdItem = getContentResolver().delete(uri, null, null);
 							detailedMovieFavoriteStateValueComparison = 0; // Ganti value untuk mengupdate comparison
 							if(deletedIdItem > 0) {
 								// Bawa nilai ke intent
@@ -520,7 +575,6 @@ public class DetailActivity extends AppCompatActivity {
 						changedState = detailedTvShowFavoriteStateValue != detailedTvShowFavoriteStateValueComparison;
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState) {
-							//todo: pake content values for shits (mungkin aja: pake conditional gt2 klo misalnya uri null ato ga)
 							// Insert based on data
 							long newIdItem = favoriteItemsHelper.insertFavoriteTvShowItem(detailedTvShowItem);
 							detailedTvShowFavoriteStateValueComparison = 1; // Ganti value untuk mengupdate comparison
@@ -580,8 +634,9 @@ public class DetailActivity extends AppCompatActivity {
 		if(accessItemMode.equals("open_movie_detail")) {
 			// Save drawable marked as favorite state for movie as well as boolean changed state + comparisons
 			outState.putInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE, detailedMovieFavoriteStateValue);
-			outState.putInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE_COMPARISON, detailedMovieFavoriteStateValueComparison);
 			outState.putBoolean(EXTRA_CHANGED_STATE, changedState);
+			outState.putParcelable(EXTRA_URI, uri);
+			outState.putParcelable(EXTRA_MOVIE_ITEM, detailedMovieItem);
 		} else if(accessItemMode.equals("open_tv_show_detail")) {
 			// Save drawable marked as favorite state for tv show as well as boolean changed state
 			outState.putInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE, detailedTvShowFavoriteStateValue);
