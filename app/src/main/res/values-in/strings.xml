@@ -80,6 +80,13 @@
 
     <string name="mark_as_favorite">Tandai sebagai Favorit</string>
 
+    <!-- Text untuk favorite movie item widget -->
+    <string name="favorite_movie_item_widget_text">Item Widget Film Favorit</string>
+    <string name="favorite_movie_item_empty_text">Item Film Favorit Kosong</string>
+
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
