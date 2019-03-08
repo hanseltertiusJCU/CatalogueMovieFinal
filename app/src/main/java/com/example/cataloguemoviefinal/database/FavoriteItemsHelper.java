@@ -8,11 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 
-import com.example.cataloguemoviefinal.entity.MovieItem;
-import com.example.cataloguemoviefinal.entity.TvShowItem;
-
-import java.util.ArrayList;
-
 import static android.provider.BaseColumns._ID;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_TABLE_NAME;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_TABLE_NAME;
@@ -65,7 +60,7 @@ public class FavoriteItemsHelper {
 			null,
 			null,
 			null,
-			FavoriteDatabaseContract.FavoriteMovieItemColumns.DATE_ADDED_COLUMN + " DESC");
+			FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_DATE_ADDED_FAVORITE_COLUMN + " DESC");
 	}
 	
 	// Method untuk read satu column data dari DB dengan menggunakan SQLiteDatabase query method (table movie item)
@@ -89,132 +84,36 @@ public class FavoriteItemsHelper {
 		return favoriteDatabase.delete(DATABASE_MOVIE_TABLE, _ID + " = ?", new String[]{id});
 	}
 	
-	
-	// Method untuk read data dari DB dengan menggunakan SQLiteDatabase query method (table movie item)
-	public ArrayList<MovieItem> getAllFavoriteMovieItems() {
-		ArrayList<MovieItem> favoriteMovieItemArrayList = new ArrayList<>();
-		
-		// Call SQLiteDatabase query method dgn sort Date Added Column in descending order (most recent to least recent)
-		Cursor cursor = favoriteDatabase.query(DATABASE_MOVIE_TABLE,
-				null,
-				null,
-				null,
-				null,
-				null,
-				FavoriteDatabaseContract.FavoriteMovieItemColumns.DATE_ADDED_COLUMN + " DESC", // Data yg paling recent menjadi yang pertama
-				null);
-		// Memindahkan Cursor ke baris pertama
-		cursor.moveToFirst();
-		// Initialize variable yg return MovieItem
-		MovieItem movieItem;
-		if(cursor.getCount() > 0) {
-			do {
-				movieItem = new MovieItem();
-				// Insert value ke MovieItem bedasarkan table yg ada di FavoriteMovieItemColumns
-				movieItem.setId(cursor.getInt(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns._ID)));
-				movieItem.setMovieTitle(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.TITLE_COLUMN)));
-				movieItem.setMovieRatings(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.RATINGS_COLUMN)));
-				movieItem.setMovieOriginalLanguage(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN)));
-				movieItem.setMovieReleaseDate(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.RELEASE_DATE_COLUMN)));
-				movieItem.setMoviePosterPath(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.FILE_PATH_COLUMN)));
-				movieItem.setDateAddedFavorite(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.DATE_ADDED_COLUMN)));
-				movieItem.setFavoriteBooleanState(cursor.getInt(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteMovieItemColumns.FAVORITE_COLUMN)));
-				// Add movie item data ke ArrayList
-				favoriteMovieItemArrayList.add(movieItem);
-				// Memindahkan Cursor ke baris selanjutnya
-				cursor.moveToNext();
-				
-			}
-			while(! cursor.isAfterLast()); // Loop kondisi ini adalah ketika cursornya itu belum berada di baris terakhir
-		}
-		
-		// Close the Cursor
-		cursor.close();
-		return favoriteMovieItemArrayList;
-	}
-	
-	// Method untuk insert data ke DB dengan menggunakan SQLiteDatabase insert method (table movie item)
-	public long insertFavoriteMovieItem(MovieItem movieItem) {
-		// Create ContentValues object
-		ContentValues movieItemValues = new ContentValues();
-		// Insert value ke ContentValues object
-		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns._ID, movieItem.getId());
-		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.TITLE_COLUMN, movieItem.getMovieTitle());
-		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.RATINGS_COLUMN, movieItem.getMovieRatings());
-		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN, movieItem.getMovieOriginalLanguage());
-		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.RELEASE_DATE_COLUMN, movieItem.getMovieReleaseDate());
-		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.FILE_PATH_COLUMN, movieItem.getMoviePosterPath());
-		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.DATE_ADDED_COLUMN, movieItem.getDateAddedFavorite());
-		movieItemValues.put(FavoriteDatabaseContract.FavoriteMovieItemColumns.FAVORITE_COLUMN, movieItem.getFavoriteBooleanState());
-		// Execute SQLiteDatabase insert method
-		return favoriteDatabase.insert(DATABASE_MOVIE_TABLE, null, movieItemValues);
-	}
-	
-	// Method untuk delete data dari DB dengan menggunakan SQLiteDatabase delete method (table movie item)
-	public int deleteFavoriteMovieItem(int id) {
-		return favoriteDatabase.delete(DATABASE_MOVIE_TABLE, _ID + " = '" + id + "'", null);
-	}
-	
 	// Method untuk read data dari DB dengan menggunakan SQLiteDatabase query method (table tv show item)
-	public ArrayList<TvShowItem> getAllFavoriteTvShowItems() {
-		ArrayList<TvShowItem> favoriteTvShowItemsArrayList = new ArrayList<>();
-		
-		Cursor cursor = favoriteDatabase.query(DATABASE_TV_SHOW_TABLE,
-				null,
-				null,
-				null,
-				null,
-				null,
-				FavoriteDatabaseContract.FavoriteTvShowItemColumns.DATE_ADDED_COLUMN + " DESC",
-				null);
-		
-		cursor.moveToFirst();
-		
-		TvShowItem tvShowItem;
-		if(cursor.getCount() > 0) {
-			do {
-				tvShowItem = new TvShowItem();
-				// Insert value ke TvShowItem bedasarkan table yg ada di FavoriteTvShowItemColumns
-				tvShowItem.setId(cursor.getInt(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteTvShowItemColumns._ID)));
-				tvShowItem.setTvShowName(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteTvShowItemColumns.NAME_COLUMN)));
-				tvShowItem.setTvShowRatings(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteTvShowItemColumns.RATINGS_COLUMN)));
-				tvShowItem.setTvShowOriginalLanguage(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteTvShowItemColumns.ORIGINAL_LANGUAGE_COLUMN)));
-				tvShowItem.setTvShowFirstAirDate(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteTvShowItemColumns.FIRST_AIR_DATE_COLUMN)));
-				tvShowItem.setTvShowPosterPath(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteTvShowItemColumns.FILE_PATH_COLUMN)));
-				tvShowItem.setDateAddedFavorite(cursor.getString(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteTvShowItemColumns.DATE_ADDED_COLUMN)));
-				tvShowItem.setFavoriteBooleanState(cursor.getInt(cursor.getColumnIndexOrThrow(FavoriteDatabaseContract.FavoriteTvShowItemColumns.FAVORITE_COLUMN)));
-				// Add tv show item data ke ArrayList
-				favoriteTvShowItemsArrayList.add(tvShowItem);
-				// Memindahkan Cursor ke baris selanjutnya
-				cursor.moveToNext();
-			} while(! cursor.isAfterLast());
-		}
-		
-		// Close the Cursor
-		cursor.close();
-		return favoriteTvShowItemsArrayList;
+	public Cursor queryFavoriteTvShowProvider(){
+		return favoriteDatabase.query(DATABASE_TV_SHOW_TABLE,
+			null,
+			null,
+			null,
+			null,
+			null,
+			FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_DATE_ADDED_COLUMN + " DESC");
+	}
+	
+	// Method untuk read satu column data dari DB dengan menggunakan SQLiteDatabase query method (table movie item)
+	public Cursor queryFavoriteTvShowProviderById(String id){
+		return favoriteDatabase.query(DATABASE_TV_SHOW_TABLE,
+			null,
+			_ID + " = ?",
+			new String[]{id},
+			null,
+			null,
+			null);
 	}
 	
 	// Method untuk insert data ke DB dengan menggunakan SQLiteDatabase insert method (table tv show item)
-	public long insertFavoriteTvShowItem(TvShowItem tvShowItem) {
-		// Create ContentValues object
-		ContentValues tvShowItemValues = new ContentValues();
-		// Insert value ke ContentValues object
-		tvShowItemValues.put(FavoriteDatabaseContract.FavoriteTvShowItemColumns._ID, tvShowItem.getId());
-		tvShowItemValues.put(FavoriteDatabaseContract.FavoriteTvShowItemColumns.NAME_COLUMN, tvShowItem.getTvShowName());
-		tvShowItemValues.put(FavoriteDatabaseContract.FavoriteTvShowItemColumns.RATINGS_COLUMN, tvShowItem.getTvShowRatings());
-		tvShowItemValues.put(FavoriteDatabaseContract.FavoriteTvShowItemColumns.ORIGINAL_LANGUAGE_COLUMN, tvShowItem.getTvShowOriginalLanguage());
-		tvShowItemValues.put(FavoriteDatabaseContract.FavoriteTvShowItemColumns.FIRST_AIR_DATE_COLUMN, tvShowItem.getTvShowFirstAirDate());
-		tvShowItemValues.put(FavoriteDatabaseContract.FavoriteTvShowItemColumns.FILE_PATH_COLUMN, tvShowItem.getTvShowPosterPath());
-		tvShowItemValues.put(FavoriteDatabaseContract.FavoriteTvShowItemColumns.DATE_ADDED_COLUMN, tvShowItem.getDateAddedFavorite());
-		tvShowItemValues.put(FavoriteDatabaseContract.FavoriteTvShowItemColumns.FAVORITE_COLUMN, tvShowItem.getFavoriteBooleanState());
-		// Execute SQLiteDatabase insert method
-		return favoriteDatabase.insert(DATABASE_TV_SHOW_TABLE, null, tvShowItemValues);
+	public long insertFavoriteTvShowProvider(ContentValues values){
+		return favoriteDatabase.insert(DATABASE_TV_SHOW_TABLE, null, values);
 	}
 	
 	// Method untuk delete data dari DB dengan menggunakan SQLiteDatabase delete method (table tv show item)
-	public int deleteFavoriteTvShowItem(int id) {
-		return favoriteDatabase.delete(DATABASE_TV_SHOW_TABLE, _ID + " = '" + id + "'", null);
+	public int deleteFavoriteTvShowProvider(String id){
+		return favoriteDatabase.delete(DATABASE_TV_SHOW_TABLE, _ID + " = ?", new String[]{id});
 	}
 	
 }

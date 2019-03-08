@@ -31,13 +31,13 @@ public class FavoriteDatabaseHelper extends SQLiteOpenHelper {
             + " %s INTEGER NOT NULL DEFAULT 0)",
             FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_TABLE_NAME ,
             FavoriteDatabaseContract.FavoriteMovieItemColumns._ID,
-            FavoriteDatabaseContract.FavoriteMovieItemColumns.TITLE_COLUMN,
-            FavoriteDatabaseContract.FavoriteMovieItemColumns.RATINGS_COLUMN,
-            FavoriteDatabaseContract.FavoriteMovieItemColumns.RELEASE_DATE_COLUMN,
-            FavoriteDatabaseContract.FavoriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN,
-            FavoriteDatabaseContract.FavoriteMovieItemColumns.FILE_PATH_COLUMN,
-            FavoriteDatabaseContract.FavoriteMovieItemColumns.DATE_ADDED_COLUMN,
-            FavoriteDatabaseContract.FavoriteMovieItemColumns.FAVORITE_COLUMN
+            FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_TITLE_COLUMN,
+            FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_RATINGS_COLUMN,
+            FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_RELEASE_DATE_COLUMN,
+            FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_ORIGINAL_LANGUAGE_COLUMN,
+            FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FILE_PATH_COLUMN,
+            FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_DATE_ADDED_FAVORITE_COLUMN,
+            FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_COLUMN
     );
     
     // Create table statement
@@ -52,13 +52,13 @@ public class FavoriteDatabaseHelper extends SQLiteOpenHelper {
             + " %s INTEGER NOT NULL DEFAULT 0)",
             FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_TABLE_NAME ,
             FavoriteDatabaseContract.FavoriteTvShowItemColumns._ID,
-            FavoriteDatabaseContract.FavoriteTvShowItemColumns.NAME_COLUMN,
-            FavoriteDatabaseContract.FavoriteTvShowItemColumns.RATINGS_COLUMN,
-            FavoriteDatabaseContract.FavoriteTvShowItemColumns.FIRST_AIR_DATE_COLUMN,
-            FavoriteDatabaseContract.FavoriteTvShowItemColumns.ORIGINAL_LANGUAGE_COLUMN,
-            FavoriteDatabaseContract.FavoriteTvShowItemColumns.FILE_PATH_COLUMN,
-            FavoriteDatabaseContract.FavoriteTvShowItemColumns.DATE_ADDED_COLUMN,
-            FavoriteDatabaseContract.FavoriteTvShowItemColumns.FAVORITE_COLUMN
+            FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_NAME_COLUMN,
+            FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_RATINGS_COLUMN,
+            FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FIRST_AIR_DATE_COLUMN,
+            FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_ORIGINAL_LANGUAGE_COLUMN,
+            FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FILE_PATH_COLUMN,
+            FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_DATE_ADDED_COLUMN,
+            FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FAVORITE_COLUMN
     );
 
     @Override

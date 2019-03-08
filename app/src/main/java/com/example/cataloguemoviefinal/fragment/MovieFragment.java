@@ -67,8 +67,6 @@ public class MovieFragment extends Fragment{
 	private MovieAdapter movieAdapter;
 	// Bikin parcelable yang berguna untuk menyimpan lalu merestore position
 	private Parcelable mMovieListState = null;
-	// Helper untuk membuka koneksi ke DB
-	private FavoriteItemsHelper favoriteItemsHelper;
 	// Bikin linearlayout manager untuk dapat call onsaveinstancestate method
 	private LinearLayoutManager movieLinearLayoutManager;
 	// Initiate ViewModel dan Componentnya
@@ -93,6 +91,11 @@ public class MovieFragment extends Fragment{
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		
+		// Initiate movie adapter
+		movieAdapter = new MovieAdapter(getContext());
+		// Notify when data changed into adapter
+		movieAdapter.notifyDataSetChanged();
+		
 		// Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
 		movieLinearLayoutManager = new LinearLayoutManager(getContext());
 		// Ukuran data recycler view sama
@@ -102,11 +105,6 @@ public class MovieFragment extends Fragment{
 		
 		// Set visibility dari LinearLayout jadi GONE supaya tidak memakan tempat + tidak ada keyword result
 		movieSearchKeywordResult.setVisibility(View.GONE);
-		
-		// Initiate movie adapter
-		movieAdapter = new MovieAdapter(getContext());
-		// Notify when data changed into adapter
-		movieAdapter.notifyDataSetChanged();
 		
 		// Set empty adapter agar dapat di rotate
 		recyclerView.setAdapter(movieAdapter);

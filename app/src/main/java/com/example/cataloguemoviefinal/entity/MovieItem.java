@@ -176,14 +176,15 @@ public class MovieItem implements Parcelable {
 	
 	// Constructor untuk menampung Cursor
 	public MovieItem(Cursor cursor){
+		// Method ini berguna untuk set variable values yg ada dari column values
 		this.id = getColumnInt(cursor, _ID);
-		this.movieTitle = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.TITLE_COLUMN);
-		this.movieRatings = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.RATINGS_COLUMN);
-		this.movieOriginalLanguage = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.ORIGINAL_LANGUAGE_COLUMN);
-		this.movieReleaseDate = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.RELEASE_DATE_COLUMN);
-		this.moviePosterPath = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.FILE_PATH_COLUMN);
-		this.dateAddedFavorite = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.DATE_ADDED_COLUMN);
-		this.favoriteBooleanState = getColumnInt(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.FAVORITE_COLUMN);
+		this.movieTitle = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_TITLE_COLUMN);
+		this.movieRatings = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_RATINGS_COLUMN);
+		this.movieOriginalLanguage = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_ORIGINAL_LANGUAGE_COLUMN);
+		this.movieReleaseDate = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_RELEASE_DATE_COLUMN);
+		this.moviePosterPath = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FILE_PATH_COLUMN);
+		this.dateAddedFavorite = getColumnString(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_DATE_ADDED_FAVORITE_COLUMN);
+		this.favoriteBooleanState = getColumnInt(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_COLUMN);
 	}
 	
 	protected MovieItem(Parcel in) {

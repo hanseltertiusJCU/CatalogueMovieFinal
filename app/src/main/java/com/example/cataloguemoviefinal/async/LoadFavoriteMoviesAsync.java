@@ -30,7 +30,7 @@ public class LoadFavoriteMoviesAsync extends AsyncTask<Void, Void, Cursor> {
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		weakCallback.get().preExecute(); // memanggil method preExecute di interface {@link LoadFavoriteMoviesCallback}
+		weakCallback.get().favoriteMoviePreExecute(); // memanggil method preExecute di interface {@link LoadFavoriteMoviesCallback}
 	}
 	
 	@Override
@@ -42,6 +42,6 @@ public class LoadFavoriteMoviesAsync extends AsyncTask<Void, Void, Cursor> {
 	@Override
 	protected void onPostExecute(Cursor movieItems) {
 		super.onPostExecute(movieItems);
-		weakCallback.get().postExecute(movieItems); // memanggil method postExecute di interface {@link LoadFavoriteMoviesCallback}
+		weakCallback.get().favoriteMoviePostExecute(movieItems); // memanggil method postExecute di interface {@link LoadFavoriteMoviesCallback}
 	}
 }

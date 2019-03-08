@@ -21,7 +21,9 @@ import android.widget.TextView;
 
 import com.example.cataloguemoviefinal.adapter.ItemSectionsFragmentPagerAdapter;
 import com.example.cataloguemoviefinal.async.LoadFavoriteMoviesAsync;
+import com.example.cataloguemoviefinal.async.LoadFavoriteTvShowAsync;
 import com.example.cataloguemoviefinal.entity.MovieItem;
+import com.example.cataloguemoviefinal.entity.TvShowItem;
 import com.example.cataloguemoviefinal.fragment.FavoriteMovieFragment;
 import com.example.cataloguemoviefinal.fragment.FavoriteTvShowFragment;
 import com.example.cataloguemoviefinal.fragment.MovieFragment;
@@ -29,6 +31,7 @@ import com.example.cataloguemoviefinal.fragment.SearchMovieFragment;
 import com.example.cataloguemoviefinal.fragment.SearchTvShowFragment;
 import com.example.cataloguemoviefinal.fragment.TvShowFragment;
 import com.example.cataloguemoviefinal.observer.FavoriteMovieDataObserver;
+import com.example.cataloguemoviefinal.observer.FavoriteTvShowDataObserver;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -37,9 +40,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FAVORITE_CONTENT_URI;
 import static com.example.cataloguemoviefinal.helper.FavoriteMovieMappingHelper.mapCursorToFavoriteMovieArrayList;
+import static com.example.cataloguemoviefinal.helper.FavoriteTvShowMappingHelper.mapCursorToFavoriteTvShowArrayList;
 
-public class MainActivity extends AppCompatActivity implements LoadFavoriteMoviesCallback{
+public class MainActivity extends AppCompatActivity implements LoadFavoriteMoviesCallback, LoadFavoriteTvShowCallback{
 	
 	// Create ViewPager untuk swipe Fragments
 	@BindView(R.id.item_viewPager)
@@ -70,14 +75,22 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	private Drawable searchMovieDrawable;
 	private Drawable[] searchTvShowDrawables;
 	private Drawable searchTvShowDrawable;
-	// ArrayList object
+	// ArrayList object untuk MovieItem
 	public static ArrayList<MovieItem> favoriteMovieItemArrayList;
-	// Initiate HandlerThread object
+	// Initiate HandlerThread object for Movie
 	public static HandlerThread movieHandlerThread;
-	// Initiate Handler object
+	// Initiate Handler object for Movie
 	public static Handler movieHandler;
-	// Initiate ContentObserver object (mungkin public biar bs communicate ke Fragment lainnya)
+	// Initiate ContentObserver object for Movie (mungkin public biar bs communicate ke Fragment lainnya)
 	public static FavoriteMovieDataObserver myFavoriteMovieObserver;
+	// ArrayList object untuk TvShowItem
+	public static ArrayList<TvShowItem> favoriteTvShowItemArrayList;
+	// Initiate HandlerThread object for TV Show
+	public static HandlerThread tvShowHandlerThread;
+	// Initiate Handler object for TV Show
+	public static Handler tvShowHandler;
+	// Initiate ContentObserver object for TV Show (mungkin public biar bs communicate ke Fragment lainnya)
+	public static FavoriteTvShowDataObserver myFavoriteTvShowObserver;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,20 +103,30 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		setSupportActionBar(mainToolbar);
 		
 		if(savedInstanceState == null){
+			// Load async task for getting the cursor in Movies and TV Show favorite
 			new LoadFavoriteMoviesAsync(this, this).execute();
+			new LoadFavoriteTvShowAsync(this, this).execute();
 		}
 		
 		// Cek kalo ada action bar
 		if(getSupportActionBar() != null) {
-			// Set default action bar title, yaitu "Movie"
+			// Set default action bar title, yaitu "Movie", alias item yg ada di posisi 0
 			getSupportActionBar().setTitle(getString(R.string.movie));
 		}
 		
+		// Initiate handler thread operation in Movie
 		movieHandlerThread = new HandlerThread("FavoriteMovieDataObserver");
 		movieHandlerThread.start();
 		movieHandler = new Handler(movieHandlerThread.getLooper());
 		myFavoriteMovieObserver = new FavoriteMovieDataObserver(movieHandler, this);
 		getContentResolver().registerContentObserver(MOVIE_FAVORITE_CONTENT_URI, true, myFavoriteMovieObserver);
+		
+		// Initiate handler thread operation in TV Show
+		tvShowHandlerThread = new HandlerThread("FavoriteTvShowDataObserver");
+		tvShowHandlerThread.start();
+		tvShowHandler = new Handler(tvShowHandlerThread.getLooper());
+		myFavoriteTvShowObserver = new FavoriteTvShowDataObserver(tvShowHandler, this);
+		getContentResolver().registerContentObserver(TV_SHOW_FAVORITE_CONTENT_URI, true, myFavoriteTvShowObserver);
 		
 		// Panggil method ini untuk saving Fragment state di ViewPager, kesannya kyk simpen
 		// fragment ketika sebuah fragment sedang tidak di display.
@@ -323,14 +346,23 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	
 	// Method dari LoadFavoriteMoviesCallback interface dan kita coba implement dari method tsb
 	@Override
-	public void preExecute() {
+	public void favoriteMoviePreExecute() {
 		// Do nothing
 	}
 	
 	@Override
-	public void postExecute(Cursor movieItems) {
-		favoriteMovieItemArrayList = mapCursorToFavoriteMovieArrayList(movieItems); // Change cursor to ArrayList that contains MovieItems
+	public void favoriteMoviePostExecute(Cursor movieItems) {
+		favoriteMovieItemArrayList = mapCursorToFavoriteMovieArrayList(movieItems); // Change cursor to ArrayList that contains MovieItem
 	}
 	
+	// Method dari LoadFavoriteTvShowCallback interface dan kita coba implement dari method tsb
+	@Override
+	public void favoriteTvShowPreExecute() {
+		// Do nothing
+	}
 	
+	@Override
+	public void favoriteTvShowPostExecute(Cursor tvShowItems) {
+		favoriteTvShowItemArrayList = mapCursorToFavoriteTvShowArrayList(tvShowItems); // Change cursor to ArrayList that contains TvShowItem
+	}
 }

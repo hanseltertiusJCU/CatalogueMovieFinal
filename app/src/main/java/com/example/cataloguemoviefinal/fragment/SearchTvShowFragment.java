@@ -6,6 +6,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 
 import com.example.cataloguemoviefinal.DetailActivity;
 import com.example.cataloguemoviefinal.LoadFavoriteTvShowCallback;
+import com.example.cataloguemoviefinal.MainActivity;
 import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.adapter.TvShowAdapter;
 import com.example.cataloguemoviefinal.async.LoadFavoriteTvShowAsync;
@@ -41,10 +43,12 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FAVORITE_CONTENT_URI;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchTvShowFragment extends Fragment implements LoadFavoriteTvShowCallback {
+public class SearchTvShowFragment extends Fragment{
 	
 	// Key untuk membawa data ke intent (data tidak d private untuk dapat diapplikasikan di berbagai Fragments dan diakses ke {@link DetailActivity})
 	public static final String TV_SHOW_ID_DATA = "TV_SHOW_ID_DATA";
@@ -63,8 +67,6 @@ public class SearchTvShowFragment extends Fragment implements LoadFavoriteTvShow
 	private TvShowAdapter tvShowAdapter;
 	// Bikin parcelable yang berguna untuk menyimpan lalu merestore position
 	private Parcelable mTvShowListState = null;
-	// Helper untuk membuka koneksi ke DB
-	private FavoriteItemsHelper favoriteItemsHelper;
 	// Bikin linearlayout manager untuk dapat call onsaveinstancestate method
 	private LinearLayoutManager searchTvShowLinearLayoutManager;
 	// Constant untuk key untuk keyword search result di tv show
@@ -77,16 +79,6 @@ public class SearchTvShowFragment extends Fragment implements LoadFavoriteTvShow
 	
 	public SearchTvShowFragment() {
 		// Required empty public constructor
-	}
-	
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		// Cek jika ada ApplicationContext, jika ada maka buka koneksi ke ItemHelper
-		if(Objects.requireNonNull(getActivity()).getApplicationContext() != null){
-			favoriteItemsHelper = FavoriteItemsHelper.getInstance(getActivity().getApplicationContext());
-			favoriteItemsHelper.open();
-		}
 	}
 	
 	@Override
@@ -144,7 +136,6 @@ public class SearchTvShowFragment extends Fragment implements LoadFavoriteTvShow
 		} else {
 			tvKeywordResult = "flash"; // Default value
 			tvShowSearchKeyword.setText(tvKeywordResult);
-			new LoadFavoriteTvShowAsync(favoriteItemsHelper, this).execute();
 		}
 		
 		if(Objects.requireNonNull(getActivity()).getApplication() != null){
@@ -213,11 +204,13 @@ public class SearchTvShowFragment extends Fragment implements LoadFavoriteTvShow
 		int tvShowIdItem = tvShowItem.getId();
 		String tvShowNameItem = tvShowItem.getTvShowName();
 		int tvShowBooleanStateItem = 0;
-		if(FavoriteTvShowFragment.favTvShowListData.size() > 0){
-			for(int i = 0; i < FavoriteTvShowFragment.favTvShowListData.size(); i++){
+		Uri tvShowUriItem = null;
+		if(MainActivity.favoriteTvShowItemArrayList.size() > 0){
+			for(int i = 0; i < MainActivity.favoriteTvShowItemArrayList.size(); i++){
 				// Cek jika tvShowIdItem itu cocok dengan item id yg ada di ArrayList
-				if(tvShowIdItem == FavoriteTvShowFragment.favTvShowListData.get(i).getId()){
-					tvShowBooleanStateItem = FavoriteTvShowFragment.favTvShowListData.get(i).getFavoriteBooleanState();
+				if(tvShowIdItem == MainActivity.favoriteTvShowItemArrayList.get(i).getId()){
+					tvShowBooleanStateItem = MainActivity.favoriteTvShowItemArrayList.get(i).getFavoriteBooleanState();
+					tvShowUriItem = Uri.parse(TV_SHOW_FAVORITE_CONTENT_URI + "/" + tvShowIdItem);
 					break;
 				}
 			}
@@ -231,6 +224,8 @@ public class SearchTvShowFragment extends Fragment implements LoadFavoriteTvShow
 		intentWithTvShowIdData.putExtra(TV_SHOW_NAME_DATA, tvShowNameItem);
 		intentWithTvShowIdData.putExtra(TV_SHOW_BOOLEAN_STATE_DATA, tvShowBooleanStateItem);
 		intentWithTvShowIdData.putExtra(MODE_INTENT, modeItem);
+		// Bawa Uri ke Intent
+		intentWithTvShowIdData.setData(tvShowUriItem);
 		// Start activity tujuan bedasarkan intent object dan bawa request code
 		// REQUEST_CHANGE untuk onActivityResult
 		startActivityForResult(intentWithTvShowIdData, DetailActivity.REQUEST_CHANGE);
@@ -257,17 +252,6 @@ public class SearchTvShowFragment extends Fragment implements LoadFavoriteTvShow
 			outState.putString(TV_KEYWORD_RESULT, tvKeywordResult);
 		}
 		
-	}
-	
-	@Override
-	public void preExecute() {
-	
-	}
-	
-	@Override
-	public void postExecute(ArrayList<TvShowItem> tvShowItems) {
-		// Bikin ArrayList global variable sama dengan hasil dari AsyncTask class
-		FavoriteTvShowFragment.favTvShowListData = tvShowItems;
 	}
 	
 	@Override

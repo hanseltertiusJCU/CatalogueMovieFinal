@@ -162,14 +162,14 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	
 	// Callback method dari Interface LoadFavoriteMoviesCallback
 	@Override
-	public void preExecute() {
+	public void favoriteMoviePreExecute() {
 		// Set progress bar visibility into visible and recyclerview visibility into visible to prepare loading data
 		progressBar.setVisibility(View.VISIBLE);
 		recyclerView.setVisibility(View.INVISIBLE);
 	}
 	
 	@Override
-	public void postExecute(Cursor movieItems) {
+	public void favoriteMoviePostExecute(Cursor movieItems) {
 		
 		if(MainActivity.favoriteMovieItemArrayList.size() > 0){
 			// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar

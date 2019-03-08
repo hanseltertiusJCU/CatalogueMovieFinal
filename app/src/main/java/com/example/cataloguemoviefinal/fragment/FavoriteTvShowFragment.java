@@ -1,6 +1,8 @@
 package com.example.cataloguemoviefinal.fragment;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +19,7 @@ import android.widget.ProgressBar;
 
 import com.example.cataloguemoviefinal.DetailActivity;
 import com.example.cataloguemoviefinal.LoadFavoriteTvShowCallback;
+import com.example.cataloguemoviefinal.MainActivity;
 import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.adapter.TvShowAdapter;
 import com.example.cataloguemoviefinal.async.LoadFavoriteTvShowAsync;
@@ -29,7 +32,10 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FAVORITE_CONTENT_URI;
+
 public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvShowCallback {
+	
 	// Key untuk membawa data ke intent (data tidak d private untuk dapat diapplikasikan di berbagai Fragments dan diakses ke {@link DetailActivity})
 	public static final String TV_SHOW_ID_DATA = "TV_SHOW_ID_DATA";
 	public static final String TV_SHOW_NAME_DATA = "TV_SHOW_NAME_DATA";
@@ -38,8 +44,6 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 	public static final String MODE_INTENT = "mode_intent";
 	// Bikin constant (key) yang merepresent Parcelable object
 	private static final String TV_SHOW_LIST_STATE = "tvShowListState";
-	// Array list untuk menyimpan data bedasarkan Database
-	static ArrayList<TvShowItem> favTvShowListData;
 	@BindView(R.id.rv_tv_shows_item_list)
 	RecyclerView recyclerView;
 	@BindView(R.id.progress_bar)
@@ -47,19 +51,7 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 	// LinearLayout untuk atur visibility dari Search keyword
 	@BindView(R.id.tv_show_search_keyword_result)
 	LinearLayout tvShowSearchKeywordResult;
-	private TvShowAdapter tvShowAdapter;
-	// Helper untuk membuka koneksi ke DB
-	private FavoriteItemsHelper favoriteItemsHelper;
-	
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		// Buka koneksi terhadap database ketika Fragment dibuat
-		if(getActivity().getApplicationContext() != null) {
-			favoriteItemsHelper = FavoriteItemsHelper.getInstance(getActivity().getApplicationContext());
-			favoriteItemsHelper.open();
-		}
-	}
+	TvShowAdapter tvShowAdapter;
 	
 	@Nullable
 	@Override
@@ -135,13 +127,13 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 				}
 			}
 		} else {
-			new LoadFavoriteTvShowAsync(favoriteItemsHelper, this).execute();
+			new LoadFavoriteTvShowAsync(getActivity(), this).execute();
 		}
 	}
 	
 	// Callback method dari Interface LoadFavoriteTvShowCallback
 	@Override
-	public void preExecute() {
+	public void favoriteTvShowPreExecute() {
 		// Set progress bar visibility into visible and recyclerview visibility into visible
 		// to prepare loading data
 		progressBar.setVisibility(View.VISIBLE);
@@ -149,29 +141,27 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 	}
 	
 	@Override
-	public void postExecute(final ArrayList<TvShowItem> tvShowItems) {
-		// Bikin ArrayList global variable sama dengan hasil dari AsyncTask class
-		favTvShowListData = tvShowItems;
-		if(tvShowItems.size() > 0) {
+	public void favoriteTvShowPostExecute(Cursor tvShowItems) {
+		if(MainActivity.favoriteTvShowItemArrayList.size() > 0) {
 			// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
 			// yang menandakan bahwa loadingnya sudah selesai
 			progressBar.setVisibility(View.GONE);
 			recyclerView.setVisibility(View.VISIBLE);
 			// Set data into adapter
-			tvShowAdapter.setTvShowData(tvShowItems);
+			tvShowAdapter.setTvShowData(MainActivity.favoriteTvShowItemArrayList);
 			// Set item click listener di dalam recycler view
 			ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 				@Override
 				public void onItemClicked(RecyclerView recyclerView, int position, View view) {
-					showSelectedTvShowItems(tvShowItems.get(position));
+					showSelectedTvShowItems(MainActivity.favoriteTvShowItemArrayList.get(position));
 				}
 			});
 		} else {
 			// Ketika tidak ada data untuk display, set RecyclerView ke
 			// invisible dan progress bar menjadi tidak ada
+			tvShowAdapter.setTvShowData(MainActivity.favoriteTvShowItemArrayList);
 			progressBar.setVisibility(View.GONE);
 			recyclerView.setVisibility(View.INVISIBLE);
-			tvShowAdapter.setTvShowData(tvShowItems);
 		}
 	}
 	
@@ -183,6 +173,9 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 		int tvBooleanStateItem = tvShowItem.getFavoriteBooleanState();
 		// Tentukan bahwa kita ingin membuka data TV Show
 		String modeItem = "open_tv_show_detail";
+		// Create URI untuk bawa URI ke data di intent dengan row id value
+		// content://com.example.cataloguemoviefinal/favorite_tv_shows/id
+		Uri tvShowUriItem = Uri.parse(TV_SHOW_FAVORITE_CONTENT_URI + "/" + tvShowIdItem);
 		// Initiate intent
 		Intent intentWithTvShowIdData = new Intent(getActivity(), DetailActivity.class);
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
@@ -190,6 +183,8 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 		intentWithTvShowIdData.putExtra(TV_SHOW_NAME_DATA, tvShowNameItem);
 		intentWithTvShowIdData.putExtra(TV_SHOW_BOOLEAN_STATE_DATA, tvBooleanStateItem);
 		intentWithTvShowIdData.putExtra(MODE_INTENT, modeItem);
+		// Bawa Uri ke Intent
+		intentWithTvShowIdData.setData(tvShowUriItem);
 		// Start activity tujuan bedasarkan intent object dan bawa request code
 		// REQUEST_CHANGE untuk onActivityResult
 		startActivityForResult(intentWithTvShowIdData, DetailActivity.REQUEST_CHANGE);
@@ -216,20 +211,13 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 					// Cek jika ada perubahan di tv show item data state
 					if(changedDataState) {
 						// Execute AsyncTask kembali
-						new LoadFavoriteTvShowAsync(favoriteItemsHelper, this).execute();
+						new LoadFavoriteTvShowAsync(getActivity(), this).execute();
 						// Reset scroll position ke paling atas
 						recyclerView.smoothScrollToPosition(0);
 					}
 				}
 			}
 		}
-	}
-	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		// Menutup koneksi terhadap SQL
-		favoriteItemsHelper.close();
 	}
 	
 }

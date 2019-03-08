@@ -17,13 +17,13 @@ public class FavoriteDatabaseContract {
 		// Nama tabel dari database
 		public static String MOVIE_TABLE_NAME = "favorite_movies";
 		// Nama columns dari database
-		public static String TITLE_COLUMN = "title";
-		public static String RATINGS_COLUMN = "ratings";
-		public static String RELEASE_DATE_COLUMN = "release_date";
-		public static String ORIGINAL_LANGUAGE_COLUMN = "original_language";
-		public static String FILE_PATH_COLUMN = "file_path";
-		public static String DATE_ADDED_COLUMN = "date_added";
-		public static String FAVORITE_COLUMN = "favorite";
+		public static String MOVIE_TITLE_COLUMN = "title";
+		public static String MOVIE_RATINGS_COLUMN = "ratings";
+		public static String MOVIE_RELEASE_DATE_COLUMN = "release_date";
+		public static String MOVIE_ORIGINAL_LANGUAGE_COLUMN = "original_language";
+		public static String MOVIE_FILE_PATH_COLUMN = "file_path";
+		public static String MOVIE_DATE_ADDED_FAVORITE_COLUMN = "date_added";
+		public static String MOVIE_FAVORITE_COLUMN = "favorite";
 		// Build an URI for Favorite Movie
 		public static final Uri MOVIE_FAVORITE_CONTENT_URI = new Uri.Builder().scheme(URI_SCHEME)
 			.authority(URI_AUTHORITY)
@@ -32,17 +32,22 @@ public class FavoriteDatabaseContract {
 	}
 	
 	// Class tsb berguna utk membuat nama tabel "favorite_tv_shows"
-	static final class FavoriteTvShowItemColumns implements BaseColumns {
+	public static final class FavoriteTvShowItemColumns implements BaseColumns {
 		// Nama tabel dari database
-		static String TV_SHOW_TABLE_NAME = "favorite_tv_shows";
+		public static String TV_SHOW_TABLE_NAME = "favorite_tv_shows";
 		// Nama columns dari database
-		static String NAME_COLUMN = "name";
-		static String RATINGS_COLUMN = "ratings";
-		static String FIRST_AIR_DATE_COLUMN = "first_air_date";
-		static String ORIGINAL_LANGUAGE_COLUMN = "original_language";
-		static String FILE_PATH_COLUMN = "file_path";
-		static String DATE_ADDED_COLUMN = "date_added";
-		static String FAVORITE_COLUMN = "favorite";
+		public static String TV_SHOW_NAME_COLUMN = "name";
+		public static String TV_SHOW_RATINGS_COLUMN = "ratings";
+		public static String TV_SHOW_FIRST_AIR_DATE_COLUMN = "first_air_date";
+		public static String TV_SHOW_ORIGINAL_LANGUAGE_COLUMN = "original_language";
+		public static String TV_SHOW_FILE_PATH_COLUMN = "file_path";
+		public static String TV_SHOW_DATE_ADDED_COLUMN = "date_added";
+		public static String TV_SHOW_FAVORITE_COLUMN = "favorite";
+		// Build an URI for Favorite TV Show
+		public static final Uri TV_SHOW_FAVORITE_CONTENT_URI = new Uri.Builder().scheme(URI_SCHEME)
+			.authority(URI_AUTHORITY)
+			.appendPath(TV_SHOW_TABLE_NAME)
+			.build();
 	}
 	
 	// Buat methods untuk variable value untuk Custom Class item yg membawa Cursor sebagai parameter

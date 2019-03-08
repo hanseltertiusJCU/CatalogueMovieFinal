@@ -1,10 +1,17 @@
 package com.example.cataloguemoviefinal.entity;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.cataloguemoviefinal.database.FavoriteDatabaseContract;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import static android.provider.BaseColumns._ID;
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.getColumnInt;
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.getColumnString;
 
 public class TvShowItem implements Parcelable {
 	
@@ -153,6 +160,29 @@ public class TvShowItem implements Parcelable {
 	
 	public TvShowItem() {
 	
+	}
+	
+	public TvShowItem(int id, String tvShowName, String tvShowRatings, String tvShowOriginalLanguage, String tvShowFirstAirDate, String tvShowPosterPath, String dateAddedFavorite, int favoriteBooleanState) {
+		this.id = id;
+		this.tvShowName = tvShowName;
+		this.tvShowRatings = tvShowRatings;
+		this.tvShowOriginalLanguage = tvShowOriginalLanguage;
+		this.tvShowFirstAirDate = tvShowFirstAirDate;
+		this.tvShowPosterPath = tvShowPosterPath;
+		this.dateAddedFavorite = dateAddedFavorite;
+		this.favoriteBooleanState = favoriteBooleanState;
+	}
+	
+	// Constructor untuk menampung Cursor
+	public TvShowItem(Cursor cursor){
+		this.id = getColumnInt(cursor, _ID);
+		this.tvShowName = getColumnString(cursor, FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_NAME_COLUMN);
+		this.tvShowRatings = getColumnString(cursor, FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_RATINGS_COLUMN);
+		this.tvShowOriginalLanguage = getColumnString(cursor, FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_ORIGINAL_LANGUAGE_COLUMN);
+		this.tvShowFirstAirDate = getColumnString(cursor, FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FIRST_AIR_DATE_COLUMN);
+		this.tvShowPosterPath = getColumnString(cursor, FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FILE_PATH_COLUMN);
+		this.dateAddedFavorite = getColumnString(cursor, FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_DATE_ADDED_COLUMN);
+		this.favoriteBooleanState = getColumnInt(cursor, FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FAVORITE_COLUMN);
 	}
 	
 	protected TvShowItem(Parcel in) {
