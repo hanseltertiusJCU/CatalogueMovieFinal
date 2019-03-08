@@ -5,8 +5,12 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <permission android:name="com.example.cataloguemoviefinal.READ_DATABASE" android:protectionLevel="normal"/>
-    <permission android:name="com.example.cataloguemoviefinal.WRITE_DATABASE" android:protectionLevel="normal"/>
+    <permission
+        android:name="com.example.cataloguemoviefinal.READ_DATABASE"
+        android:protectionLevel="normal" />
+    <permission
+        android:name="com.example.cataloguemoviefinal.WRITE_DATABASE"
+        android:protectionLevel="normal" />
 
     <application
         android:allowBackup="true"
@@ -16,28 +20,41 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
+        <receiver android:name=".widget.FavoriteMovieItemWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/favorite_movie_item_widget_info" />
+        </receiver>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/catalogue_movie_final"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailActivity"
+        <activity
+            android:name=".DetailActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".MainActivity" />
         </activity>
+
         <provider
-            android:authorities="com.example.cataloguemoviefinal"
             android:name=".provider.FavoriteItemsProvider"
+            android:authorities="com.example.cataloguemoviefinal"
             android:exported="true"
             android:readPermission="com.example.cataloguemoviefinal.READ_DATABASE"
-            android:writePermission="com.example.cataloguemoviefinal.WRITE_DATABASE"/>
+            android:writePermission="com.example.cataloguemoviefinal.WRITE_DATABASE" />
     </application>
 
 </manifest>
