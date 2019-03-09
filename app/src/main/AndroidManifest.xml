@@ -4,6 +4,7 @@
     package="com.example.cataloguemoviefinal">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <permission
         android:name="com.example.cataloguemoviefinal.READ_DATABASE"
@@ -55,6 +56,10 @@
             android:exported="true"
             android:readPermission="com.example.cataloguemoviefinal.READ_DATABASE"
             android:writePermission="com.example.cataloguemoviefinal.WRITE_DATABASE" />
+
+        <service
+            android:name=".widget.FavoriteMovieStackWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>
 
 </manifest>

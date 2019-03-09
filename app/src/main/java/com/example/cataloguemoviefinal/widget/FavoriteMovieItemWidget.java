@@ -1,9 +1,14 @@
 package com.example.cataloguemoviefinal.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.example.cataloguemoviefinal.R;
 
@@ -12,13 +17,34 @@ import com.example.cataloguemoviefinal.R;
  */
 public class FavoriteMovieItemWidget extends AppWidgetProvider {
 	
+	private static final String TOAST_ACTION = "com.example.cataloguemoviefinal.TOAST_ACTION";
+	public static final String EXTRA_FAVORITE_MOVIE_ITEM = "com.example.cataloguemoviefinal.EXTRA_FAVORITE_MOVIE_ITEM";
+	
 	static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
 								int appWidgetId) {
 		
-		CharSequence widgetText = context.getString(R.string.appwidget_text);
-		// Construct the RemoteViews object
+		// Baris diatas berguna untuk pasang Intent ke FavoriteMovieStackViewService yg berhubungan
+		// ke RemoteAdapter
+		Intent intent = new Intent(context, FavoriteMovieStackWidgetService.class);
+		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+		intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+		
 		RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.favorite_movie_item_widget);
-		views.setTextViewText(R.id.appwidget_text, widgetText);
+		views.setRemoteAdapter(R.id.favorite_movie_stack_view, intent);
+		views.setEmptyView(R.id.favorite_movie_stack_view, R.id.favorite_movie_item_empty_view);
+		
+		Intent toastIntent = new Intent(context, FavoriteMovieItemWidget.class); // Create intent that goes into self (FavoriteMovieItemWidget)
+		toastIntent.setAction(FavoriteMovieItemWidget.TOAST_ACTION); // Set action in toast intent
+		toastIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId); // Put app widget id into toast intent
+		intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+		// Create PendingIntent
+		PendingIntent pendingToastIntent = PendingIntent.getBroadcast(context, 0, toastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		views.setPendingIntentTemplate(R.id.favorite_movie_stack_view, pendingToastIntent);
+		
+		ComponentName componentName = new ComponentName(context, FavoriteMovieItemWidget.class);
+
+		// Instruct the widget manager to update the view whenever the data changes
+		appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.favorite_movie_stack_view); // todo: harus make it work
 		
 		// Instruct the widget manager to update the widget
 		appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -26,6 +52,7 @@ public class FavoriteMovieItemWidget extends AppWidgetProvider {
 	
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+		
 		// There may be multiple widgets active, so update all of them
 		for(int appWidgetId : appWidgetIds) {
 			updateAppWidget(context, appWidgetManager, appWidgetId);
@@ -40,6 +67,19 @@ public class FavoriteMovieItemWidget extends AppWidgetProvider {
 	@Override
 	public void onDisabled(Context context) {
 		// Enter relevant functionality for when the last widget is disabled
+	}
+	
+	@Override
+	public void onReceive(Context context, Intent intent) {
+		super.onReceive(context, intent);
+		// Cek jika action exists
+		if(intent.getAction() != null){
+			// Cek jika action dari intent itu sama dengan TOAST_ACTION (bawaan dari Intent yg di plant ke PendingIntent)
+			if(intent.getAction().equals(TOAST_ACTION)){
+				int viewIndex = intent.getIntExtra(EXTRA_FAVORITE_MOVIE_ITEM, 0);
+				Toast.makeText(context, "Touched view : " + viewIndex, Toast.LENGTH_SHORT).show(); // Make Toast message bedasarkan viewindex (item position)
+			}
+		}
 	}
 }
 

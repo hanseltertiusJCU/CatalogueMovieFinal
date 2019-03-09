@@ -1,5 +1,6 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@android:color/darker_gray"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="9"
-            android:loopViews="true"/>
+            android:loopViews="true" />
 
         <!-- todo: pikirin text sm background colornya apa -->
         <TextView
@@ -25,6 +26,7 @@
             android:text="@string/favorite_movie_item_widget_text"
             android:textAlignment="center"
             android:textSize="@dimen/item_section_title"
+            android:textColor="@color/colorBlack"
             android:textStyle="bold"/>
 
     </LinearLayout>
@@ -37,6 +39,7 @@
         android:layout_gravity="center"
         android:text="@string/favorite_movie_item_empty_text"
         android:textAlignment="center"
+        android:textColor="@color/colorBlack"
         android:textSize="@dimen/item_section_title"
         android:visibility="gone"/>
 
