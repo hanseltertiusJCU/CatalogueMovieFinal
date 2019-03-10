@@ -1,7 +1,9 @@
 package com.example.cataloguemoviefinal;
 
+import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -38,6 +40,7 @@ import com.example.cataloguemoviefinal.fragment.MovieFragment;
 import com.example.cataloguemoviefinal.fragment.TvShowFragment;
 import com.example.cataloguemoviefinal.model.DetailedMovieViewModel;
 import com.example.cataloguemoviefinal.model.DetailedTvShowViewModel;
+import com.example.cataloguemoviefinal.widget.FavoriteMovieItemWidget;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -546,6 +549,12 @@ public class DetailActivity extends AppCompatActivity {
 							uri = getContentResolver().insert(MOVIE_FAVORITE_CONTENT_URI, movieColumnValues);
 							detailedMovieFavoriteStateValueComparison = 1; // Ganti value untuk mengupdate comparison
 							if(uri != null){
+								// Panggil AppWidgetManager class
+								AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+								// Get App widget ids dari FavoriteMovieItemWidget class
+								int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(getApplicationContext(), FavoriteMovieItemWidget.class));
+								// Notify R.id.favorite_movie_stack_view {@link StackView di favorite_movie_item_widget.xml} agar dpt memanggil onDataSetChanged method
+								appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.favorite_movie_stack_view);
 								// Bawa nilai ke intent
 								resultIntent.putExtra(EXTRA_CHANGED_STATE, changedState);
 								setResult(RESULT_CHANGE, resultIntent); // Set result that brings result code and intent
@@ -568,6 +577,12 @@ public class DetailActivity extends AppCompatActivity {
 							detailedMovieFavoriteStateValueComparison = 0; // Ganti value untuk mengupdate comparison
 							Log.d("Deleted item", String.valueOf(deletedIdItem));
 							if(deletedIdItem > 0) {
+								// Panggil AppWidgetManager class
+								AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+								// Get App widget ids dari FavoriteMovieItemWidget class
+								int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(getApplicationContext(), FavoriteMovieItemWidget.class));
+								// Notify R.id.favorite_movie_stack_view {@link StackView di favorite_movie_item_widget.xml} agar dpt memanggil onDataSetChanged method
+								appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.favorite_movie_stack_view);
 								// Bawa nilai ke intent
 								resultIntent.putExtra(EXTRA_CHANGED_STATE, changedState);
 								setResult(RESULT_CHANGE, resultIntent); // Set result that brings result code and intent

@@ -41,11 +41,6 @@ public class FavoriteMovieItemWidget extends AppWidgetProvider {
 		PendingIntent pendingToastIntent = PendingIntent.getBroadcast(context, 0, toastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		views.setPendingIntentTemplate(R.id.favorite_movie_stack_view, pendingToastIntent);
 		
-		ComponentName componentName = new ComponentName(context, FavoriteMovieItemWidget.class);
-
-		// Instruct the widget manager to update the view whenever the data changes
-		appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.favorite_movie_stack_view); // todo: harus make it work
-		
 		// Instruct the widget manager to update the widget
 		appWidgetManager.updateAppWidget(appWidgetId, views);
 	}

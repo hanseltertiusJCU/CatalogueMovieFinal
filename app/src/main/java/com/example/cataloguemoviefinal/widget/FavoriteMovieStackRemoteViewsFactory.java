@@ -50,8 +50,6 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 		
 		cursor = context.getContentResolver().query(MOVIE_FAVORITE_CONTENT_URI, null, null, null, null);
 		
-		cursor.setNotificationUri(context.getContentResolver(), MOVIE_FAVORITE_CONTENT_URI);
-		
 		Binder.restoreCallingIdentity(identityToken);
 		
 	}
@@ -116,19 +114,19 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 	
 	@Override
 	public long getItemId(int position) {
-		return 0;
+		return cursor.moveToPosition(position) ? cursor.getLong(0) : position;
 	}
 	
 	@Override
 	public boolean hasStableIds() {
-		return false;
+		return true;
 	}
 	
 	private MovieItem getSpecificMovieItem(int position){
 		if(cursor.moveToPosition(position)){
 			return new MovieItem(cursor);
 		} else {
-			throw new IllegalStateException("");
+			throw new IllegalStateException("The position is invalid!");
 		}
 		
 	}
