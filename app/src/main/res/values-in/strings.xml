@@ -44,11 +44,35 @@
     <string name="detailed_movie_languages_title">Bahasa</string>
     <string name="detailed_movie_genres_text">Teks Jenis dari Detil Film</string>
 
+    <!-- Placeholder for unknown values in detail movies -->
+    <string name="detailed_movie_unknown_title">Judul Tidak Diketahui</string>
+    <string name="detailed_movie_unknown_tagline">Ucapan Tidak Diketahui</string>
+    <string name="detailed_movie_unknown_status">Status Tidak Diketahui</string>
+    <string name="detailed_movie_default_value_ratings">0</string>
+    <string name="detailed_movie_default_value_ratings_vote">0</string>
+    <string name="detailed_movie_unknown_original_language">Bahasa Asli Tidak Diketahui</string>
+    <string name="detailed_movie_unknown_language">Bahasa Tidak Diketahui</string>
+    <string name="detailed_movie_unknown_genres">Jenis Film Tidak Diketahui</string>
+    <string name="detailed_movie_unknown_release_date">Tanggal Rilis Tidak Diketahui</string>
+    <string name="detailed_movie_unknown_overview">Peninjauan Luas Tidak Diketahui</string>
+
     <!-- Set Detailed TV Show section title -->
     <string name="detailed_tv_show_overview_title">Peninjauan Luas</string>
     <string name="detailed_tv_show_first_air_date_title">Tanggal Pertama Kali Keluar</string>
     <string name="detailed_tv_show_genres_title">Jenis Acara TV</string>
     <string name="detailed_tv_show_networks_title">Channel</string>
+
+    <!-- Placeholder for unknown values in detail TV Show -->
+    <string name="detailed_tv_show_unknown_name">Nama Tidak Diketahui</string>
+    <string name="detailed_tv_show_unknown_seasons">Jumlah Musim Tidak Diketahui</string>
+    <string name="detailed_tv_show_unknown_episodes">Jumlah Episode Tidak Diketahui</string>
+    <string name="detailed_tv_show_default_value_ratings">0</string>
+    <string name="detailed_tv_show_default_value_ratings_vote">0</string>
+    <string name="detailed_tv_show_unknown_original_language">Bahasa Asli Tidak Diketahui</string>
+    <string name="detailed_tv_show_unknown_networks">Channel Acara TV Tidak Diketahui</string>
+    <string name="detailed_tv_show_unknown_genres">Jenis Acara TV Tidak Diketahui</string>
+    <string name="detailed_tv_show_unknown_first_air_date">Tanggal Pertama Kali Mengudara Tidak Diketahui</string>
+    <string name="detailed_tv_show_unknown_overview">Peninjauan Luas Tidak Diketahui</string>
 
     <!-- Set Span movie item section title -->
     <string name="span_movie_item_ratings">Nilai :</string>

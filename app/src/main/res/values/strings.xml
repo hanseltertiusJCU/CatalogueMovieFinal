@@ -44,11 +44,36 @@
     <string name="detailed_movie_languages_title">Language(s) spoken</string>
     <string name="detailed_movie_genres_text">Detailed Movie Genre(s) Text</string>
 
+    <!-- Placeholder for unknown values in detail movies -->
+    <string name="detailed_movie_unknown_title">Title Unknown</string>
+    <string name="detailed_movie_unknown_tagline">Tagline Unknown</string>
+    <string name="detailed_movie_unknown_status">Status Unknown</string>
+    <string name="detailed_movie_default_value_ratings">0</string>
+    <string name="detailed_movie_default_value_ratings_vote">0</string>
+    <string name="detailed_movie_unknown_original_language">Original Language Unknown</string>
+    <string name="detailed_movie_unknown_language">Languages Unknown</string>
+    <string name="detailed_movie_unknown_genres">Genres Unknown</string>
+    <string name="detailed_movie_unknown_release_date">Release Date Unknown</string>
+    <string name="detailed_movie_unknown_overview">Overview Unknown</string>
+
     <!-- Set Detailed TV Show section title -->
     <string name="detailed_tv_show_overview_title">Overview</string>
     <string name="detailed_tv_show_first_air_date_title">First Air Date</string>
     <string name="detailed_tv_show_genres_title">Genre(s)</string>
     <string name="detailed_tv_show_networks_title">Network(s)</string>
+
+    <!-- Placeholder for unknown values in detail TV Show -->
+    <string name="detailed_tv_show_unknown_name">Name Unknown</string>
+    <string name="detailed_tv_show_unknown_seasons">Seasons Unknown</string>
+    <string name="detailed_tv_show_unknown_episodes">Episodes Unknown</string>
+    <string name="detailed_tv_show_default_value_ratings">0</string>
+    <string name="detailed_tv_show_default_value_ratings_vote">0</string>
+    <string name="detailed_tv_show_unknown_original_language">Original Language Unknown</string>
+    <string name="detailed_tv_show_unknown_networks">Networks Unknown</string>
+    <string name="detailed_tv_show_unknown_genres">Genres Unknown</string>
+    <string name="detailed_tv_show_unknown_first_air_date">First Air Date Unknown</string>
+    <string name="detailed_tv_show_unknown_overview">Overview Unknown</string>
+
 
     <!-- Set Span movie item section title -->
     <string name="span_movie_item_ratings">Ratings :</string>

@@ -78,8 +78,6 @@ public class TvShowItem implements Parcelable {
 								dataNetworks += network + ", ";
 						}
 					}
-				} else {
-					dataNetworks = "Network Unknown";
 				}
 				
 				JSONArray dataGenresArray = object.getJSONArray("genres");
@@ -105,8 +103,6 @@ public class TvShowItem implements Parcelable {
 								dataGenres += genre + ", ";
 						}
 					}
-				} else {
-					dataGenres = "Genre Unknown";
 				}
 				
 				String dataFirstAirDate = object.getString("first_air_date");
@@ -212,11 +208,7 @@ public class TvShowItem implements Parcelable {
 	
 	public String getTvShowName() {
 		// Set default value for DetailedTvShowName if DetailedTvShowName is null or ""
-		if(tvShowName != null && ! tvShowName.isEmpty()) {
-			return tvShowName;
-		} else {
-			return "Name Unknown";
-		}
+		return tvShowName;
 	}
 	
 	public void setTvShowName(String tvShowName) {
@@ -244,11 +236,7 @@ public class TvShowItem implements Parcelable {
 	}
 	
 	public String getTvShowOriginalLanguage() {
-		if(tvShowOriginalLanguage != null) {
-			return tvShowOriginalLanguage;
-		} else {
-			return "Language Unknown";
-		}
+		return tvShowOriginalLanguage;
 	}
 	
 	public void setTvShowOriginalLanguage(String tvShowOriginalLanguage) {
@@ -256,27 +244,15 @@ public class TvShowItem implements Parcelable {
 	}
 	
 	public String getTvShowNetworks() {
-		if(tvShowNetworks != null) {
-			return tvShowNetworks;
-		} else {
-			return "Networks Unknown";
-		}
+		return tvShowNetworks;
 	}
 	
 	public String getTvShowGenres() {
-		if(tvShowGenres != null && ! tvShowGenres.isEmpty()) {
-			return tvShowGenres;
-		} else {
-			return "Genres Unknown";
-		}
+		return tvShowGenres;
 	}
 	
 	public String getTvShowFirstAirDate() {
-		if(tvShowFirstAirDate != null && ! tvShowFirstAirDate.isEmpty()) {
-			return tvShowFirstAirDate;
-		} else {
-			return "First Air Date Unknown";
-		}
+		return tvShowFirstAirDate;
 	}
 	
 	public void setTvShowFirstAirDate(String tvShowFirstAirDate) {
@@ -284,11 +260,7 @@ public class TvShowItem implements Parcelable {
 	}
 	
 	public String getTvShowOverview() {
-		if(tvShowOverview != null && ! tvShowOverview.isEmpty()) {
-			return tvShowOverview;
-		} else {
-			return "Overview Unknown";
-		}
+		return tvShowOverview;
 	}
 	
 	public String getTvShowPosterPath() {

@@ -45,7 +45,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	public static final String MOVIE_TITLE_DATA = "MOVIE_TITLE_DATA";
 	public static final String MOVIE_BOOLEAN_STATE_DATA = "MOVIE_BOOLEAN_STATE_DATA";
 	// Constant untuk represent mode agar membuka data tertentu
-	public static final String MODE_INTENT = "mode_intent";
+	public static final String MODE_INTENT = "MODE_INTENT";
 	// Bikin constant (key) yang merepresent Parcelable object
 	private static final String MOVIE_LIST_STATE = "movieListState";
 	@BindView(R.id.rv_movie_item_list)

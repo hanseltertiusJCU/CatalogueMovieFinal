@@ -7,23 +7,18 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Binder;
 import android.os.Bundle;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.example.cataloguemoviefinal.BuildConfig;
-import com.example.cataloguemoviefinal.MainActivity;
 import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.entity.MovieItem;
 import com.squareup.picasso.Picasso;
 
-
-import butterknife.BindView;
-
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
 
 public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
-
+	
 	private final Context context;
 	private Cursor cursor;
 	private int appWidgetId;

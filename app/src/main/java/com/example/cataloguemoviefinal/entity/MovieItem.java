@@ -80,8 +80,6 @@ public class MovieItem implements Parcelable {
 								dataLanguages += language + ", ";
 						}
 					}
-				} else {
-					dataLanguages = "Language Unknown";
 				}
 				
 				JSONArray dataGenreArray = object.getJSONArray("genres");
@@ -106,8 +104,6 @@ public class MovieItem implements Parcelable {
 								dataGenres += genre + ", ";
 						}
 					}
-				} else {
-					dataGenres = "Genre Unknown";
 				}
 				
 				String dataReleaseDate = object.getString("release_date");
@@ -213,12 +209,7 @@ public class MovieItem implements Parcelable {
 	}
 	
 	public String getMovieTitle() {
-		// Set default value for DetailedMovieTitle if DetailedMovieTitle is null or ""
-		if(movieTitle != null && ! movieTitle.isEmpty()) {
-			return movieTitle;
-		} else {
-			return "Title Unknown";
-		}
+		return movieTitle;
 	}
 	
 	public void setMovieTitle(String movieTitle) {
@@ -226,22 +217,12 @@ public class MovieItem implements Parcelable {
 	}
 	
 	public String getMovieTagline() {
-		// Set default value for DetailedMovieTagline if DetailedMovieTagline is null or ""
-		if(movieTagline != null && ! movieTagline.isEmpty()) {
-			return movieTagline;
-		} else {
-			return "Tagline Unknown";
-		}
+		return movieTagline;
 		
 	}
 	
 	public String getMovieStatus() {
-		// Set default value for DetailedMovieStatus if DetailedMovieStatus is null or ""
-		if(movieStatus != null && ! movieStatus.isEmpty()) {
-			return movieStatus;
-		} else {
-			return "Status Unknown";
-		}
+		return movieStatus;
 		
 	}
 	
@@ -258,11 +239,7 @@ public class MovieItem implements Parcelable {
 	}
 	
 	public String getMovieOriginalLanguage() {
-		if(movieOriginalLanguage != null) {
-			return movieOriginalLanguage;
-		} else {
-			return "Language Unknown";
-		}
+		return movieOriginalLanguage;
 	}
 	
 	public void setMovieOriginalLanguage(String movieOriginalLanguage) {
@@ -270,29 +247,16 @@ public class MovieItem implements Parcelable {
 	}
 	
 	public String getMovieLanguages() {
-		if(movieLanguages != null) {
-			return movieLanguages;
-		} else {
-			return "Languages Unknown";
-		}
+		return movieLanguages;
 	}
 	
 	public String getMovieGenres() {
-		if(movieGenres != null && ! movieGenres.isEmpty()) {
-			return movieGenres;
-		} else {
-			return "Genres Unknown";
-		}
+		return movieGenres;
 		
 	}
 	
 	public String getMovieReleaseDate() {
-		// Set default value for DetailedMovieReleaseDate if DetailedMovieReleaseDate is null or ""
-		if(movieReleaseDate != null && ! movieReleaseDate.isEmpty()) {
-			return movieReleaseDate;
-		} else {
-			return "Release Date Unknown";
-		}
+		return movieReleaseDate;
 	}
 	
 	public void setMovieReleaseDate(String movieReleaseDate) {
@@ -300,12 +264,7 @@ public class MovieItem implements Parcelable {
 	}
 	
 	public String getMovieOverview() {
-		// Set default value for DetailedMovieOverview if DetailedMovieOverview is null or ""
-		if(movieOverview != null && ! movieOverview.isEmpty()) {
-			return movieOverview;
-		} else {
-			return "Overview Unknown";
-		}
+		return movieOverview;
 	}
 	
 	public String getMoviePosterPath() {

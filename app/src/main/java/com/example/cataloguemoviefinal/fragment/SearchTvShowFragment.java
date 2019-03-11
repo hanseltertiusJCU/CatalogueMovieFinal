@@ -55,7 +55,7 @@ public class SearchTvShowFragment extends Fragment{
 	public static final String TV_SHOW_NAME_DATA = "TV_SHOW_NAME_DATA";
 	public static final String TV_SHOW_BOOLEAN_STATE_DATA = "TV_SHOW_BOOLEAN_STATE_DATA";
 	// Constant untuk represent mode agar membuka data tertentu
-	public static final String MODE_INTENT = "mode_intent";
+	public static final String MODE_INTENT = "MODE_INTENT";
 	// Bikin constant (key) yang merepresent Parcelable object
 	private static final String TV_SHOW_LIST_STATE = "tvShowListState";
 	@BindView(R.id.rv_tv_shows_item_list)
