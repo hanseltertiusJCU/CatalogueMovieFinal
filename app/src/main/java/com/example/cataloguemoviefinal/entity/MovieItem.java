@@ -30,6 +30,7 @@ public class MovieItem implements Parcelable {
 	private int id;
 	private String movieTitle;
 	private String movieTagline;
+	private String movieRuntime;
 	private String movieStatus;
 	private String movieRatings;
 	private String movieRatingsVote;
@@ -51,6 +52,7 @@ public class MovieItem implements Parcelable {
 				int dataId = object.getInt("id");
 				String dataTitle = object.getString("title");
 				String dataTagline = object.getString("tagline");
+				String dataRuntime = object.getString("runtime");
 				String dataStatus = object.getString("status");
 				String dataVoteAverage = object.getString("vote_average");
 				String dataVoteCount = object.getString("vote_count");
@@ -116,6 +118,7 @@ public class MovieItem implements Parcelable {
 				this.id = dataId;
 				this.movieTitle = dataTitle;
 				this.movieTagline = dataTagline;
+				this.movieRuntime = dataRuntime;
 				this.movieStatus = dataStatus;
 				this.movieRatings = dataVoteAverage;
 				this.movieRatingsVote = dataVoteCount;
@@ -187,6 +190,7 @@ public class MovieItem implements Parcelable {
 		id = in.readInt();
 		movieTitle = in.readString();
 		movieTagline = in.readString();
+		movieRuntime = in.readString();
 		movieStatus = in.readString();
 		movieRatings = in.readString();
 		movieRatingsVote = in.readString();
@@ -219,6 +223,10 @@ public class MovieItem implements Parcelable {
 	public String getMovieTagline() {
 		return movieTagline;
 		
+	}
+	
+	public String getMovieRuntime() {
+		return movieRuntime;
 	}
 	
 	public String getMovieStatus() {
@@ -303,6 +311,7 @@ public class MovieItem implements Parcelable {
 		dest.writeInt(id);
 		dest.writeString(movieTitle);
 		dest.writeString(movieTagline);
+		dest.writeString(movieRuntime);
 		dest.writeString(movieStatus);
 		dest.writeString(movieRatings);
 		dest.writeString(movieRatingsVote);

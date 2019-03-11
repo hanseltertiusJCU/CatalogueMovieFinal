@@ -32,6 +32,7 @@
     <string name="detailed_movie_rating_text">Detailed Movie Rating Text</string>
     <string name="detailed_movie_status_text">Detailed Movie Status Text</string>
     <string name="detailed_movie_tagline_text">Detailed Movie Tagline Text</string>
+    <string name="detailed_movie_runtime_text">Detailed Movie Runtime Text</string>
     <string name="detailed_movie_title_text">Detailed Movie Title Text</string>
     <string name="detailed_movie_overview_text">Detailed Overview</string>
     <string name="detailed_movie_release_date_text">yyyy-MM-dd</string>
@@ -48,6 +49,7 @@
     <string name="detailed_movie_unknown_title">Title Unknown</string>
     <string name="detailed_movie_unknown_tagline">Tagline Unknown</string>
     <string name="detailed_movie_unknown_status">Status Unknown</string>
+    <string name="detailed_movie_unknown_runtime">Runtime Unknown</string>
     <string name="detailed_movie_default_value_ratings">0</string>
     <string name="detailed_movie_default_value_ratings_vote">0</string>
     <string name="detailed_movie_unknown_original_language">Original Language Unknown</string>
@@ -66,6 +68,7 @@
     <string name="detailed_tv_show_unknown_name">Name Unknown</string>
     <string name="detailed_tv_show_unknown_seasons">Seasons Unknown</string>
     <string name="detailed_tv_show_unknown_episodes">Episodes Unknown</string>
+    <string name="detailed_tv_show_unknown_episodes_runtime">Episodes Runtime Unknown</string>
     <string name="detailed_tv_show_default_value_ratings">0</string>
     <string name="detailed_tv_show_default_value_ratings_vote">0</string>
     <string name="detailed_tv_show_unknown_original_language">Original Language Unknown</string>
@@ -88,12 +91,16 @@
     <!-- Set Span detailed movie item section title -->
     <string name="span_movie_detail_status">Status :</string>
     <string name="span_movie_detail_rating">Rating :</string>
+    <string name="span_movie_detail_runtime">Runtime :</string>
+    <string name="span_movie_detail_runtime_minutes">minute(s)</string>
     <string name="span_movie_detail_from">from</string>
     <string name="span_movie_detail_votes">vote(s)</string>
 
     <!-- Set Span detailed TV Show item section title -->
     <string name="span_tv_show_detail_number_of_seasons">Number of Seasons :</string>
     <string name="span_tv_show_detail_number_of_episodes">Number of Episodes :</string>
+    <string name="span_tv_show_detail_runtime_episodes">Episodes Runtime :</string>
+    <string name="span_tv_show_detail_runtime_episodes_minutes">minute(s)</string>
     <string name="span_tv_show_detail_rating">Rating :</string>
     <string name="span_tv_show_detail_from">from</string>
     <string name="span_tv_show_detail_votes">vote(s)</string>

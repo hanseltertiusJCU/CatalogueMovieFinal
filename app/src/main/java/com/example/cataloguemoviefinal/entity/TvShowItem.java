@@ -31,6 +31,7 @@ public class TvShowItem implements Parcelable {
 	private String tvShowName;
 	private String tvShowSeasons;
 	private String tvShowEpisodes;
+	private String tvShowRuntimeEpisodes;
 	private String tvShowRatings;
 	private String tvShowRatingsVote;
 	private String tvShowOriginalLanguage;
@@ -52,6 +53,11 @@ public class TvShowItem implements Parcelable {
 				String dataName = object.getString("name");
 				String dataNumberOfSeasons = object.getString("number_of_seasons");
 				String dataNumberOfEpisodes = object.getString("number_of_episodes");
+				JSONArray dataEpisodesRuntimeArray = object.getJSONArray("episode_run_time");
+				String dataRuntimeEpisodes = null;
+				if(dataEpisodesRuntimeArray.length() > 0){
+					dataRuntimeEpisodes = dataEpisodesRuntimeArray.getString(0); // retrieve value from episode_run_time JSON array
+				}
 				String dataVoteAverage = object.getString("vote_average");
 				String dataVoteCount = object.getString("vote_count");
 				// value tsb berguna untuk mentransfer ke MainActivity agar bisa mendisplay
@@ -116,6 +122,7 @@ public class TvShowItem implements Parcelable {
 				this.tvShowName = dataName;
 				this.tvShowSeasons = dataNumberOfSeasons;
 				this.tvShowEpisodes = dataNumberOfEpisodes;
+				this.tvShowRuntimeEpisodes = dataRuntimeEpisodes;
 				this.tvShowRatings = dataVoteAverage;
 				this.tvShowRatingsVote = dataVoteCount;
 				this.tvShowOriginalLanguage = displayed_language;
@@ -186,6 +193,7 @@ public class TvShowItem implements Parcelable {
 		tvShowName = in.readString();
 		tvShowSeasons = in.readString();
 		tvShowEpisodes = in.readString();
+		tvShowRuntimeEpisodes = in.readString();
 		tvShowRatings = in.readString();
 		tvShowRatingsVote = in.readString();
 		tvShowOriginalLanguage = in.readString();
@@ -211,10 +219,6 @@ public class TvShowItem implements Parcelable {
 		return tvShowName;
 	}
 	
-	public void setTvShowName(String tvShowName) {
-		this.tvShowName = tvShowName;
-	}
-	
 	public String getTvShowSeasons() {
 		return tvShowSeasons;
 	}
@@ -223,12 +227,12 @@ public class TvShowItem implements Parcelable {
 		return tvShowEpisodes;
 	}
 	
-	public String getTvShowRatings() {
-		return tvShowRatings;
+	public String getTvShowRuntimeEpisodes() {
+		return tvShowRuntimeEpisodes;
 	}
 	
-	public void setTvShowRatings(String tvShowRatings) {
-		this.tvShowRatings = tvShowRatings;
+	public String getTvShowRatings() {
+		return tvShowRatings;
 	}
 	
 	public String getTvShowRatingsVote() {
@@ -237,10 +241,6 @@ public class TvShowItem implements Parcelable {
 	
 	public String getTvShowOriginalLanguage() {
 		return tvShowOriginalLanguage;
-	}
-	
-	public void setTvShowOriginalLanguage(String tvShowOriginalLanguage) {
-		this.tvShowOriginalLanguage = tvShowOriginalLanguage;
 	}
 	
 	public String getTvShowNetworks() {
@@ -255,20 +255,12 @@ public class TvShowItem implements Parcelable {
 		return tvShowFirstAirDate;
 	}
 	
-	public void setTvShowFirstAirDate(String tvShowFirstAirDate) {
-		this.tvShowFirstAirDate = tvShowFirstAirDate;
-	}
-	
 	public String getTvShowOverview() {
 		return tvShowOverview;
 	}
 	
 	public String getTvShowPosterPath() {
 		return tvShowPosterPath;
-	}
-	
-	public void setTvShowPosterPath(String tvShowPosterPath) {
-		this.tvShowPosterPath = tvShowPosterPath;
 	}
 	
 	public String getDateAddedFavorite() {
@@ -299,6 +291,7 @@ public class TvShowItem implements Parcelable {
 		dest.writeString(tvShowName);
 		dest.writeString(tvShowSeasons);
 		dest.writeString(tvShowEpisodes);
+		dest.writeString(tvShowRuntimeEpisodes);
 		dest.writeString(tvShowRatings);
 		dest.writeString(tvShowRatingsVote);
 		dest.writeString(tvShowOriginalLanguage);

@@ -10,12 +10,9 @@
         android:id="@+id/detailed_poster_image"
         style="@style/PosterImage"
         android:layout_margin="@dimen/inner_view_margin"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.01"
+        app:layout_constraintBottom_toBottomOf="@id/detailed_fifth_info_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toTopOf="@id/detailed_first_info_text"
         tools:src="@drawable/no_image_available" />
 
 
@@ -61,7 +58,7 @@
         app:layout_constraintStart_toEndOf="@+id/detailed_poster_image"
         app:layout_constraintTop_toBottomOf="@+id/detailed_second_info_text"
         app:layout_constraintVertical_weight="1"
-        tools:text="@string/detailed_movie_status_text" />
+        tools:text="@string/detailed_movie_runtime_text" />
 
     <TextView
         android:id="@+id/detailed_fourth_info_text"
@@ -70,7 +67,22 @@
         android:layout_marginTop="@dimen/text_margin"
         android:layout_marginRight="@dimen/inner_view_margin"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/detailed_fifth_info_title"
+        app:layout_constraintBottom_toTopOf="@+id/detailed_fifth_info_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/detailed_poster_image"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_third_info_text"
+        app:layout_constraintVertical_weight="1"
+        tools:text="@string/detailed_movie_status_text"/>
+
+    <TextView
+        android:id="@+id/detailed_fifth_info_text"
+        style="@style/DetailedText"
+        android:layout_marginLeft="@dimen/inner_view_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        android:layout_marginRight="@dimen/inner_view_margin"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/detailed_sixth_info_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/detailed_poster_image"
@@ -78,32 +90,6 @@
         app:layout_constraintVertical_weight="1"
         tools:text="@string/detailed_movie_rating_text" />
 
-
-    <TextView
-        android:id="@+id/detailed_fifth_info_title"
-        style="@style/DetailedScrollViewTitleText"
-        android:layout_marginStart="@dimen/inner_view_margin"
-        android:layout_marginTop="@dimen/text_margin"
-        android:layout_marginEnd="@dimen/inner_view_margin"
-        app:layout_constraintBottom_toTopOf="@+id/detailed_fifth_info_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailed_poster_image"
-        tools:text="@string/detailed_movie_languages_title" />
-
-    <TextView
-        android:id="@+id/detailed_fifth_info_text"
-        style="@style/DetailedScrollViewContentText"
-        android:layout_marginStart="@dimen/inner_view_margin"
-        android:layout_marginTop="@dimen/text_margin"
-        android:layout_marginEnd="@dimen/inner_view_margin"
-        app:layout_constraintBottom_toTopOf="@+id/detailed_sixth_info_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailed_fifth_info_title"
-        tools:text="@string/detailed_movie_languages_text" />
 
     <TextView
         android:id="@+id/detailed_sixth_info_title"
@@ -116,7 +102,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detailed_fifth_info_text"
-        tools:text="@string/detailed_movie_genres_title" />
+        tools:text="@string/detailed_movie_languages_title" />
 
     <TextView
         android:id="@+id/detailed_sixth_info_text"
@@ -129,7 +115,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detailed_sixth_info_title"
-        tools:text="@string/detailed_movie_genres_text" />
+        tools:text="@string/detailed_movie_languages_text" />
 
     <TextView
         android:id="@+id/detailed_seventh_info_title"
@@ -142,7 +128,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detailed_sixth_info_text"
-        tools:text="@string/detailed_movie_release_date_title" />
+        tools:text="@string/detailed_movie_genres_title" />
 
     <TextView
         android:id="@+id/detailed_seventh_info_text"
@@ -155,7 +141,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detailed_seventh_info_title"
-        tools:text="@string/detailed_movie_release_date_text" />
+        tools:text="@string/detailed_movie_genres_text" />
 
     <TextView
         android:id="@+id/detailed_eighth_info_title"
@@ -168,10 +154,36 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detailed_seventh_info_text"
-        tools:text="@string/detailed_movie_overview_title" />
+        tools:text="@string/detailed_movie_release_date_title" />
 
     <TextView
         android:id="@+id/detailed_eighth_info_text"
+        style="@style/DetailedScrollViewContentText"
+        android:layout_marginStart="@dimen/inner_view_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        android:layout_marginEnd="@dimen/inner_view_margin"
+        app:layout_constraintBottom_toTopOf="@+id/detailed_ninth_info_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_eighth_info_title"
+        tools:text="@string/detailed_movie_release_date_text" />
+
+    <TextView
+        android:id="@+id/detailed_ninth_info_title"
+        style="@style/DetailedScrollViewTitleText"
+        android:layout_marginStart="@dimen/inner_view_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        android:layout_marginEnd="@dimen/inner_view_margin"
+        app:layout_constraintBottom_toTopOf="@+id/detailed_ninth_info_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_eighth_info_text"
+        tools:text="@string/detailed_movie_overview_title" />
+
+    <TextView
+        android:id="@+id/detailed_ninth_info_text"
         style="@style/DetailedScrollViewContentText"
         android:layout_marginStart="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
@@ -181,7 +193,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailed_eighth_info_title"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_ninth_info_title"
         tools:text="@string/detailed_movie_overview_text" />
 
 </android.support.constraint.ConstraintLayout>

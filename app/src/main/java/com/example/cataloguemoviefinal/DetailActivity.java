@@ -31,7 +31,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
-import com.example.cataloguemoviefinal.database.FavoriteDatabaseContract;
 import com.example.cataloguemoviefinal.entity.MovieItem;
 import com.example.cataloguemoviefinal.entity.TvShowItem;
 import com.example.cataloguemoviefinal.factory.DetailedMovieViewModelFactory;
@@ -96,8 +95,6 @@ public class DetailActivity extends AppCompatActivity {
 	TextView textViewDetailedThirdInfoText;
 	@BindView(R.id.detailed_fourth_info_text)
 	TextView textViewDetailedFourthInfoText;
-	@BindView(R.id.detailed_fifth_info_title)
-	TextView textViewDetailedFifthInfoTitle;
 	@BindView(R.id.detailed_fifth_info_text)
 	TextView textViewDetailedFifthInfoText;
 	@BindView(R.id.detailed_sixth_info_title)
@@ -112,6 +109,10 @@ public class DetailActivity extends AppCompatActivity {
 	TextView textViewDetailedEighthInfoTitle;
 	@BindView(R.id.detailed_eighth_info_text)
 	TextView textViewDetailedEighthInfoText;
+	@BindView(R.id.detailed_ninth_info_title)
+	TextView textViewDetailedNinthInfoTitle;
+	@BindView(R.id.detailed_ninth_info_text)
+	TextView textViewDetailedNinthInfoText;
 	// Set layout value untuk dapat menjalankan process loading data
 	@BindView(R.id.detailed_progress_bar)
 	ProgressBar detailedProgressBar;
@@ -340,92 +341,113 @@ public class DetailActivity extends AppCompatActivity {
 					}
 					
 					// Set textview content in detailed movie runtime to contain a variety of different colors
+					Spannable runtimeWord = new SpannableString(getString(R.string.span_movie_detail_runtime) + " ");
+					runtimeWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, runtimeWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedThirdInfoText.setText(runtimeWord);
+					
+					// todo: if condition
+					if(detailedMovieItems.get(0).getMovieRuntime() != null && !detailedMovieItems.get(0).getMovieRuntime().isEmpty()){
+						Spannable runtimeDetailedMovie = new SpannableString(detailedMovieItems.get(0).getMovieRuntime() + " ");
+						runtimeDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, runtimeDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+						textViewDetailedThirdInfoText.append(runtimeDetailedMovie);
+						
+						Spannable runtimeDetailedMovieMinutes = new SpannableString(getString(R.string.span_movie_detail_runtime_minutes));
+						runtimeDetailedMovieMinutes.setSpan(new ForegroundColorSpan(Color.BLACK), 0, runtimeDetailedMovieMinutes.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+						textViewDetailedThirdInfoText.append(runtimeDetailedMovieMinutes);
+					} else {
+						Spannable runtimeDetailedMovie = new SpannableString(getString(R.string.detailed_movie_unknown_runtime));
+						runtimeDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, runtimeDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+						textViewDetailedThirdInfoText.append(runtimeDetailedMovie);
+					}
+					
+					// Set textview content in detailed movie status to contain a variety of different colors
 					Spannable statusWord = new SpannableString(getString(R.string.span_movie_detail_status) + " ");
 					statusWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, statusWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-					textViewDetailedThirdInfoText.setText(statusWord);
+					textViewDetailedFourthInfoText.setText(statusWord);
+					
 					// todo: if condition
 					if(detailedMovieItems.get(0).getMovieStatus() != null && !detailedMovieItems.get(0).getMovieStatus().isEmpty()){
 						Spannable statusDetailedMovie = new SpannableString(detailedMovieItems.get(0).getMovieStatus());
 						statusDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, statusDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-						textViewDetailedThirdInfoText.append(statusDetailedMovie);
+						textViewDetailedFourthInfoText.append(statusDetailedMovie);
 					} else {
 						Spannable statusDetailedMovie = new SpannableString(getString(R.string.detailed_movie_unknown_status));
 						statusDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, statusDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-						textViewDetailedThirdInfoText.append(statusDetailedMovie);
+						textViewDetailedFourthInfoText.append(statusDetailedMovie);
 					}
 					
 					
 					// Set textview content in detailed movie rating to contain a variety of different colors
 					Spannable ratingWord = new SpannableString(getString(R.string.span_movie_detail_rating) + " ");
 					ratingWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-					textViewDetailedFourthInfoText.setText(ratingWord);
+					textViewDetailedFifthInfoText.setText(ratingWord);
 					
 					// todo: if condition -> set default value to 0
 					if(detailedMovieItems.get(0).getMovieRatings() != null && !detailedMovieItems.get(0).getMovieRatings().isEmpty()){
 						Spannable ratingDetailedMovie = new SpannableString(detailedMovieItems.get(0).getMovieRatings());
 						ratingDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, ratingDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-						textViewDetailedFourthInfoText.append(ratingDetailedMovie);
+						textViewDetailedFifthInfoText.append(ratingDetailedMovie);
 					} else {
 						Spannable ratingDetailedMovie = new SpannableString(getString(R.string.detailed_movie_default_value_ratings));
 						ratingDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, ratingDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-						textViewDetailedFourthInfoText.append(ratingDetailedMovie);
+						textViewDetailedFifthInfoText.append(ratingDetailedMovie);
 					}
 					
 					
 					Spannable ratingFromWord = new SpannableString(" " + getString(R.string.span_movie_detail_from) + " ");
 					ratingFromWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingFromWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-					textViewDetailedFourthInfoText.append(ratingFromWord);
+					textViewDetailedFifthInfoText.append(ratingFromWord);
 					
 					// todo: if condition -> set default value to 0
 					if(detailedMovieItems.get(0).getMovieRatingsVote() != null && !detailedMovieItems.get(0).getMovieRatingsVote().isEmpty()){
 						Spannable ratingDetailedMovieVotes = new SpannableString(detailedMovieItems.get(0).getMovieRatingsVote());
 						ratingDetailedMovieVotes.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, ratingDetailedMovieVotes.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-						textViewDetailedFourthInfoText.append(ratingDetailedMovieVotes);
+						textViewDetailedFifthInfoText.append(ratingDetailedMovieVotes);
 					} else {
 						Spannable ratingDetailedMovieVotes = new SpannableString(getString(R.string.detailed_movie_default_value_ratings_vote));
 						ratingDetailedMovieVotes.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, ratingDetailedMovieVotes.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-						textViewDetailedFourthInfoText.append(ratingDetailedMovieVotes);
+						textViewDetailedFifthInfoText.append(ratingDetailedMovieVotes);
 					}
 					
 					
 					Spannable ratingVotesWord = new SpannableString(" " + getString(R.string.span_movie_detail_votes));
 					ratingVotesWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingVotesWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-					textViewDetailedFourthInfoText.append(ratingVotesWord);
+					textViewDetailedFifthInfoText.append(ratingVotesWord);
 					
-					textViewDetailedFifthInfoTitle.setText(getString(R.string.detailed_movie_languages_title));
+					textViewDetailedSixthInfoTitle.setText(getString(R.string.detailed_movie_languages_title));
 					
 					// todo: if condition
 					if(detailedMovieItems.get(0).getMovieLanguages() != null && !detailedMovieItems.get(0).getMovieLanguages().isEmpty()){
-						textViewDetailedFifthInfoText.setText(detailedMovieItems.get(0).getMovieLanguages());
+						textViewDetailedSixthInfoText.setText(detailedMovieItems.get(0).getMovieLanguages());
 					} else {
-						textViewDetailedFifthInfoText.setText(getString(R.string.detailed_movie_unknown_language));
+						textViewDetailedSixthInfoText.setText(getString(R.string.detailed_movie_unknown_language));
 					}
 					
-					textViewDetailedSixthInfoTitle.setText(getString(R.string.detailed_movie_genres_title));
+					textViewDetailedSeventhInfoTitle.setText(getString(R.string.detailed_movie_genres_title));
 					
 					// todo: if condition
 					if(detailedMovieItems.get(0).getMovieGenres() != null && !detailedMovieItems.get(0).getMovieGenres().isEmpty()){
-						textViewDetailedSixthInfoText.setText(detailedMovieItems.get(0).getMovieGenres());
+						textViewDetailedSeventhInfoText.setText(detailedMovieItems.get(0).getMovieGenres());
 					} else {
-						textViewDetailedSixthInfoText.setText(getString(R.string.detailed_movie_unknown_genres));
+						textViewDetailedSeventhInfoText.setText(getString(R.string.detailed_movie_unknown_genres));
 					}
 					
-					textViewDetailedSeventhInfoTitle.setText(getString(R.string.detailed_movie_release_date_title));
+					textViewDetailedEighthInfoTitle.setText(getString(R.string.detailed_movie_release_date_title));
 					
 					// todo: if condition
 					if(detailedMovieItems.get(0).getMovieReleaseDate() != null && !detailedMovieItems.get(0).getMovieReleaseDate().isEmpty()){
-						textViewDetailedSeventhInfoText.setText(detailedMovieItems.get(0).getMovieReleaseDate());
+						textViewDetailedEighthInfoText.setText(detailedMovieItems.get(0).getMovieReleaseDate());
 					} else {
-						textViewDetailedSeventhInfoText.setText(getString(R.string.detailed_movie_unknown_release_date));
+						textViewDetailedEighthInfoText.setText(getString(R.string.detailed_movie_unknown_release_date));
 					}
 					
-					textViewDetailedEighthInfoTitle.setText(getString(R.string.detailed_movie_overview_title));
+					textViewDetailedNinthInfoTitle.setText(getString(R.string.detailed_movie_overview_title));
 					
 					// todo: if condition
 					if(detailedMovieItems.get(0).getMovieOverview() != null && !detailedMovieItems.get(0).getMovieOverview().isEmpty()){
-						textViewDetailedEighthInfoText.setText(detailedMovieItems.get(0).getMovieOverview());
+						textViewDetailedNinthInfoText.setText(detailedMovieItems.get(0).getMovieOverview());
 					} else {
-						textViewDetailedEighthInfoText.setText(getString(R.string.detailed_movie_unknown_overview));
+						textViewDetailedNinthInfoText.setText(getString(R.string.detailed_movie_unknown_overview));
 					}
 					
 					
@@ -496,72 +518,87 @@ public class DetailActivity extends AppCompatActivity {
 						textViewDetailedThirdInfoText.append(episodesDetailedMovie);
 					}
 					
+					Spannable episodesRuntimeWord = new SpannableString(getString(R.string.span_tv_show_detail_runtime_episodes) + " ");
+					episodesRuntimeWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, episodesRuntimeWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textViewDetailedFourthInfoText.setText(episodesRuntimeWord);
+					
+					// todo: if condition
+					if(detailedTvShowItems.get(0).getTvShowRuntimeEpisodes() != null && !detailedTvShowItems.get(0).getTvShowRuntimeEpisodes().isEmpty()){
+						Spannable episodesRuntimeDetailTvShow = new SpannableString(detailedTvShowItems.get(0).getTvShowRuntimeEpisodes() + " ");
+						episodesRuntimeDetailTvShow.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, episodesRuntimeDetailTvShow.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+						textViewDetailedFourthInfoText.append(episodesRuntimeDetailTvShow);
+						
+						Spannable episodesRuntimeDetailTvShowMinutes = new SpannableString(getString(R.string.span_tv_show_detail_runtime_episodes_minutes));
+						episodesRuntimeDetailTvShowMinutes.setSpan(new ForegroundColorSpan(Color.BLACK), 0, episodesRuntimeDetailTvShowMinutes.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+						textViewDetailedFourthInfoText.append(episodesRuntimeDetailTvShowMinutes);
+					}
+					
 					// Set textview content in detailed movie rating to contain a variety of different colors
 					Spannable ratingWord = new SpannableString(getString(R.string.span_tv_show_detail_rating) + " ");
 					ratingWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-					textViewDetailedFourthInfoText.setText(ratingWord);
+					textViewDetailedFifthInfoText.setText(ratingWord);
 					// todo: if condition
 					if(detailedTvShowItems.get(0).getTvShowRatings() != null && !detailedTvShowItems.get(0).getTvShowRatings().isEmpty()){
 						Spannable tvShowDetailedMovie = new SpannableString(detailedTvShowItems.get(0).getTvShowRatings());
 						tvShowDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, tvShowDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-						textViewDetailedFourthInfoText.append(tvShowDetailedMovie);
+						textViewDetailedFifthInfoText.append(tvShowDetailedMovie);
 					} else {
 						Spannable tvShowDetailedMovie = new SpannableString(getString(R.string.detailed_movie_default_value_ratings));
 						tvShowDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, tvShowDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-						textViewDetailedFourthInfoText.append(tvShowDetailedMovie);
+						textViewDetailedFifthInfoText.append(tvShowDetailedMovie);
 					}
 					
 					
 					Spannable ratingFromWord = new SpannableString(" " + getString(R.string.span_tv_show_detail_from) + " ");
 					ratingFromWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingFromWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-					textViewDetailedFourthInfoText.append(ratingFromWord);
+					textViewDetailedFifthInfoText.append(ratingFromWord);
 					// todo: if condition
 					if(detailedTvShowItems.get(0).getTvShowRatingsVote() != null && !detailedTvShowItems.get(0).getTvShowRatingsVote().isEmpty()){
 						Spannable ratingDetailedTvShowVotes = new SpannableString(detailedTvShowItems.get(0).getTvShowRatingsVote());
 						ratingDetailedTvShowVotes.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, ratingDetailedTvShowVotes.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-						textViewDetailedFourthInfoText.append(ratingDetailedTvShowVotes);
+						textViewDetailedFifthInfoText.append(ratingDetailedTvShowVotes);
 					} else {
 						Spannable ratingDetailedTvShowVotes = new SpannableString(getString(R.string.detailed_tv_show_default_value_ratings_vote));
 						ratingDetailedTvShowVotes.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, ratingDetailedTvShowVotes.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-						textViewDetailedFourthInfoText.append(ratingDetailedTvShowVotes);
+						textViewDetailedFifthInfoText.append(ratingDetailedTvShowVotes);
 					}
 					
 					
 					Spannable ratingVotesWord = new SpannableString(" " + getString(R.string.span_tv_show_detail_votes));
 					ratingVotesWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingVotesWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-					textViewDetailedFourthInfoText.append(ratingVotesWord);
+					textViewDetailedFifthInfoText.append(ratingVotesWord);
 					
-					textViewDetailedFifthInfoTitle.setText(getString(R.string.detailed_tv_show_networks_title));
+					textViewDetailedSixthInfoTitle.setText(getString(R.string.detailed_tv_show_networks_title));
 					// todo: if condition
 					if(detailedTvShowItems.get(0).getTvShowNetworks() != null && !detailedTvShowItems.get(0).getTvShowNetworks().isEmpty()){
-						textViewDetailedFifthInfoText.setText(detailedTvShowItems.get(0).getTvShowNetworks());
+						textViewDetailedSixthInfoText.setText(detailedTvShowItems.get(0).getTvShowNetworks());
 					} else {
-						textViewDetailedFifthInfoText.setText(getString(R.string.detailed_tv_show_unknown_networks));
+						textViewDetailedSixthInfoText.setText(getString(R.string.detailed_tv_show_unknown_networks));
 					}
 					
-					textViewDetailedSixthInfoTitle.setText(getString(R.string.detailed_tv_show_genres_title));
+					textViewDetailedSeventhInfoTitle.setText(getString(R.string.detailed_tv_show_genres_title));
 					// todo: if condition
 					if(detailedTvShowItems.get(0).getTvShowGenres() != null && !detailedTvShowItems.get(0).getTvShowGenres().isEmpty()){
-						textViewDetailedSixthInfoText.setText(detailedTvShowItems.get(0).getTvShowGenres());
+						textViewDetailedSeventhInfoText.setText(detailedTvShowItems.get(0).getTvShowGenres());
 					} else {
-						textViewDetailedSixthInfoText.setText(getString(R.string.detailed_tv_show_unknown_genres));
+						textViewDetailedSeventhInfoText.setText(getString(R.string.detailed_tv_show_unknown_genres));
 					}
 					
 					
-					textViewDetailedSeventhInfoTitle.setText(getString(R.string.detailed_tv_show_first_air_date_title));
+					textViewDetailedEighthInfoTitle.setText(getString(R.string.detailed_tv_show_first_air_date_title));
 					// todo: if condition
 					if(detailedTvShowItems.get(0).getTvShowFirstAirDate() != null && !detailedTvShowItems.get(0).getTvShowFirstAirDate().isEmpty()){
-						textViewDetailedSeventhInfoText.setText(detailedTvShowItems.get(0).getTvShowFirstAirDate());
+						textViewDetailedEighthInfoText.setText(detailedTvShowItems.get(0).getTvShowFirstAirDate());
 					} else {
-						textViewDetailedSeventhInfoText.setText(getString(R.string.detailed_tv_show_unknown_first_air_date));
+						textViewDetailedEighthInfoText.setText(getString(R.string.detailed_tv_show_unknown_first_air_date));
 					}
 					
-					textViewDetailedEighthInfoTitle.setText(getString(R.string.detailed_tv_show_overview_title));
+					textViewDetailedNinthInfoTitle.setText(getString(R.string.detailed_tv_show_overview_title));
 					// todo: if condition
 					if(detailedTvShowItems.get(0).getTvShowOverview() != null && !detailedTvShowItems.get(0).getTvShowOverview().isEmpty()){
-						textViewDetailedEighthInfoText.setText(detailedTvShowItems.get(0).getTvShowOverview());
+						textViewDetailedNinthInfoText.setText(detailedTvShowItems.get(0).getTvShowOverview());
 					} else {
-						textViewDetailedEighthInfoText.setText(getString(R.string.detailed_tv_show_unknown_overview));
+						textViewDetailedNinthInfoText.setText(getString(R.string.detailed_tv_show_unknown_overview));
 					}
 					
 					
