@@ -27,6 +27,7 @@
     <string name="favorite">Favorit</string>
     <string name="search_movie">Pencarian Movie</string>
     <string name="search_tv_show">Pencarian Acara TV</string>
+    <string name="settings">Pengaturan</string>
 
     <!-- Set Detailed Movie section value placeholder -->
     <string name="detailed_movie_rating_text">Teks Nilai dari Detil Film</string>

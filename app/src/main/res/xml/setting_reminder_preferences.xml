@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Class ini berguna utk membuat layout SharedPreferences -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Buat PreferenceCategory untuk menampung daily reminder dan release movie reminder -->
@@ -10,13 +11,15 @@
             android:defaultValue="false"
             android:key="@string/daily_reminder_key"
             android:title="@string/daily_reminder_title"
-            android:summary="@string/daily_reminder_summary"/>
+            android:summary="@string/daily_reminder_summary"
+            android:textColor="@android:color/black"/>
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/release_movie_reminder_key"
             android:title="@string/release_movie_reminder_title"
-            android:summary="@string/release_movie_reminder_summary"/>
+            android:summary="@string/release_movie_reminder_summary"
+            android:textColor="@android:color/black"/>
 
     </PreferenceCategory>
 

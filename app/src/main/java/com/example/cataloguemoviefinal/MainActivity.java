@@ -323,8 +323,11 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == R.id.action_change_language_settings) {
+		if(item.getItemId() == R.id.action_change_language_settings) { // Open language settings
 			Intent mIntent = new Intent(Settings.ACTION_LOCALE_SETTINGS);
+			startActivity(mIntent);
+		} else if(item.getItemId() == R.id.action_reminder_preference_settings){ // Open preference settings for triggering alarm manager
+			Intent mIntent = new Intent(this, SettingsActivity.class);
 			startActivity(mIntent);
 		}
 		

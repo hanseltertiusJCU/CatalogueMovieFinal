@@ -9,7 +9,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "API_KEY" , "\"920c265d2e074ebf06d98bf438bded70\"")
+        buildConfigField("String", "API_KEY", "\"920c265d2e074ebf06d98bf438bded70\"")
         buildConfigField("String", "BASE_DISCOVER_MOVIE_URL", "\"https://api.themoviedb.org/3/discover/movie?api_key=\"")
         buildConfigField("String", "BASE_DISCOVER_TV_SHOW_URL", "\"https://api.themoviedb.org/3/discover/tv?api_key=\"")
         buildConfigField("String", "BASE_MOVIE_SEARCH_URL", "\"https://api.themoviedb.org/3/search/movie?api_key=\"")
@@ -42,6 +42,7 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation "android.arch.lifecycle:viewmodel:1.1.1"
     implementation 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.android.support:preference-v7:28.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

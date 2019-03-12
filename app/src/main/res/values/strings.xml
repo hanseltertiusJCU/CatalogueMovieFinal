@@ -27,6 +27,7 @@
     <string name="favorite">Favorite</string>
     <string name="search_movie">Search Movie</string>
     <string name="search_tv_show">Search TV Show</string>
+    <string name="settings">Settings</string>
 
     <!-- Set Detailed Movie section value placeholder -->
     <string name="detailed_movie_rating_text">Detailed Movie Rating Text</string>
