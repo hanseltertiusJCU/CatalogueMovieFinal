@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Buat PreferenceCategory untuk menampung daily reminder dan release movie reminder -->
+    <PreferenceCategory android:title="@string/alarm_setting_title">
+
+        <!-- Switch preference untuk mengatur value on and off -->
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/daily_reminder_key"
+            android:title="@string/daily_reminder_title"
+            android:summary="@string/daily_reminder_summary"/>
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/release_movie_reminder_key"
+            android:title="@string/release_movie_reminder_title"
+            android:summary="@string/release_movie_reminder_summary"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

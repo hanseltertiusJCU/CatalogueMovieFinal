@@ -115,6 +115,17 @@
     <string name="favorite_movie_item_widget_text">Item Widget Film Favorit</string>
     <string name="favorite_movie_item_empty_text">Item Film Favorit Kosong</string>
 
+    <!-- String untuk represent title di setting -->
+    <string name="alarm_setting_title">Pengaturan alarm</string>
+
+    <!-- String untuk menampung isi value dari setting preferences -->
+    <string name="daily_reminder_title">Peringatan harian</string>
+    <string name="daily_reminder_summary">Peringatan untuk kembali ke app Catalogue Movie</string>
+    <string name="daily_reminder_key">key_daily_reminder</string>
+    <string name="release_movie_reminder_title">Peringatan tanggal rilis dari film</string>
+    <string name="release_movie_reminder_summary">Peringatan untuk menunjukkan bahwa ada film yang keluar hari ini</string>
+    <string name="release_movie_reminder_key">key_release_movie_reminder</string>
+
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
 
