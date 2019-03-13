@@ -131,6 +131,12 @@
     <string name="release_movie_reminder_summary">Reminder showing the movie that released today</string>
     <string name="release_movie_reminder_key">key_release_movie_reminder</string>
 
+    <!-- String untuk menampung notification title dan subtitle di Alarm Manager -->
+    <string name="daily_reminder_notif_title">Catalogue Movie</string>
+    <string name="daily_reminder_notif_text">Catalogue Movie is missing you! Click to open the app!</string>
+    <string name="release_today_reminder_notif_text_placeholder">has released today!</string>
+
+
 
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>

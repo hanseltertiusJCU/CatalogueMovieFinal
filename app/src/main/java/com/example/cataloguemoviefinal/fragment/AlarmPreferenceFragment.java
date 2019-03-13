@@ -6,6 +6,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.example.cataloguemoviefinal.R;
+import com.example.cataloguemoviefinal.alarm.DailyReminderAlarmReceiver;
 
 public class AlarmPreferenceFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener {
 	
@@ -15,6 +16,8 @@ public class AlarmPreferenceFragment extends PreferenceFragmentCompat implements
 	// Preference in preference screen, which is useful for storing boolean into SharedPreferences
 	private SwitchPreference dailyReminderPreference;
 	private SwitchPreference movieReleaseTodayReminderPreference;
+	// Alarm receiver object
+	private DailyReminderAlarmReceiver dailyReminderAlarmReceiver;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -38,9 +41,29 @@ public class AlarmPreferenceFragment extends PreferenceFragmentCompat implements
 	}
 	
 	
-	// Method tsb berguna untuk mengganti mode key true atau false
+	// Method tsb berguna ketika value dari Preference itu diganti
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object object) {
-		return true;
+		
+		// Dapatin key value dari preference object
+		String preferenceKey = preference.getKey();
+		
+		// Dapatin state dari object
+		boolean objectState = (boolean) object;
+		
+		// Buat daily alarm receiver
+		dailyReminderAlarmReceiver = new DailyReminderAlarmReceiver();
+		
+		// Cek jika preference key itu sama dengan reminder
+		if(preferenceKey.equals(DAILY_REMINDER)){
+			if(objectState){
+				dailyReminderAlarmReceiver.setDailyReminderAlarm(getActivity(), DailyReminderAlarmReceiver.TYPE_DAILY_REMINDER);
+			} else {
+				dailyReminderAlarmReceiver.cancelAlarm(getActivity(), DailyReminderAlarmReceiver.TYPE_DAILY_REMINDER);
+			}
+		}
+		
+		// todo: cek jika value dari preference key itu true, kalau iya trigger alarmmanager
+		return true; // Return true agar update value state dari Preference
 	}
 }

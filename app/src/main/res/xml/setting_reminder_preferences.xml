@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Class ini berguna utk membuat layout SharedPreferences -->
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:iconSpaceReserved="false">
 
     <!-- Buat PreferenceCategory untuk menampung daily reminder dan release movie reminder -->
     <PreferenceCategory android:title="@string/alarm_setting_title">
