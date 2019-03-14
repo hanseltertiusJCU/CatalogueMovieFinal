@@ -79,6 +79,11 @@
             android:enabled="true"
             android:exported="false"/>
 
+        <receiver
+            android:name=".alarm.ReleaseTodayReminderAlarmReceiver"
+            android:enabled="true"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

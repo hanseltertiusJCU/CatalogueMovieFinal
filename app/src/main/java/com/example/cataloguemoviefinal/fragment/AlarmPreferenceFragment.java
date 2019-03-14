@@ -7,6 +7,8 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.alarm.DailyReminderAlarmReceiver;
+import com.example.cataloguemoviefinal.alarm.ReleaseTodayReminderAlarmReceiver;
+
 
 public class AlarmPreferenceFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener {
 	
@@ -18,6 +20,7 @@ public class AlarmPreferenceFragment extends PreferenceFragmentCompat implements
 	private SwitchPreference movieReleaseTodayReminderPreference;
 	// Alarm receiver object
 	private DailyReminderAlarmReceiver dailyReminderAlarmReceiver;
+	private ReleaseTodayReminderAlarmReceiver releaseTodayReminderAlarmReceiver;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,7 @@ public class AlarmPreferenceFragment extends PreferenceFragmentCompat implements
 		movieReleaseTodayReminderPreference.setOnPreferenceChangeListener(this);
 		
 	}
+	
 	
 	@Override
 	public void onCreatePreferences(Bundle bundle, String s) {
@@ -54,16 +58,26 @@ public class AlarmPreferenceFragment extends PreferenceFragmentCompat implements
 		// Buat daily alarm receiver
 		dailyReminderAlarmReceiver = new DailyReminderAlarmReceiver();
 		
+		// Buat release today alarm receiver
+		releaseTodayReminderAlarmReceiver = new ReleaseTodayReminderAlarmReceiver();
+		
 		// Cek jika preference key itu sama dengan reminder
 		if(preferenceKey.equals(DAILY_REMINDER)){
 			if(objectState){
-				dailyReminderAlarmReceiver.setDailyReminderAlarm(getActivity(), DailyReminderAlarmReceiver.TYPE_DAILY_REMINDER);
+				dailyReminderAlarmReceiver.setDailyReminderAlarm(getActivity());
 			} else {
-				dailyReminderAlarmReceiver.cancelAlarm(getActivity(), DailyReminderAlarmReceiver.TYPE_DAILY_REMINDER);
+				dailyReminderAlarmReceiver.cancelAlarm(getActivity());
 			}
 		}
 		
-		// todo: cek jika value dari preference key itu true, kalau iya trigger alarmmanager
+		if(preferenceKey.equals(TODAY_RELEASE_DATE_MOVIE_REMINDER)) {
+			if(objectState){
+				releaseTodayReminderAlarmReceiver.setReleaseDateTodayReminderAlarm(getActivity()); // Set alarm
+			} else {
+				releaseTodayReminderAlarmReceiver.cancelReleaseDateTodayAlarm(getActivity()); // Cancel alarm
+			}
+		}
+		
 		return true; // Return true agar update value state dari Preference
 	}
 }
