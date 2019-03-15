@@ -136,7 +136,12 @@
     <string name="daily_reminder_notif_text">Catalogue Movie is missing you! Click to open the app!</string>
     <string name="release_today_reminder_notif_text_placeholder">has released today!</string>
 
-
+    <!-- Value untuk empty state data -->
+    <string name="no_movie_data_shown">There is no movie data to display</string>
+    <string name="no_favorite_movie_data_shown">There is no favorite movie data to display</string>
+    <string name="no_tv_show_data_shown">There is no TV show data to display</string>
+    <string name="no_favorite_tv_show_data_shown">There is no favorite TV Show data to display</string>
+    <string name="no_internet_connection">There is no internet connection</string>
 
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>

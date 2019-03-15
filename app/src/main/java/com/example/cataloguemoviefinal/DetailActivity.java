@@ -265,6 +265,7 @@ public class DetailActivity extends AppCompatActivity {
 		
 		// Mode untuk menangani ViewModel yg berbeda
 		if(accessItemMode.equals("open_movie_detail")) {
+			// todo: pake if bwt connectivity
 			// Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
 			// Buat ViewModel untuk detailedMovieInfo
 			DetailedMovieViewModel detailedMovieViewModel = ViewModelProviders.of(this, new DetailedMovieViewModelFactory(this.getApplication(), detailedMovieId)).get(DetailedMovieViewModel.class);
@@ -274,6 +275,7 @@ public class DetailActivity extends AppCompatActivity {
 			// Tempelkan Observer ke LiveData object
 			detailedMovieViewModel.getDetailedMovie().observe(this, detailedMovieObserver);
 		} else if(accessItemMode.equals("open_tv_show_detail")) {
+			// todo: pake if bwt connectivity
 			// Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
 			// Buat ViewModel untuk detailedTvShowInfo
 			DetailedTvShowViewModel detailedTvShowViewModel = ViewModelProviders.of(this, new DetailedTvShowViewModelFactory(this.getApplication(), detailedTvShowId)).get(DetailedTvShowViewModel.class);

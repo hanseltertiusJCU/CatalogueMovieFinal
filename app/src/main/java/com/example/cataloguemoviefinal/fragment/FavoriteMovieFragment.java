@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.cataloguemoviefinal.DetailActivity;
 import com.example.cataloguemoviefinal.LoadFavoriteMoviesCallback;
@@ -53,6 +54,9 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	MovieAdapter movieAdapter;
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
+	// TextView buat empty state text
+	@BindView(R.id.movie_empty_state_text)
+	TextView emptyTextView;
 	// LinearLayout untuk atur visibility dari Search keyword
 	@BindView(R.id.movie_search_keyword_result)
 	LinearLayout movieSearchKeywordResult;
@@ -170,12 +174,14 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	
 	@Override
 	public void favoriteMoviePostExecute(Cursor movieItems) {
-		
+		// todo: bikin condition dimana datanya itu ada atau tidak
 		if(MainActivity.favoriteMovieItemArrayList.size() > 0){
 			// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
 			// yang menandakan bahwa loadingnya sudah selesai
 			progressBar.setVisibility(View.GONE);
 			recyclerView.setVisibility(View.VISIBLE);
+			// Set empty view visibility into gone
+			emptyTextView.setVisibility(View.GONE);
 			// Set data into adapter
 			movieAdapter.setData(MainActivity.favoriteMovieItemArrayList);
 			// Set item click listener di dalam recycler view
@@ -191,6 +197,10 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 			movieAdapter.setData(MainActivity.favoriteMovieItemArrayList);
 			progressBar.setVisibility(View.GONE);
 			recyclerView.setVisibility(View.INVISIBLE);
+			// Set empty view visibility into visible
+			emptyTextView.setVisibility(View.VISIBLE);
+			// Set empty view text
+			emptyTextView.setText(getString(R.string.no_favorite_movie_data_shown));
 		}
 	}
 	

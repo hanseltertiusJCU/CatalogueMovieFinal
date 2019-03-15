@@ -62,6 +62,7 @@
                 android:value=".MainActivity"/>
         </activity>
 
+        <!--  -->
         <provider
             android:name=".provider.FavoriteItemsProvider"
             android:authorities="com.example.cataloguemoviefinal"
@@ -69,6 +70,7 @@
             android:readPermission="com.example.cataloguemoviefinal.READ_DATABASE"
             android:writePermission="com.example.cataloguemoviefinal.WRITE_DATABASE" />
 
+        <!-- Service untuk Widget -->
         <service
             android:name=".widget.FavoriteMovieStackWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />

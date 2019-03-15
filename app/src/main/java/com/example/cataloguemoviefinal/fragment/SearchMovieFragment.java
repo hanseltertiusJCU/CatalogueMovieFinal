@@ -67,6 +67,9 @@ public class SearchMovieFragment extends Fragment{
 	RecyclerView recyclerView;
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
+	// TextView buat empty state text
+	@BindView(R.id.movie_empty_state_text)
+	TextView emptyTextView;
 	@BindView(R.id.movie_search_keyword_content)
 	TextView movieSearchKeyword;
 	private MovieAdapter movieAdapter;
@@ -175,6 +178,7 @@ public class SearchMovieFragment extends Fragment{
 						// Ketika kita submit query text, maka data akan melakukan loading kembali
 						recyclerView.setVisibility(View.INVISIBLE);
 						progressBar.setVisibility(View.VISIBLE);
+						emptyTextView.setVisibility(View.GONE);
 						
 						// Call setter method untuk merubah value parameter di ViewModel
 						searchMovieViewModel.setMovieSearchKeyword(moviekeywordResult);
@@ -294,23 +298,42 @@ public class SearchMovieFragment extends Fragment{
 		return new Observer<ArrayList<MovieItem>>() {
 			@Override
 			public void onChanged(@Nullable final ArrayList<MovieItem> movieItems) {
-				// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
-				// yang menandakan bahwa loadingnya sudah selesai
-				recyclerView.setVisibility(View.VISIBLE);
-				progressBar.setVisibility(View.GONE);
-				// Set data ke adapter
-				movieAdapter.setData(movieItems);
-				// Set item click listener di dalam recycler view
-				ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-					// Implement interface method
-					@Override
-					public void onItemClicked(RecyclerView recyclerView, int position, View view) {
-						// Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
-						if(movieItems != null) {
-							showSelectedMovieItems(movieItems.get(position));
-						}
+				// Cek jika ada arraylist
+				if(movieItems != null){
+					// Cek jika arraylist ada data
+					if(movieItems.size() > 0){
+						// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
+						// yang menandakan bahwa loadingnya sudah selesai
+						recyclerView.setVisibility(View.VISIBLE);
+						progressBar.setVisibility(View.GONE);
+						// Set empty view visibility into gone : doesnt take space and no content displayed
+						emptyTextView.setVisibility(View.GONE);
+						// Set data ke adapter
+						movieAdapter.setData(movieItems);
+						// Set item click listener di dalam recycler view
+						ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+							// Implement interface method
+							@Override
+							public void onItemClicked(RecyclerView recyclerView, int position, View view) {
+								// Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
+								showSelectedMovieItems(movieItems.get(position));
+							}
+						});
+					} else { // kondisi jika data tidak ada
+						// Set data into adapter
+						movieAdapter.setData(movieItems);
+						// Set progress bar visibility into gone, indicating that data finished on loading
+						progressBar.setVisibility(View.GONE);
+						// Set recycler view visibility into visible: take space but doesnt display anything
+						recyclerView.setVisibility(View.INVISIBLE);
+						// Set empty view visibility into visible
+						emptyTextView.setVisibility(View.VISIBLE);
+						// Set empty view text
+						emptyTextView.setText(getString(R.string.no_movie_data_shown));
 					}
-				});
+
+				}
+
 			}
 		};
 	}
