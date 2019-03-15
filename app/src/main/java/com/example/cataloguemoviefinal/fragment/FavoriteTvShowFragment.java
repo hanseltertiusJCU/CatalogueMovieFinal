@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.cataloguemoviefinal.DetailActivity;
 import com.example.cataloguemoviefinal.LoadFavoriteTvShowCallback;
@@ -48,6 +49,9 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 	RecyclerView recyclerView;
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
+	// TextView buat empty state text
+	@BindView(R.id.tv_show_empty_state_text)
+	TextView emptyTextView;
 	// LinearLayout untuk atur visibility dari Search keyword
 	@BindView(R.id.tv_show_search_keyword_result)
 	LinearLayout tvShowSearchKeywordResult;
@@ -147,6 +151,8 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 			// yang menandakan bahwa loadingnya sudah selesai
 			progressBar.setVisibility(View.GONE);
 			recyclerView.setVisibility(View.VISIBLE);
+			// Set empty view visibility into gone
+			emptyTextView.setVisibility(View.GONE);
 			// Set data into adapter
 			tvShowAdapter.setTvShowData(MainActivity.favoriteTvShowItemArrayList);
 			// Set item click listener di dalam recycler view
@@ -162,6 +168,10 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 			tvShowAdapter.setTvShowData(MainActivity.favoriteTvShowItemArrayList);
 			progressBar.setVisibility(View.GONE);
 			recyclerView.setVisibility(View.INVISIBLE);
+			// Set empty view visibility into visible
+			emptyTextView.setVisibility(View.VISIBLE);
+			// Set empty view text
+			emptyTextView.setText(getString(R.string.no_favorite_tv_show_data_shown));
 		}
 	}
 	

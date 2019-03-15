@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.cataloguemoviefinal.DetailActivity;
 import com.example.cataloguemoviefinal.LoadFavoriteTvShowCallback;
@@ -56,6 +57,9 @@ public class TvShowFragment extends Fragment{
 	RecyclerView recyclerView;
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
+	// TextView buat empty state text
+	@BindView(R.id.tv_show_empty_state_text)
+	TextView emptyTextView;
 	// LinearLayout untuk atur visibility dari Search keyword
 	@BindView(R.id.tv_show_search_keyword_result)
 	LinearLayout tvShowSearchKeywordResult;
@@ -124,7 +128,8 @@ public class TvShowFragment extends Fragment{
 		if(savedInstanceState != null) {
 			mTvShowListState = savedInstanceState.getParcelable(TV_SHOW_LIST_STATE);
 		}
-		
+
+		// todo: check for network connection
 		// Dapatkan ViewModel yang tepat dari ViewModelProviders
 		TvShowViewModel tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
 		
@@ -196,22 +201,41 @@ public class TvShowFragment extends Fragment{
 		return new Observer<ArrayList<TvShowItem>>() {
 			@Override
 			public void onChanged(@Nullable final ArrayList<TvShowItem> tvShowItems) {
-				// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
-				// yang menandakan bahwa loadingnya sudah selesai
-				recyclerView.setVisibility(View.VISIBLE);
-				progressBar.setVisibility(View.GONE);
-				// Set data ke Adapter
-				tvShowAdapter.setTvShowData(tvShowItems);
-				// Set item click listener di dalam recycler view
-				ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-					@Override
-					public void onItemClicked(RecyclerView recyclerView, int position, View view) {
-						if(tvShowItems != null) {
-							// Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
-							showSelectedTvShowItems(tvShowItems.get(position));
-						}
+				// Cek jika array tv show item exist
+				if(tvShowItems != null){
+					// Cek jika array tv show item ada data
+					if(tvShowItems.size() > 0){
+						// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
+						// yang menandakan bahwa loadingnya sudah selesai
+						recyclerView.setVisibility(View.VISIBLE);
+						progressBar.setVisibility(View.GONE);
+						// Set empty view visibility into gone : doesnt take space and no content displayed
+						emptyTextView.setVisibility(View.GONE);
+						// Set data ke Adapter
+						tvShowAdapter.setTvShowData(tvShowItems);
+						// Set item click listener di dalam recycler view
+						ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+							@Override
+							public void onItemClicked(RecyclerView recyclerView, int position, View view) {
+								// Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
+								showSelectedTvShowItems(tvShowItems.get(position));
+							}
+						});
+					} else { // kondisi jika tidak ada data
+						// Set data into adapter
+						tvShowAdapter.setTvShowData(tvShowItems);
+						// Set progress bar visibility into gone, indicating that data finished on loading
+						progressBar.setVisibility(View.GONE);
+						// Set recycler view visibility into invisible: take space but doesnt display anything
+						recyclerView.setVisibility(View.INVISIBLE);
+						// Set empty view visibility into visible
+						emptyTextView.setVisibility(View.VISIBLE);
+						// Set empty view text
+						emptyTextView.setText(getString(R.string.no_tv_show_data_shown));
 					}
-				});
+				}
+
+
 			}
 		};
 	}

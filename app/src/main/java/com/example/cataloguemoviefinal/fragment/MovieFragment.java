@@ -271,7 +271,7 @@ public class MovieFragment extends Fragment{
 						movieAdapter.setData(movieItems);
 						// Set progress bar visibility into gone, indicating that data finished on loading
 						progressBar.setVisibility(View.GONE);
-						// Set recycler view visibility into visible: take space but doesnt display anything
+						// Set recycler view visibility into invisible: take space but doesnt display anything
 						recyclerView.setVisibility(View.INVISIBLE);
 						// Set empty view visibility into visible
 						emptyTextView.setVisibility(View.VISIBLE);

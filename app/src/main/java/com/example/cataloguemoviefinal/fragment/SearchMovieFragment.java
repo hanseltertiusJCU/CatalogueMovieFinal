@@ -170,6 +170,7 @@ public class SearchMovieFragment extends Fragment{
 				movieSearchView.setQueryHint(getResources().getString(R.string.search));
 				// Listener untuk text dari searchview
 				movieSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+					// Method ini melakukan aksi ketika tekan submit di keyboard
 					@Override
 					public boolean onQueryTextSubmit(String query) {
 						moviekeywordResult = query;

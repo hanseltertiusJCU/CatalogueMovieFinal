@@ -62,6 +62,9 @@ public class SearchTvShowFragment extends Fragment{
 	RecyclerView recyclerView;
 	@BindView(R.id.progress_bar)
 	ProgressBar progressBar;
+	// TextView buat empty state text
+	@BindView(R.id.tv_show_empty_state_text)
+	TextView emptyTextView;
 	@BindView(R.id.tv_show_search_keyword_content)
 	TextView tvShowSearchKeyword;
 	private TvShowAdapter tvShowAdapter;
@@ -169,6 +172,7 @@ public class SearchTvShowFragment extends Fragment{
 						// Ketika kita submit query text, maka data akan melakukan loading kembali
 						recyclerView.setVisibility(View.INVISIBLE);
 						progressBar.setVisibility(View.VISIBLE);
+						emptyTextView.setVisibility(View.GONE);
 						
 						// Call setter method untuk merubah value parameter di ViewModel
 						searchTvShowViewModel.setTvShowSearchKeyword(tvKeywordResult);
@@ -286,22 +290,36 @@ public class SearchTvShowFragment extends Fragment{
 		return new Observer<ArrayList<TvShowItem>>() {
 			@Override
 			public void onChanged(@Nullable final ArrayList<TvShowItem> tvShowItems) {
-				// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
-				// yang menandakan bahwa loadingnya sudah selesai
-				recyclerView.setVisibility(View.VISIBLE);
-				progressBar.setVisibility(View.GONE);
-				// Set data ke adapter
-				tvShowAdapter.setTvShowData(tvShowItems);
-				// Set item click listener di dalam recycler view
-				ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-					@Override
-					public void onItemClicked(RecyclerView recyclerView, int position, View view) {
-						if(tvShowItems != null){
-							showSelectedTvShowItems(tvShowItems.get(position));
-						}
+				if(tvShowItems != null){
+					if(tvShowItems.size() > 0){
+						// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
+						// yang menandakan bahwa loadingnya sudah selesai
+						recyclerView.setVisibility(View.VISIBLE);
+						progressBar.setVisibility(View.GONE);
+						emptyTextView.setVisibility(View.GONE);
+						// Set data ke adapter
+						tvShowAdapter.setTvShowData(tvShowItems);
+						// Set item click listener di dalam recycler view
+						ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+							@Override
+							public void onItemClicked(RecyclerView recyclerView, int position, View view) {
+								// Click bwt show selected tv show items
+								showSelectedTvShowItems(tvShowItems.get(position));
+							}
+						});
+					} else {
+						// Set data into adapter
+						tvShowAdapter.setTvShowData(tvShowItems);
+						// Set progress bar visibility into gone, indicating that data finished on loading
+						progressBar.setVisibility(View.GONE);
+						// Set recycler view visibility into invisible: take space but doesnt display anything
+						recyclerView.setVisibility(View.INVISIBLE);
+						// Set empty view visibility into visible
+						emptyTextView.setVisibility(View.VISIBLE);
+						// Set empty view text
+						emptyTextView.setText(getString(R.string.no_tv_show_data_shown));
 					}
-				});
-				
+				}
 			}
 		};
 	}

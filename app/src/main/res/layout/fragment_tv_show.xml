@@ -55,4 +55,9 @@
         android:id="@+id/progress_bar"
         style="@style/ProgressBar" />
 
+    <TextView
+        android:id="@+id/tv_show_empty_state_text"
+        style="@style/NoDataText"
+        tools:text="@string/no_tv_show_data_shown"/>
+
 </RelativeLayout>
