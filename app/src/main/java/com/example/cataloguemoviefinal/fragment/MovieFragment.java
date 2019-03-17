@@ -2,8 +2,11 @@ package com.example.cataloguemoviefinal.fragment;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -124,29 +127,46 @@ public class MovieFragment extends Fragment{
 			recyclerView.addItemDecoration(itemDecorator);
 		}
 		
-		// Set visiblity of views ketika sedang dalam meretrieve data
-		recyclerView.setVisibility(View.INVISIBLE);
-		progressBar.setVisibility(View.VISIBLE);
+
 	}
 	
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+		// Set visiblity of views ketika sedang dalam meretrieve data
+		recyclerView.setVisibility(View.INVISIBLE);
+		progressBar.setVisibility(View.VISIBLE);
+		emptyTextView.setVisibility(View.GONE);
 		// Cek jika Bundle exist, jika iya maka kita metretrieve list state as well as
 		// list/item positions (scroll position)
 		if(savedInstanceState != null) {
 			mMovieListState = savedInstanceState.getParcelable(MOVIE_LIST_STATE);
 		}
-		
-		// Dapatkan ViewModel yang tepat dari ViewModelProviders
-		movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-		
-		// Panggil method createObserver untuk return Observer object
-		movieObserver = createObserver();
-		
-		// Tempelkan Observer ke LiveData object
-		movieViewModel.getMovies().observe(this, movieObserver);
+
+		// Cek jika activity exists
+		if(getActivity() != null){
+			// Connectivity manager untuk mengecek state dari network connectivity
+			ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+			// Network Info object untuk melihat ada data network yang aktif
+			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+			// Cek jika ada network connection
+			if(networkInfo != null && networkInfo.isConnected()){
+				// Dapatkan ViewModel yang tepat dari ViewModelProviders
+				movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+				// Panggil method createObserver untuk return Observer object
+				movieObserver = createObserver();
+				// Tempelkan Observer ke LiveData object
+				movieViewModel.getMovies().observe(this, movieObserver);
+			} else {
+				// Progress bar into gone and recycler view into invisible as the data finished on loading
+				progressBar.setVisibility(View.GONE);
+				recyclerView.setVisibility(View.INVISIBLE);
+				// Set empty view visibility into visible
+				emptyTextView.setVisibility(View.VISIBLE);
+				// Empty text view yg menunjukkan bahwa tidak ada internet yang sedang terhubung
+				emptyTextView.setText(getString(R.string.no_internet_connection));
+			}
+		}
 		
 	}
 	
@@ -242,44 +262,60 @@ public class MovieFragment extends Fragment{
 		return new Observer<ArrayList<MovieItem>>() {
 			@Override
 			public void onChanged(@Nullable final ArrayList<MovieItem> movieItems) {
-				// todo: if statement untuk uji bahwa networknya itu connected atau tidak
-				
-				// todo: if statement untuk uji bahwa movieitems size > 0
-				// Cek jika ada arraylist
-				if(movieItems != null){
-					// Cek jika ada data di dalam arraylist
-					if(movieItems.size() > 0){
-						// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
-						// yang menandakan bahwa loadingnya sudah selesai
-						recyclerView.setVisibility(View.VISIBLE);
-						progressBar.setVisibility(View.GONE);
-						// Set empty view visibility into gone : doesnt take space and no content displayed
-						emptyTextView.setVisibility(View.GONE);
-						// Set data ke adapter
-						movieAdapter.setData(movieItems);
-						// Set item click listener di dalam recycler view
-						ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-							// Implement interface method
-							@Override
-							public void onItemClicked(RecyclerView recyclerView, int position, View view) {
-								// Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
-								showSelectedMovieItems(movieItems.get(position));
+				// Cek jika activity exist
+				if(getActivity() != null){
+                    // Connectivity manager untuk mengecek state dari network connectivity
+                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                    // Network Info object untuk melihat ada data network yang aktif
+                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                    // Cek jika ada network connection
+                    if(networkInfo != null && networkInfo.isConnected()){
+                        // Cek jika ada arraylist
+                        if(movieItems != null) {
+							// Cek jika ada data di dalam arraylist
+							if (movieItems.size() > 0) {
+								// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
+								// yang menandakan bahwa loadingnya sudah selesai
+								recyclerView.setVisibility(View.VISIBLE);
+								progressBar.setVisibility(View.GONE);
+								// Set empty view visibility into gone : doesnt take space and no content displayed
+								emptyTextView.setVisibility(View.GONE);
+								// Set data ke adapter
+								movieAdapter.setData(movieItems);
+								// Set item click listener di dalam recycler view
+								ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+									// Implement interface method
+									@Override
+									public void onItemClicked(RecyclerView recyclerView, int position, View view) {
+										// Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
+										showSelectedMovieItems(movieItems.get(position));
+									}
+								});
+							} else { // kondisi jika tidak ada data
+								// Set data into adapter
+								movieAdapter.setData(movieItems);
+								// Set progress bar visibility into gone, indicating that data finished on loading
+								progressBar.setVisibility(View.GONE);
+								// Set recycler view visibility into invisible: take space but doesnt display anything
+								recyclerView.setVisibility(View.INVISIBLE);
+								// Set empty view visibility into visible
+								emptyTextView.setVisibility(View.VISIBLE);
+								// Set empty view text
+								emptyTextView.setText(getString(R.string.no_movie_data_shown));
+
 							}
-						});
-					} else { // kondisi jika tidak ada data
-						// Set data into adapter
-						movieAdapter.setData(movieItems);
-						// Set progress bar visibility into gone, indicating that data finished on loading
+						}
+                    } else {
+						// Progress bar into gone and recycler view into invisible as the data finished on loading
 						progressBar.setVisibility(View.GONE);
-						// Set recycler view visibility into invisible: take space but doesnt display anything
 						recyclerView.setVisibility(View.INVISIBLE);
 						// Set empty view visibility into visible
 						emptyTextView.setVisibility(View.VISIBLE);
-						// Set empty view text
-						emptyTextView.setText(getString(R.string.no_movie_data_shown));
-
+						// Empty text view yg menunjukkan bahwa tidak ada internet yang sedang terhubung
+						emptyTextView.setText(getString(R.string.no_internet_connection));
 					}
-				}
+                }
+
 
 
 			}

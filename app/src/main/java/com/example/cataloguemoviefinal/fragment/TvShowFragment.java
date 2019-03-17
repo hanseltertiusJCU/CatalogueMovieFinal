@@ -3,7 +3,10 @@ package com.example.cataloguemoviefinal.fragment;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -113,32 +116,47 @@ public class TvShowFragment extends Fragment{
 			// Set divider untuk RecyclerView items
 			recyclerView.addItemDecoration(itemDecorator);
 		}
-		
-		// Set visiblity of views ketika sedang dalam meretrieve data
-		recyclerView.setVisibility(View.INVISIBLE);
-		progressBar.setVisibility(View.VISIBLE);
 	}
 	
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+		// Set visiblity of views ketika sedang dalam meretrieve data
+		recyclerView.setVisibility(View.INVISIBLE);
+		progressBar.setVisibility(View.VISIBLE);
+		emptyTextView.setVisibility(View.GONE);
 		// Cek jika Bundle exist, jika iya maka kita metretrieve list state as well as
 		// list/item positions (scroll position)
 		if(savedInstanceState != null) {
 			mTvShowListState = savedInstanceState.getParcelable(TV_SHOW_LIST_STATE);
 		}
 
-		// todo: check for network connection
-		// Dapatkan ViewModel yang tepat dari ViewModelProviders
-		TvShowViewModel tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
-		
-		// Panggil method createObserver untuk return Observer object
-		Observer<ArrayList<TvShowItem>> tvShowObserver = createObserver();
-		
-		// Tempelkan Observer ke LiveData object
-		tvShowViewModel.getTvShows().observe(this, tvShowObserver);
-		
+		// Cek jika activity exists
+		if(getActivity() != null){
+			// Connectivity manager untuk mengecek state dari network connectivity
+			ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+			// Network Info object untuk melihat ada data network yang aktif
+			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+			// Cek jika ada network connection
+			if(networkInfo != null && networkInfo.isConnected()){
+				// Dapatkan ViewModel yang tepat dari ViewModelProviders
+				TvShowViewModel tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
+
+				// Panggil method createObserver untuk return Observer object
+				Observer<ArrayList<TvShowItem>> tvShowObserver = createObserver();
+
+				// Tempelkan Observer ke LiveData object
+				tvShowViewModel.getTvShows().observe(this, tvShowObserver);
+			} else {
+				// Progress bar into gone and recycler view into invisible as the data finished on loading
+				progressBar.setVisibility(View.GONE);
+				recyclerView.setVisibility(View.INVISIBLE);
+				// Set empty view visibility into visible
+				emptyTextView.setVisibility(View.VISIBLE);
+				// Empty text view yg menunjukkan bahwa tidak ada internet yang sedang terhubung
+				emptyTextView.setText(getString(R.string.no_internet_connection));
+			}
+		}
 	}
 	
 	private void showSelectedTvShowItems(TvShowItem tvShowItem) {
@@ -234,7 +252,6 @@ public class TvShowFragment extends Fragment{
 						emptyTextView.setText(getString(R.string.no_tv_show_data_shown));
 					}
 				}
-
 
 			}
 		};

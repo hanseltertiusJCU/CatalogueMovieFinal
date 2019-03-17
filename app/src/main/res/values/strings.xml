@@ -143,6 +143,9 @@
     <string name="no_favorite_tv_show_data_shown">There is no favorite TV Show data to display</string>
     <string name="no_internet_connection">There is no internet connection</string>
 
+    <!-- String untuk label detail activity -->
+    <string name="detail_activity">Activity Detail</string>
+
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
 

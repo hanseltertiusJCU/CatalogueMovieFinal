@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -122,6 +124,9 @@ public class DetailActivity extends AppCompatActivity {
 	AppBarLayout detailedAppBarLayout;
 	@BindView(R.id.detailed_toolbar)
 	Toolbar detailedToolbar;
+	// Set empty text view
+	@BindView(R.id.empty_detailed_info_text)
+	TextView detailedEmptyTextView;
 	// Setup intent value untuk movie items
 	private int detailedMovieId;
 	private String detailedMovieTitle;
@@ -144,12 +149,11 @@ public class DetailActivity extends AppCompatActivity {
 	private TvShowItem detailedTvShowItem;
 	// String value untuk mengetahui mode data yg dibuka
 	private String accessItemMode;
-	
 	// Boolean value untuk extra di Intent
 	private boolean changedState;
-	
-	// Uri value
+	// Uri value untuk membaca data (jika data ada di favorite) ataupun insert data
 	private Uri uri;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -262,29 +266,56 @@ public class DetailActivity extends AppCompatActivity {
 		// Set visiblity of views ketika sedang dalam meretrieve data
 		detailedContent.setVisibility(View.INVISIBLE);
 		detailedProgressBar.setVisibility(View.VISIBLE);
+		detailedEmptyTextView.setVisibility(View.GONE);
 		
 		// Mode untuk menangani ViewModel yg berbeda
 		if(accessItemMode.equals("open_movie_detail")) {
-			// todo: pake if bwt connectivity
-			// Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
-			// Buat ViewModel untuk detailedMovieInfo
-			DetailedMovieViewModel detailedMovieViewModel = ViewModelProviders.of(this, new DetailedMovieViewModelFactory(this.getApplication(), detailedMovieId)).get(DetailedMovieViewModel.class);
-			// Buat observer object untuk mendisplay data ke UI
-			// Buat Observer untuk detailedMovieInfo
-			Observer<ArrayList<MovieItem>> detailedMovieObserver = createDetailedMovieObserver();
-			// Tempelkan Observer ke LiveData object
-			detailedMovieViewModel.getDetailedMovie().observe(this, detailedMovieObserver);
+			// Connectivity manager untuk mengecek state dari network connectivity
+			ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+			// Network Info object untuk melihat ada data network yang aktif
+			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+			if(networkInfo != null && networkInfo.isConnected()){
+				// Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
+				// Buat ViewModel untuk detailedMovieInfo
+				DetailedMovieViewModel detailedMovieViewModel = ViewModelProviders.of(this, new DetailedMovieViewModelFactory(this.getApplication(), detailedMovieId)).get(DetailedMovieViewModel.class);
+				// Buat observer object untuk mendisplay data ke UI
+				// Buat Observer untuk detailedMovieInfo
+				Observer<ArrayList<MovieItem>> detailedMovieObserver = createDetailedMovieObserver();
+				// Tempelkan Observer ke LiveData object
+				detailedMovieViewModel.getDetailedMovie().observe(this, detailedMovieObserver);
+			} else {
+				// Progress bar into gone and recycler view into invisible as the data finished on loading
+				detailedProgressBar.setVisibility(View.GONE);
+				detailedContent.setVisibility(View.VISIBLE);
+				// Set empty view visibility into visible
+				detailedEmptyTextView.setVisibility(View.VISIBLE);
+				// Empty text view yang menunjukkan bahwa tidak ada internet yang sedang terhubung
+				detailedEmptyTextView.setText(getString(R.string.no_internet_connection));
+			}
 		} else if(accessItemMode.equals("open_tv_show_detail")) {
-			// todo: pake if bwt connectivity
-			// Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
-			// Buat ViewModel untuk detailedTvShowInfo
-			DetailedTvShowViewModel detailedTvShowViewModel = ViewModelProviders.of(this, new DetailedTvShowViewModelFactory(this.getApplication(), detailedTvShowId)).get(DetailedTvShowViewModel.class);
-			// Buat observer object untuk mendisplay data ke UI
-			// Buat Observer untuk detailedTvShowInfo
-			Observer<ArrayList<TvShowItem>> detailedTvShowObserver = createDetailedTvShowObserver();
-			// Tempelkan Observer ke LiveData object
-			detailedTvShowViewModel.getDetailedTvShow().observe(this, detailedTvShowObserver);
-			
+			// Connectivity manager untuk mengecek state dari network connectivity
+			ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+			// Network Info object untuk melihat ada data network yang aktif
+			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+			// Cek jika ada network connection
+			if(networkInfo != null && networkInfo.isConnected()){
+				// Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
+				// Buat ViewModel untuk detailedTvShowInfo
+				DetailedTvShowViewModel detailedTvShowViewModel = ViewModelProviders.of(this, new DetailedTvShowViewModelFactory(this.getApplication(), detailedTvShowId)).get(DetailedTvShowViewModel.class);
+				// Buat observer object untuk mendisplay data ke UI
+				// Buat Observer untuk detailedTvShowInfo
+				Observer<ArrayList<TvShowItem>> detailedTvShowObserver = createDetailedTvShowObserver();
+				// Tempelkan Observer ke LiveData object
+				detailedTvShowViewModel.getDetailedTvShow().observe(this, detailedTvShowObserver);
+			} else { // Kondisi jika tidak connected ke network
+				// Progress bar into gone and recycler view into invisible as the data finished on loading
+				detailedProgressBar.setVisibility(View.GONE);
+				detailedContent.setVisibility(View.VISIBLE);
+				// Set empty view visibility into visible
+				detailedEmptyTextView.setVisibility(View.VISIBLE);
+				// Empty text view yang menunjukkan bahwa tidak ada internet yang sedang terhubung
+				detailedEmptyTextView.setText(getString(R.string.no_internet_connection));
+			}
 		}
 		
 		
@@ -478,7 +509,7 @@ public class DetailActivity extends AppCompatActivity {
 				// yang menandakan bahwa loadingnya sudah selesai
 				detailedContent.setVisibility(View.VISIBLE);
 				detailedProgressBar.setVisibility(View.GONE);
-				
+
 				if(detailedTvShowItems != null) {
 					// Set semua data ke dalam detail activity
 					// Load image jika ada poster path

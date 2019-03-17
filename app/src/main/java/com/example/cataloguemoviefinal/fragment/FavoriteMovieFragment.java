@@ -1,7 +1,11 @@
 package com.example.cataloguemoviefinal.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -105,14 +109,16 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+		// Set visiblity of views ketika sedang dalam meretrieve data
+		recyclerView.setVisibility(View.INVISIBLE);
+		progressBar.setVisibility(View.VISIBLE);
+		emptyTextView.setVisibility(View.GONE);
 		// Cek jika bundle savedInstanceState itu ada
 		if(savedInstanceState != null) {
 			// Retrieve array list parcelable
 			final ArrayList<MovieItem> movieItemList = savedInstanceState.getParcelableArrayList(MOVIE_LIST_STATE);
-			
-			if(movieItemList != null) {
-				if(movieItemList.size() > 0) {
+			if (movieItemList != null) {
+				if (movieItemList.size() > 0) {
 					// Hilangkan progress bar agar tidak ada progress bar lagi setelah d rotate
 					progressBar.setVisibility(View.GONE);
 					recyclerView.setVisibility(View.VISIBLE);
@@ -132,11 +138,33 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 					movieAdapter.setData(movieItemList);
 					progressBar.setVisibility(View.GONE);
 					recyclerView.setVisibility(View.INVISIBLE);
+					// Set empty view visibility into visible
+					emptyTextView.setVisibility(View.VISIBLE);
+					// Set empty view text
+					emptyTextView.setText(getString(R.string.no_favorite_movie_data_shown));
 				}
 			}
-		} else {
-			// Lakukan AsyncTask utk meretrieve ArrayList yg isinya data dari database
-			new LoadFavoriteMoviesAsync(getActivity(), this).execute();
+		}
+
+		// Cek jika activity exist
+		if(getActivity() != null){
+			// Connectivity manager untuk mengecek state dari network connectivity
+			ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+			// Network Info object untuk melihat ada data network yang aktif
+			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+			// Cek jika ada network connection
+			if(networkInfo != null && networkInfo.isConnected()){
+				// Lakukan AsyncTask utk meretrieve ArrayList yg isinya data dari database
+				new LoadFavoriteMoviesAsync(getActivity(), this).execute();
+			} else {
+				// Progress bar into gone and recycler view into invisible as the data finished on loading
+				progressBar.setVisibility(View.GONE);
+				recyclerView.setVisibility(View.INVISIBLE);
+				// Set empty view visibility into visible
+				emptyTextView.setVisibility(View.VISIBLE);
+				// Empty text view yg menunjukkan bahwa tidak ada internet yang sedang terhubung
+				emptyTextView.setText(getString(R.string.no_internet_connection));
+			}
 		}
 	}
 	
@@ -167,14 +195,12 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	// Callback method dari Interface LoadFavoriteMoviesCallback
 	@Override
 	public void favoriteMoviePreExecute() {
-		// Set progress bar visibility into visible and recyclerview visibility into visible to prepare loading data
-		progressBar.setVisibility(View.VISIBLE);
-		recyclerView.setVisibility(View.INVISIBLE);
+		// Tidak ngapa2in
 	}
 	
 	@Override
 	public void favoriteMoviePostExecute(Cursor movieItems) {
-		// todo: bikin condition dimana datanya itu ada atau tidak
+		// cek jika array list favorite ada data
 		if(MainActivity.favoriteMovieItemArrayList.size() > 0){
 			// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
 			// yang menandakan bahwa loadingnya sudah selesai

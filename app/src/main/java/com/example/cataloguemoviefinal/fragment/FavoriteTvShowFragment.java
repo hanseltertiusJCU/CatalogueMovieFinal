@@ -1,7 +1,10 @@
 package com.example.cataloguemoviefinal.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -102,11 +105,16 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		// Set progress bar visibility into visible and recyclerview visibility into visible
+		// to prepare loading data
+		progressBar.setVisibility(View.VISIBLE);
+		recyclerView.setVisibility(View.INVISIBLE);
+		emptyTextView.setVisibility(View.GONE);
 		// Cek jika bundle savedInstanceState itu ada
 		if(savedInstanceState != null) {
 			// Retrieve array list parcelable untuk retrieve scroll position
 			final ArrayList<TvShowItem> tvShowItemsList = savedInstanceState.getParcelableArrayList(TV_SHOW_LIST_STATE);
-			
+			// Cek jika array list exist
 			if(tvShowItemsList != null) {
 				if(tvShowItemsList.size() > 0) {
 					// Hilangkan progress bar agar tidak ada progress bar lagi setelah d rotate
@@ -128,24 +136,44 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 					tvShowAdapter.setTvShowData(tvShowItemsList);
 					progressBar.setVisibility(View.GONE);
 					recyclerView.setVisibility(View.INVISIBLE);
+					// Set empty view visibility into visible
+					emptyTextView.setVisibility(View.VISIBLE);
+					// Set empty text
+					emptyTextView.setText(getString(R.string.no_favorite_tv_show_data_shown));
 				}
 			}
-		} else {
-			new LoadFavoriteTvShowAsync(getActivity(), this).execute();
+		}
+
+		// Cek jika activity exist
+		if(getActivity() != null){
+			// Connectivity manager untuk mengecek state dari network connectivity
+			ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+			// Network Info object untuk melihat ada data network yang aktif
+			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+			// Cek jika ada active network connection
+			if(networkInfo != null && networkInfo.isConnected()){
+				new LoadFavoriteTvShowAsync(getActivity(), this).execute();
+			} else {
+				// Progress bar into done and recycler view into invisible as the data finished on loading
+				progressBar.setVisibility(View.GONE);
+				recyclerView.setVisibility(View.INVISIBLE);
+				// Set empty view visibility into visible
+				emptyTextView.setVisibility(View.VISIBLE);
+				// Empty text view yg menunjukkan bahwa tidak ada internet yang sedang terhubung
+				emptyTextView.setText(getString(R.string.no_internet_connection));
+			}
 		}
 	}
 	
 	// Callback method dari Interface LoadFavoriteTvShowCallback
 	@Override
 	public void favoriteTvShowPreExecute() {
-		// Set progress bar visibility into visible and recyclerview visibility into visible
-		// to prepare loading data
-		progressBar.setVisibility(View.VISIBLE);
-		recyclerView.setVisibility(View.INVISIBLE);
+		// Tidak ngapa2in
 	}
 	
 	@Override
 	public void favoriteTvShowPostExecute(Cursor tvShowItems) {
+		// Cek jika array list favorite ada data
 		if(MainActivity.favoriteTvShowItemArrayList.size() > 0) {
 			// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
 			// yang menandakan bahwa loadingnya sudah selesai

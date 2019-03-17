@@ -35,9 +35,11 @@
                 android:resource="@xml/favorite_movie_item_widget_info" />
         </receiver>
 
+        <!-- Menggunakan config changes orientation di main activity agar tidak perlu load activity pas orientation changes -->
         <activity
             android:name=".MainActivity"
             android:label="@string/catalogue_movie_final"
+            android:configChanges="orientation"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,6 +50,8 @@
         <activity
             android:name=".DetailActivity"
             android:parentActivityName=".MainActivity"
+            android:label="@string/detail_activity"
+            android:configChanges="orientation"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -56,13 +60,14 @@
 
         <activity android:name=".SettingsActivity"
             android:parentActivityName=".MainActivity"
+            android:label="@string/settings"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
 
-        <!--  -->
+        <!-- Content provider  -->
         <provider
             android:name=".provider.FavoriteItemsProvider"
             android:authorities="com.example.cataloguemoviefinal"
