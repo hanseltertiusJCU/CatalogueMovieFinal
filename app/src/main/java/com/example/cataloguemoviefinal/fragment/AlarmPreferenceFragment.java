@@ -64,17 +64,17 @@ public class AlarmPreferenceFragment extends PreferenceFragmentCompat implements
 		// Cek jika preference key itu sama dengan reminder
 		if(preferenceKey.equals(DAILY_REMINDER)){
 			if(objectState){
-				dailyReminderAlarmReceiver.setDailyReminderAlarm(getActivity());
+				dailyReminderAlarmReceiver.setDailyReminderAlarm(getActivity()); // Set alarm dari object daily alarm receiver
 			} else {
-				dailyReminderAlarmReceiver.cancelAlarm(getActivity());
+				dailyReminderAlarmReceiver.cancelAlarm(getActivity()); // Cancel alarm dari object daily alarm receiver
 			}
 		}
 		
 		if(preferenceKey.equals(TODAY_RELEASE_DATE_MOVIE_REMINDER)) {
 			if(objectState){
-				releaseTodayReminderAlarmReceiver.setReleaseDateTodayReminderAlarm(getActivity()); // Set alarm
+				releaseTodayReminderAlarmReceiver.setReleaseDateTodayReminderAlarm(getActivity()); // Set alarm dari object release today alarm receiver
 			} else {
-				releaseTodayReminderAlarmReceiver.cancelReleaseDateTodayAlarm(getActivity()); // Cancel alarm
+				releaseTodayReminderAlarmReceiver.cancelReleaseDateTodayAlarm(getActivity()); // Cancel alarm dari object release today alarm receiver
 			}
 		}
 		

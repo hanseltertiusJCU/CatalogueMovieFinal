@@ -3,7 +3,7 @@
     android:initialKeyguardLayout="@layout/favorite_movie_item_widget"
     android:initialLayout="@layout/favorite_movie_item_widget"
     android:minWidth="250dp"
-    android:minHeight="180dp"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:minHeight="110dp"
+    android:previewImage="@drawable/favorite_movies_image_preview"
     android:updatePeriodMillis="0"
     android:widgetCategory="home_screen"/>

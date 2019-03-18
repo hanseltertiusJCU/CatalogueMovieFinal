@@ -109,7 +109,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		// Set visiblity of views ketika sedang dalam meretrieve data
+		// Set visiblity of views ketika sedang dalam meretrieve data, kesannya seperti data sedang loading
 		recyclerView.setVisibility(View.INVISIBLE);
 		progressBar.setVisibility(View.VISIBLE);
 		emptyTextView.setVisibility(View.GONE);
@@ -117,7 +117,9 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		if(savedInstanceState != null) {
 			// Retrieve array list parcelable
 			final ArrayList<MovieItem> movieItemList = savedInstanceState.getParcelableArrayList(MOVIE_LIST_STATE);
+			// Cek jika array list itu ada
 			if (movieItemList != null) {
+				// Cek jika array list itu ada datanya
 				if (movieItemList.size() > 0) {
 					// Hilangkan progress bar agar tidak ada progress bar lagi setelah d rotate
 					progressBar.setVisibility(View.GONE);

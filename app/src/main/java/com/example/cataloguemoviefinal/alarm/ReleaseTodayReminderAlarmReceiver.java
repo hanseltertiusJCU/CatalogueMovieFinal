@@ -39,17 +39,23 @@ public class ReleaseTodayReminderAlarmReceiver extends BroadcastReceiver {
 			LoadMoviesDataAsync loadMoviesDataAsync = new LoadMoviesDataAsync(); // Create async task
 			AsyncTask<Void, Void, ArrayList<MovieItem>> task = loadMoviesDataAsync.execute(); // Execute async task
 			
-			ArrayList<MovieItem> movieItemArrayList = task.get(); // Dapatin result
+			ArrayList<MovieItem> movieItemArrayList = task.get(); // Dapatin result bedasarkan asynctask
 			
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // Create new Simple date format object and format the date
 			Date date = new Date(); // Create new Date object
 			String todayDate = dateFormat.format(date); // Create string based on date object
 			
-			for(MovieItem movieItem : movieItemArrayList){ // Iterate array list
-				if(movieItem.getMovieReleaseDate().equals(todayDate)){ // Compare if release date = today date
-					showReleaseTodayReminderNotification(context, movieItem.getId(), movieItem.getMovieTitle()); // Set notif, notif itu yg membedakan itu adalah notif id, sehingga bs kirim banyak notif jika ada.
+			// Cek jika array list tidak null dan juga array list itu ada datanya
+			if(movieItemArrayList != null){
+				if(movieItemArrayList.size() > 0){
+					for(MovieItem movieItem : movieItemArrayList){ // Iterate array list
+						if(movieItem.getMovieReleaseDate().equals(todayDate)){ // Compare if release date = today date
+							showReleaseTodayReminderNotification(context, movieItem.getId(), movieItem.getMovieTitle()); // Set notif, notif itu yg membedakan itu adalah notif id, sehingga bs kirim banyak notif jika ada.
+						}
+					}
 				}
 			}
+
 			
 		} catch(Exception e){ // Catch Exception cus Exception carries all types of exception
 			e.printStackTrace();
@@ -73,8 +79,9 @@ public class ReleaseTodayReminderAlarmReceiver extends BroadcastReceiver {
 		// Create pending intent dengan membawa object Intent yg disebut agar dapat trigger broadcast
 		PendingIntent releaseTodayPendingIntent = PendingIntent.getBroadcast(context, RELEASE_TODAY_REQUEST_CODE, releaseTodayReminderIntent, 0);
 		
+		// Cek jika alarm manager object exist
 		if(releaseTodayAlarmReminder != null){
-			releaseTodayAlarmReminder.setInexactRepeating(AlarmManager.RTC_WAKEUP, releaseTodayReminderClock.getTimeInMillis(), AlarmManager.INTERVAL_DAY, releaseTodayPendingIntent);
+			releaseTodayAlarmReminder.setRepeating(AlarmManager.RTC_WAKEUP, releaseTodayReminderClock.getTimeInMillis(), AlarmManager.INTERVAL_DAY, releaseTodayPendingIntent); // Set alarm dengan interval per hari dan set alarm persis sesuai dengan waktu yang ada
 		}
 		
 		Toast.makeText(context, "Set release date today reminder alarm", Toast.LENGTH_SHORT).show();

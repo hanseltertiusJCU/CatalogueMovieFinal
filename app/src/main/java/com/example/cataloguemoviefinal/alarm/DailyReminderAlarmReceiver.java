@@ -13,19 +13,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.cataloguemoviefinal.MainActivity;
 import com.example.cataloguemoviefinal.R;
-import com.example.cataloguemoviefinal.entity.MovieItem;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 // Class ini berguna utk mengatur daily reminder alarm
 public class DailyReminderAlarmReceiver extends BroadcastReceiver {
@@ -55,10 +48,10 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
 		
 		// Create pending intent yang berisi intent agar dapat trigger broadcast
 		PendingIntent dailyReminderPendingIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, dailyReminderIntent, 0);
-		
+
 		// Cek jika alarm manager exist
 		if(dailyReminderAlarmManager != null){
-			dailyReminderAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, dailyReminderCalendarClock.getTimeInMillis(), AlarmManager.INTERVAL_DAY, dailyReminderPendingIntent); // Set alarm dengan interval per hari
+			dailyReminderAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, dailyReminderCalendarClock.getTimeInMillis(), AlarmManager.INTERVAL_DAY, dailyReminderPendingIntent); // Set alarm dengan interval per hari dan set alarm persis sesuai dengan waktu yang ada
 		}
 		
 		Toast.makeText(context, "Add daily reminder alarm", Toast.LENGTH_SHORT).show(); // Toast message untuk notify bahwa daily reminder alarm ditambahkan
@@ -66,13 +59,14 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
 	
 	// Method ini berguna untuk cancel alarm yg ada di AlarmManager
 	public void cancelAlarm(Context context){
-		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE); // Initiate alarm manager
 		Intent intent = new Intent(context, DailyReminderAlarmReceiver.class);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, intent, 0); // Set pending intent yang berisi intent untuk mentrigger broadcast
 		pendingIntent.cancel(); // Cancel pending intent
 		
+		// Cek jika alarm manager itu exist
 		if(alarmManager != null){
-			alarmManager.cancel(pendingIntent);
+			alarmManager.cancel(pendingIntent); // Cancel alarm manager
 		}
 		
 		Toast.makeText(context, "Cancel daily reminder alarm", Toast.LENGTH_SHORT).show(); // Toast message untuk notify bahwa daily reminder alarm cancel
@@ -80,8 +74,10 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
 	
 	// Method ini berguna untuk notification di Daily Reminder
 	private void showDailyReminderNotification(Context context){
+		// Bikin channel for Daily alarm reminder
 		String CHANNEL_ID = "Channel_1";
 		String CHANNEL_NAME = "DailyReminder channel";
+		// Bikin id for notif and request code for pending intent
 		int NOTIFICATION_ID = 100;
 		int REQUEST_CODE_ACTIVITY = 0;
 		
@@ -116,11 +112,12 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
 				CHANNEL_NAME,
 				NotificationManager.IMPORTANCE_DEFAULT);
 			
-			dailyReminderChannel.enableVibration(true);
-			dailyReminderChannel.setVibrationPattern(new long[]{1000, 1000, 1000, 1000, 1000});
+			dailyReminderChannel.enableVibration(true); // Enable vibration on notification channel
+			dailyReminderChannel.setVibrationPattern(new long[]{1000, 1000, 1000, 1000, 1000}); // Set vibration on notification channel
 			
 			dailyReminderNotificationBuilder.setChannelId(CHANNEL_ID); // Set channel id ke Notification Builder
-			
+
+			// Cek jika notification manager itu exist
 			if(dailyReminderNotificationManagerCompat != null){
 				dailyReminderNotificationManagerCompat.createNotificationChannel(dailyReminderChannel); // Buat notification channel ke notification manager
 			}
@@ -129,8 +126,8 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
 		// Buat notification object bedasarkan notification builder build method
 		Notification dailyReminderNotification = dailyReminderNotificationBuilder.build();
 		
+		// Cek jika notification manager itu exist
 		if(dailyReminderNotificationManagerCompat != null){
-			
 			dailyReminderNotificationManagerCompat.notify(NOTIFICATION_ID, dailyReminderNotification); // Berikan notifikasi
 		}
 	}

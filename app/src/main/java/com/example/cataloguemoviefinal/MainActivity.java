@@ -77,20 +77,8 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	private Drawable searchTvShowDrawable;
 	// ArrayList object untuk MovieItem
 	public static ArrayList<MovieItem> favoriteMovieItemArrayList;
-	// Initiate HandlerThread object for Movie
-	public static HandlerThread movieHandlerThread;
-	// Initiate Handler object for Movie
-	public static Handler movieHandler;
-	// Initiate ContentObserver object for Movie (mungkin public biar bs communicate ke Fragment lainnya)
-	public static FavoriteMovieDataObserver myFavoriteMovieObserver;
 	// ArrayList object untuk TvShowItem
 	public static ArrayList<TvShowItem> favoriteTvShowItemArrayList;
-	// Initiate HandlerThread object for TV Show
-	public static HandlerThread tvShowHandlerThread;
-	// Initiate Handler object for TV Show
-	public static Handler tvShowHandler;
-	// Initiate ContentObserver object for TV Show (mungkin public biar bs communicate ke Fragment lainnya)
-	public static FavoriteTvShowDataObserver myFavoriteTvShowObserver;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,17 +103,17 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		}
 		
 		// Initiate handler thread operation in Movie
-		movieHandlerThread = new HandlerThread("FavoriteMovieDataObserver");
+		HandlerThread movieHandlerThread = new HandlerThread("FavoriteMovieDataObserver"); // Initiate HandlerThread
 		movieHandlerThread.start();
-		movieHandler = new Handler(movieHandlerThread.getLooper());
-		myFavoriteMovieObserver = new FavoriteMovieDataObserver(movieHandler, this);
+		Handler movieHandler = new Handler(movieHandlerThread.getLooper()); // Initiate Handler
+		FavoriteMovieDataObserver myFavoriteMovieObserver = new FavoriteMovieDataObserver(movieHandler, this); // Initiate ContentObserver
 		getContentResolver().registerContentObserver(MOVIE_FAVORITE_CONTENT_URI, true, myFavoriteMovieObserver);
 		
 		// Initiate handler thread operation in TV Show
-		tvShowHandlerThread = new HandlerThread("FavoriteTvShowDataObserver");
+		HandlerThread tvShowHandlerThread = new HandlerThread("FavoriteTvShowDataObserver"); // Initiate HandlerThread
 		tvShowHandlerThread.start();
-		tvShowHandler = new Handler(tvShowHandlerThread.getLooper());
-		myFavoriteTvShowObserver = new FavoriteTvShowDataObserver(tvShowHandler, this);
+		Handler tvShowHandler = new Handler(tvShowHandlerThread.getLooper()); // Initiate Handler
+		FavoriteTvShowDataObserver myFavoriteTvShowObserver = new FavoriteTvShowDataObserver(tvShowHandler, this); // Initiate ContentObserver
 		getContentResolver().registerContentObserver(TV_SHOW_FAVORITE_CONTENT_URI, true, myFavoriteTvShowObserver);
 		
 		// Panggil method ini untuk saving Fragment state di ViewPager, kesannya kyk simpen

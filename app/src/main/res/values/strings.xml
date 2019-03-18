@@ -113,9 +113,6 @@
 
     <string name="mark_as_favorite">Mark as Favorite</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <!-- Text untuk favorite movie item widget -->
     <string name="favorite_movie_item_widget_text">Favorite Movie Item Widget</string>
     <string name="favorite_movie_item_empty_text">Empty Favorite Movie Item</string>
@@ -145,9 +142,6 @@
 
     <!-- String untuk label detail activity -->
     <string name="detail_activity">Activity Detail</string>
-
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
 
 
 </resources>

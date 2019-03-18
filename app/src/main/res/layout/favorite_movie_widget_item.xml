@@ -14,16 +14,15 @@
         android:layout_height="wrap_content"
         android:src="@drawable/no_image_available"/>
 
-    <!-- todo: harus dibikin widthnya jd match parent instead of wrap content cus walaupun layout_widthnya match parent tp it acts like wrap content -->
     <TextView
         android:id="@+id/movie_title_widget_item"
-        android:layout_width="match_parent"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/item_section_title"
-        android:textColor="@color/colorBlack"
         android:layout_gravity="center"
         android:textAlignment="center"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/item_section_title"
         android:textStyle="bold"
-        tools:text="test"/>
+        tools:text="test" />
 
 </LinearLayout>

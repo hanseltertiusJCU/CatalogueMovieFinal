@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
 
+    <!-- Declare permission for read and write database data -->
     <permission
         android:name="com.example.cataloguemoviefinal.READ_DATABASE"
         android:protectionLevel="normal" />
@@ -35,7 +36,7 @@
                 android:resource="@xml/favorite_movie_item_widget_info" />
         </receiver>
 
-        <!-- Menggunakan config changes orientation di main activity agar tidak perlu load activity pas orientation changes -->
+        <!-- Menggunakan config changes orientation di main activity and settings activity agar tidak perlu load activity pas orientation changes -->
         <activity
             android:name=".MainActivity"
             android:label="@string/catalogue_movie_final"
@@ -67,7 +68,7 @@
                 android:value=".MainActivity"/>
         </activity>
 
-        <!-- Content provider  -->
+        <!-- Content provider agar app/modul lain dapat di akses -->
         <provider
             android:name=".provider.FavoriteItemsProvider"
             android:authorities="com.example.cataloguemoviefinal"

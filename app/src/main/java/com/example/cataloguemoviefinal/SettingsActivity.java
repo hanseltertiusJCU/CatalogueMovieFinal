@@ -27,7 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
 		
 		if(getSupportActionBar() != null){
 			getSupportActionBar().setTitle(getString(R.string.settings)); // Set title in action bar
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Set home button
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Set home button (to navigate to main activity)
 		}
 		
 		getSupportFragmentManager().beginTransaction().add(R.id.alarm_settings, new AlarmPreferenceFragment()).commit(); // Attach AlarmPreferenceFragment to root layout in activity_settings.xml {@link LinearLayout}
