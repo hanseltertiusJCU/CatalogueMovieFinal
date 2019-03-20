@@ -1,8 +1,10 @@
 package com.example.cataloguemoviefinal.observer;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 
 import com.example.cataloguemoviefinal.LoadFavoriteMoviesCallback;
 import com.example.cataloguemoviefinal.async.LoadFavoriteMoviesAsync;
@@ -18,5 +20,6 @@ public class FavoriteMovieDataObserver extends ContentObserver {
 	public void onChange(boolean selfChange) {
 		super.onChange(selfChange);
 		new LoadFavoriteMoviesAsync(context, (LoadFavoriteMoviesCallback) context).execute();
+		//todo: implement logic recall fragment (pake postexecute)
 	}
 }

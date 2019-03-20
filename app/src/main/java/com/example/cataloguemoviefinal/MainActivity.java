@@ -292,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		itemSectionsFragmentPagerAdapter = new ItemSectionsFragmentPagerAdapter(this, getSupportFragmentManager());
 		
 		// Tambahkan fragment beserta title ke FragmentPagerAdapter
-		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new MovieFragment(), getString(R.string.movie));
+		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new MovieFragment(), getString(R.string.movie)); // todo: mungkin pasang tag
 		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new TvShowFragment(), getString(R.string.tv_show));
 		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new FavoriteMovieFragment(), getString(R.string.favorite_movie));
 		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new FavoriteTvShowFragment(), getString(R.string.favorite_tv_show));
@@ -344,6 +344,10 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	@Override
 	public void favoriteMoviePostExecute(Cursor movieItems) {
 		favoriteMovieItemArrayList = mapCursorToFavoriteMovieArrayList(movieItems); // Change cursor to ArrayList that contains MovieItem
+		// todo: detatch and attach fragment/replace favorite movie item (antara pake tag atau pake find fragment posiiton) plus cek jika fragmentnya sedang attach (maybe cek fragment isAdded() method)
+		// todo: coba pake log d
+
+		// todo: update isi dari widget (ngaru klo dr app lain ga ya?)
 	}
 	
 	// Method dari LoadFavoriteTvShowCallback interface dan kita coba implement dari method tsb

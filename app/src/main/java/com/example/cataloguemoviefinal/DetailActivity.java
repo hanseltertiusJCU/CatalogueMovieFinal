@@ -207,7 +207,7 @@ public class DetailActivity extends AppCompatActivity {
 				uri = savedInstanceState.getParcelable(EXTRA_URI);
 				// Bawa object MovieItem agar MovieItem tidak null pada saat rotate, sehingga mencegah run time error (NullPointerException)
 				detailedMovieItem = savedInstanceState.getParcelable(EXTRA_MOVIE_ITEM);
-				// Tujuannya agar bs bawa ke result serta handle comparison value
+				// Tujuan dari line code ini adalah agar bs bawa ke result serta handle comparison value
 				// dimana kedua hal tsb dapat menghandle situasi orientation changes
 				if(changedState) { // Cek jika value dr changedState itu true
 					if(detailedMovieFavoriteStateValue == 1){
@@ -643,7 +643,7 @@ public class DetailActivity extends AppCompatActivity {
 					// maka menu bs d click
 					menuClickable = true;
 					
-					// Update option menu to searchMovieRecall onPrepareOptionMenu method
+					// Update option menu to recall onPrepareOptionMenu method
 					invalidateOptionsMenu();
 				}
 			}

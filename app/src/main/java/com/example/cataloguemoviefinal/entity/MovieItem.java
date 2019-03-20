@@ -132,7 +132,7 @@ public class MovieItem implements Parcelable {
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
-		} else { // Jika tidak, maka kita akan mengakses URL movie NowPlaying/Upcoming
+		} else { // Jika tidak, maka kita akan mengakses URL movie ataupun tv show (apart from favorite)
 			try {
 				// Get JSON object fields
 				int dataId = object.getInt("id");
@@ -216,10 +216,6 @@ public class MovieItem implements Parcelable {
 		return movieTitle;
 	}
 	
-	public void setMovieTitle(String movieTitle) {
-		this.movieTitle = movieTitle;
-	}
-	
 	public String getMovieTagline() {
 		return movieTagline;
 		
@@ -238,20 +234,12 @@ public class MovieItem implements Parcelable {
 		return movieRatings;
 	}
 	
-	public void setMovieRatings(String movieRatings) {
-		this.movieRatings = movieRatings;
-	}
-	
 	public String getMovieRatingsVote() {
 		return movieRatingsVote;
 	}
 	
 	public String getMovieOriginalLanguage() {
 		return movieOriginalLanguage;
-	}
-	
-	public void setMovieOriginalLanguage(String movieOriginalLanguage) {
-		this.movieOriginalLanguage = movieOriginalLanguage;
 	}
 	
 	public String getMovieLanguages() {
@@ -267,20 +255,12 @@ public class MovieItem implements Parcelable {
 		return movieReleaseDate;
 	}
 	
-	public void setMovieReleaseDate(String movieReleaseDate) {
-		this.movieReleaseDate = movieReleaseDate;
-	}
-	
 	public String getMovieOverview() {
 		return movieOverview;
 	}
 	
 	public String getMoviePosterPath() {
 		return moviePosterPath;
-	}
-	
-	public void setMoviePosterPath(String moviePosterPath) {
-		this.moviePosterPath = moviePosterPath;
 	}
 	
 	public String getDateAddedFavorite() {

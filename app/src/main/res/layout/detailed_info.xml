@@ -66,7 +66,6 @@
         android:layout_marginLeft="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
         android:layout_marginRight="@dimen/inner_view_margin"
-        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/detailed_fifth_info_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -81,12 +80,12 @@
         android:layout_marginLeft="@dimen/inner_view_margin"
         android:layout_marginTop="@dimen/text_margin"
         android:layout_marginRight="@dimen/inner_view_margin"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="@dimen/inner_view_margin"
         app:layout_constraintBottom_toTopOf="@+id/detailed_sixth_info_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/detailed_poster_image"
-        app:layout_constraintTop_toBottomOf="@+id/detailed_third_info_text"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_fourth_info_text"
         app:layout_constraintVertical_weight="1"
         tools:text="@string/detailed_movie_rating_text" />
 

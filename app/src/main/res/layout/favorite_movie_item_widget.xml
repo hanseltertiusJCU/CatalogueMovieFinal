@@ -17,11 +17,11 @@
             android:layout_weight="9"
             android:loopViews="true" />
 
-        <!-- todo: pikirin text sm background colornya apa -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_gravity="bottom"
             android:layout_weight="1"
             android:text="@string/favorite_movie_item_widget_text"
             android:textAlignment="center"
