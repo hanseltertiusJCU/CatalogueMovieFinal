@@ -9,6 +9,8 @@ import android.os.HandlerThread;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -292,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		itemSectionsFragmentPagerAdapter = new ItemSectionsFragmentPagerAdapter(this, getSupportFragmentManager());
 		
 		// Tambahkan fragment beserta title ke FragmentPagerAdapter
-		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new MovieFragment(), getString(R.string.movie)); // todo: mungkin pasang tag
+		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new MovieFragment(), getString(R.string.movie));
 		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new TvShowFragment(), getString(R.string.tv_show));
 		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new FavoriteMovieFragment(), getString(R.string.favorite_movie));
 		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new FavoriteTvShowFragment(), getString(R.string.favorite_tv_show));
@@ -337,27 +339,45 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	
 	// Method dari LoadFavoriteMoviesCallback interface dan kita coba implement dari method tsb
 	@Override
-	public void favoriteMoviePreExecute() {
-		// Do nothing
-	}
-	
-	@Override
 	public void favoriteMoviePostExecute(Cursor movieItems) {
 		favoriteMovieItemArrayList = mapCursorToFavoriteMovieArrayList(movieItems); // Change cursor to ArrayList that contains MovieItem
-		// todo: detatch and attach fragment/replace favorite movie item (antara pake tag atau pake find fragment posiiton) plus cek jika fragmentnya sedang attach (maybe cek fragment isAdded() method)
-		// todo: coba pake log d
+
+		// Line code tsb bertujuan untuk refresh fragment favorite movie ketika ada perubahan data di database
+		Fragment favoriteMovieFragment = itemSectionsFragmentPagerAdapter.getItem(2); // Panggil Fragment favorite movie item
+		// Initiate fragment transaction untuk melakukan fragment operation
+		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+		// Cek jika fragmentnya itu ada
+		if(favoriteMovieFragment != null){
+			// Cek jika fragment di attach ke activity
+			if(favoriteMovieFragment.isAdded()){
+				fragmentTransaction.detach(favoriteMovieFragment);
+				fragmentTransaction.attach(favoriteMovieFragment);
+				fragmentTransaction.commitAllowingStateLoss();
+			}
+		}
+
 
 		// todo: update isi dari widget (ngaru klo dr app lain ga ya?)
 	}
 	
 	// Method dari LoadFavoriteTvShowCallback interface dan kita coba implement dari method tsb
-	@Override
-	public void favoriteTvShowPreExecute() {
-		// Do nothing
-	}
-	
+
 	@Override
 	public void favoriteTvShowPostExecute(Cursor tvShowItems) {
 		favoriteTvShowItemArrayList = mapCursorToFavoriteTvShowArrayList(tvShowItems); // Change cursor to ArrayList that contains TvShowItem
+
+		// Line code tsb bertujuan untuk refresh fragment favorite tv show ketika ada perubahan data di database
+		Fragment favoriteTvShowFragment = itemSectionsFragmentPagerAdapter.getItem(3);
+		// Initiate fragment transaction untuk melakukan fragment operation
+		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+		// Cek jika fragmentnya itu ada
+		if(favoriteTvShowFragment != null){
+			// Cek jika fragment di attach ke activity
+			if(favoriteTvShowFragment.isAdded()){
+				fragmentTransaction.detach(favoriteTvShowFragment);
+				fragmentTransaction.attach(favoriteTvShowFragment);
+				fragmentTransaction.commitAllowingStateLoss();
+			}
+		}
 	}
 }

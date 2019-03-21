@@ -197,9 +197,8 @@ public class MovieFragment extends Fragment{
 		intentWithMovieIdData.putExtra(MODE_INTENT, modeItem);
 		// Set Uri ke Intent
 		intentWithMovieIdData.setData(movieUriItem);
-		// Start activity tujuan bedasarkan intent object dan bawa request code
-		// REQUEST_CHANGE untuk onActivityResult
-		startActivityForResult(intentWithMovieIdData, DetailActivity.REQUEST_CHANGE);
+		// Start activity ke DetailActivity
+		startActivity(intentWithMovieIdData);
 	}
 	
 	@Override
@@ -224,37 +223,6 @@ public class MovieFragment extends Fragment{
 		}
 		
 	}
-	
-	
-	// Refractor code layaknya menggunakan hal yg sama
-	
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if(data != null) {
-			// Check for correct request code
-			if(requestCode == DetailActivity.REQUEST_CHANGE) {
-				// Check for result code
-				if(resultCode == DetailActivity.RESULT_CHANGE) {
-					// Tambahkan item ke adapter dan reset scroll position ke paling atas
-					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_CHANGED_STATE, false);
-					// Cek jika value dari changedDataState itu true
-					if(changedDataState) {
-						if(Objects.requireNonNull(getActivity()).getSupportFragmentManager() != null) {
-							// Dapatin position fragment dari FavoriteMovieFragment di ViewPager since ViewPager menampung list dari Fragments
-							FavoriteMovieFragment favoriteMovieFragment = (FavoriteMovieFragment) getActivity().getSupportFragmentManager().getFragments().get(2);
-							// Cek jika favoriteMovieFragment itu ada
-							if(favoriteMovieFragment != null) {
-								// Komunikasi dengan FavoriteMovieFragment dengan memanggil onActivityResult method di FavoriteMovieFragment
-								favoriteMovieFragment.onActivityResult(requestCode, resultCode, data);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	
 	
 	// Method tsb berguna untuk membuat observer
 	public Observer<ArrayList<MovieItem>> createObserver() {
@@ -315,9 +283,6 @@ public class MovieFragment extends Fragment{
 						emptyTextView.setText(getString(R.string.no_internet_connection));
 					}
                 }
-
-
-
 			}
 		};
 	}

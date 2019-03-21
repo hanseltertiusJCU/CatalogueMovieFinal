@@ -166,10 +166,6 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 	}
 	
 	// Callback method dari Interface LoadFavoriteTvShowCallback
-	@Override
-	public void favoriteTvShowPreExecute() {
-		// Tidak ngapa2in
-	}
 	
 	@Override
 	public void favoriteTvShowPostExecute(Cursor tvShowItems) {
@@ -223,9 +219,8 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 		intentWithTvShowIdData.putExtra(MODE_INTENT, modeItem);
 		// Bawa Uri ke Intent
 		intentWithTvShowIdData.setData(tvShowUriItem);
-		// Start activity tujuan bedasarkan intent object dan bawa request code
-		// REQUEST_CHANGE untuk onActivityResult
-		startActivityForResult(intentWithTvShowIdData, DetailActivity.REQUEST_CHANGE);
+		// Start activity ke activity tujuan
+		startActivity(intentWithTvShowIdData);
 	}
 	
 	
@@ -234,28 +229,6 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 		super.onSaveInstanceState(outState);
 		// Put ArrayList into Bundle for handling orientation change
 		outState.putParcelableArrayList(TV_SHOW_LIST_STATE, tvShowAdapter.getTvShowData());
-	}
-	
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		// Cek jika Intent itu ada
-		if(data != null) {
-			// Check for correct request code
-			if(requestCode == DetailActivity.REQUEST_CHANGE) {
-				// Check for result code
-				if(resultCode == DetailActivity.RESULT_CHANGE) {
-					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_CHANGED_STATE, false);
-					// Cek jika ada perubahan di tv show item data state
-					if(changedDataState) {
-						// Execute AsyncTask kembali
-						new LoadFavoriteTvShowAsync(getActivity(), this).execute();
-						// Reset scroll position ke paling atas
-						recyclerView.smoothScrollToPosition(0);
-					}
-				}
-			}
-		}
 	}
 	
 }

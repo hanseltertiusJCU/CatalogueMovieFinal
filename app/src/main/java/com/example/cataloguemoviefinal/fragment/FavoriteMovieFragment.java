@@ -189,17 +189,12 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA, movieBooleanStateItem);
 		intentWithMovieIdData.putExtra(MODE_INTENT, modeItem);
 		intentWithMovieIdData.setData(movieUriItem);
-		// Start activity tujuan bedasarkan intent object
-		startActivityForResult(intentWithMovieIdData, DetailActivity.REQUEST_CHANGE);
+		// Start activity ke detail activity
+		startActivity(intentWithMovieIdData);
 	}
 	
 	
 	// Callback method dari Interface LoadFavoriteMoviesCallback
-	@Override
-	public void favoriteMoviePreExecute() {
-		// Tidak ngapa2in
-	}
-	
 	@Override
 	public void favoriteMoviePostExecute(Cursor movieItems) {
 		// cek jika array list favorite ada data
@@ -239,31 +234,5 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		// Put ArrayList into Bundle for handling orientation change
 		outState.putParcelableArrayList(MOVIE_LIST_STATE, movieAdapter.getmMovieData());
 	}
-	
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		// Cek jika Intent itu ada
-		if(data != null) {
-			// Check for correct request code
-			if(requestCode == DetailActivity.REQUEST_CHANGE) {
-				// Check for result code
-				if(resultCode == DetailActivity.RESULT_CHANGE) {
-					// Retrieve value dari boolean changedState {@link DetailActivity}
-					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_CHANGED_STATE, false);
-					// Cek jika ada perubahan di movie item data state
-					if(changedDataState) {
-						// Execute AsyncTask kembali dengan getActivity() method sbg parameter karena
-						// getActivity() return Activity (MainActivity) dan memanggil AsyncTask
-						// ke Activity; Fragment ini berkomunikasi dgn MainActivity. Plus,
-						// Activity extends Context yg merupakan parameter dari AsyncTask sehingga
-						// Activity represent Context
-						new LoadFavoriteMoviesAsync(getActivity(), this).execute();
-						// Reset scroll position ke paling atas
-						recyclerView.smoothScrollToPosition(0);
-					}
-				}
-			}
-		}
-	}
+
 }

@@ -71,10 +71,6 @@ import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_RATINGS_COLUMN;
 
 public class DetailActivity extends AppCompatActivity {
-	// Request code
-	public static final int REQUEST_CHANGE = 100;
-	// Result code
-	public static final int RESULT_CHANGE = 200;
 	// Constant untuk dibawa ke FavoriteMovieFragment ataupun FavoriteTvShowFragment
 	public static final String EXTRA_CHANGED_STATE = "extra_changed_state";
 	// Constant untuk key dri drawable dan boolean state, as well as its comparisons
@@ -215,9 +211,6 @@ public class DetailActivity extends AppCompatActivity {
 					} else {
 						detailedMovieFavoriteStateValueComparison = 0;
 					}
-					Intent resultIntent = new Intent();
-					resultIntent.putExtra(EXTRA_CHANGED_STATE, changedState);
-					setResult(RESULT_CHANGE, resultIntent);
 				}
 			} else if(accessItemMode.equals("open_tv_show_detail")) {
 				detailedTvShowFavoriteStateValue = savedInstanceState.getInt(KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE);
@@ -234,9 +227,6 @@ public class DetailActivity extends AppCompatActivity {
 					} else {
 						detailedTvShowFavoriteStateValueComparison = 0;
 					}
-					Intent resultIntent = new Intent();
-					resultIntent.putExtra(EXTRA_CHANGED_STATE, changedState);
-					setResult(RESULT_CHANGE, resultIntent);
 				}
 			}
 			
@@ -696,9 +686,6 @@ public class DetailActivity extends AppCompatActivity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Create new Intent object
-		Intent resultIntent = new Intent();
-		
 		// Boolean untuk mengetahui apakah state dari movie item itu berganti atau tidak
 		switch(item.getItemId()) {
 			case R.id.action_marked_as_favorite:
@@ -730,7 +717,7 @@ public class DetailActivity extends AppCompatActivity {
 						
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState) {
-							uri = getContentResolver().insert(MOVIE_FAVORITE_CONTENT_URI, movieColumnValues);
+							uri = getContentResolver().insert(MOVIE_FAVORITE_CONTENT_URI, movieColumnValues); // todo: bikin ga usah return apa2
 							detailedMovieFavoriteStateValueComparison = 1; // Ganti value untuk mengupdate comparison
 							if(uri != null){
 								// Panggil AppWidgetManager class
@@ -739,9 +726,6 @@ public class DetailActivity extends AppCompatActivity {
 								int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(getApplicationContext(), FavoriteMovieItemWidget.class));
 								// Notify R.id.favorite_movie_stack_view {@link StackView di favorite_movie_item_widget.xml} agar dpt memanggil onDataSetChanged method
 								appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.favorite_movie_stack_view);
-								// Bawa nilai ke intent
-								resultIntent.putExtra(EXTRA_CHANGED_STATE, changedState);
-								setResult(RESULT_CHANGE, resultIntent); // Set result that brings result code and intent
 							}
 						}
 						
@@ -766,9 +750,6 @@ public class DetailActivity extends AppCompatActivity {
 								int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(getApplicationContext(), FavoriteMovieItemWidget.class));
 								// Notify R.id.favorite_movie_stack_view {@link StackView di favorite_movie_item_widget.xml} agar dpt memanggil onDataSetChanged method
 								appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.favorite_movie_stack_view);
-								// Bawa nilai ke intent
-								resultIntent.putExtra(EXTRA_CHANGED_STATE, changedState);
-								setResult(RESULT_CHANGE, resultIntent); // Set result that brings result code and intent
 							}
 						}
 						
@@ -801,13 +782,8 @@ public class DetailActivity extends AppCompatActivity {
 						
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState) {
-							uri = getContentResolver().insert(TV_SHOW_FAVORITE_CONTENT_URI, tvShowColumnValues);
+							getContentResolver().insert(TV_SHOW_FAVORITE_CONTENT_URI, tvShowColumnValues);
 							detailedTvShowFavoriteStateValueComparison = 1; // Ganti value untuk mengupdate comparison
-							if(uri != null){
-								// Bawa nilai ke intent
-								resultIntent.putExtra(EXTRA_CHANGED_STATE, changedState);
-								setResult(RESULT_CHANGE, resultIntent); // Set result that brings result code and intent
-							}
 						}
 						
 						// Update option menu
@@ -824,13 +800,8 @@ public class DetailActivity extends AppCompatActivity {
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState) {
 							// Remove from database
-							int deletedIdItem = getContentResolver().delete(uri, null, null);
+							getContentResolver().delete(uri, null, null);
 							detailedTvShowFavoriteStateValueComparison = 0; // Ganti value untuk mengupdate comparison
-							if(deletedIdItem > 0) {
-								// Bawa nilai ke intent
-								resultIntent.putExtra(EXTRA_CHANGED_STATE, changedState);
-								setResult(RESULT_CHANGE, resultIntent); // Set result that brings result code and intent
-							}
 						}
 						
 						// Update option menu
@@ -841,6 +812,7 @@ public class DetailActivity extends AppCompatActivity {
 			case R.id.home:
 				// Finish method untuk membawa Intent ke MainActivity
 				finish();
+				break;
 			default:
 				break;
 		}

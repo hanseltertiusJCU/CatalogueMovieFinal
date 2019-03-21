@@ -186,9 +186,8 @@ public class TvShowFragment extends Fragment{
 		intentWithTvShowIdData.putExtra(MODE_INTENT, modeItem);
 		// Set Uri ke Intent
 		intentWithTvShowIdData.setData(tvShowUriItem);
-		// Start activity tujuan bedasarkan intent object dan bawa request code
-		// REQUEST_CHANGE untuk onActivityResult
-		startActivityForResult(intentWithTvShowIdData, DetailActivity.REQUEST_CHANGE);
+		// Start activity ke DetailActivity
+		startActivity(intentWithTvShowIdData);
 	}
 	
 	@Override
@@ -256,32 +255,4 @@ public class TvShowFragment extends Fragment{
 			}
 		};
 	}
-	
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if(data != null) {
-			// Check for correct request code
-			if(requestCode == DetailActivity.REQUEST_CHANGE) {
-				// Check for result code
-				if(resultCode == DetailActivity.RESULT_CHANGE) {
-					// Tambahkan item ke adapter dan reset scroll position ke paling atas
-					boolean changedDataState = data.getBooleanExtra(DetailActivity.EXTRA_CHANGED_STATE, false);
-					// Cek jika value dari changedDataState itu true
-					if(changedDataState) {
-						if(Objects.requireNonNull(getActivity()).getSupportFragmentManager() != null) {
-							// Dapatin position fragment dari FavoriteTvShowFragment di ViewPager since ViewPager menampung list dari Fragments
-							FavoriteTvShowFragment favoriteTvShowFragment = (FavoriteTvShowFragment) getActivity().getSupportFragmentManager().getFragments().get(3);
-							// Cek jika favoriteTvShowFragment itu ada
-							if(favoriteTvShowFragment != null) {
-								// Komunikasi dengan FavoriteTvShowFragment dengan memanggil onActivityResult method di FavoriteTvShowFragment
-								favoriteTvShowFragment.onActivityResult(requestCode, resultCode, data);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	
 }
