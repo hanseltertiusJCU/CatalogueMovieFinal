@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -79,6 +80,9 @@ public class MovieFragment extends Fragment{
 	// Initiate ViewModel dan Componentnya
 	MovieViewModel movieViewModel;
 	Observer<ArrayList<MovieItem>> movieObserver;
+	// Initiate Swipe to refresh layout
+	@BindView(R.id.fragment_movie_swipe_refresh_layout)
+	SwipeRefreshLayout fragmentMovieSwipeRefreshLayout;
 	
 	
 	public MovieFragment() {
@@ -133,10 +137,6 @@ public class MovieFragment extends Fragment{
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		// Set visiblity of views ketika sedang dalam meretrieve data
-		recyclerView.setVisibility(View.INVISIBLE);
-		progressBar.setVisibility(View.VISIBLE);
-		emptyTextView.setVisibility(View.GONE);
 		// Cek jika Bundle exist, jika iya maka kita metretrieve list state as well as
 		// list/item positions (scroll position)
 		if(savedInstanceState != null) {
@@ -145,6 +145,10 @@ public class MovieFragment extends Fragment{
 
 		// Cek jika activity exists
 		if(getActivity() != null){
+			// Set visiblity of views ketika sedang dalam meretrieve data
+			recyclerView.setVisibility(View.INVISIBLE);
+			progressBar.setVisibility(View.VISIBLE);
+			emptyTextView.setVisibility(View.GONE);
 			// Connectivity manager untuk mengecek state dari network connectivity
 			ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 			// Network Info object untuk melihat ada data network yang aktif
@@ -167,6 +171,54 @@ public class MovieFragment extends Fragment{
 				emptyTextView.setText(getString(R.string.no_internet_connection));
 			}
 		}
+
+		// Set refresh listener ke swipe to refresh layout
+		fragmentMovieSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				// Cek jika activity exists
+				if(getActivity() != null){
+					// Set visiblity of views ketika sedang dalam meretrieve data
+					recyclerView.setVisibility(View.INVISIBLE);
+					progressBar.setVisibility(View.VISIBLE);
+					emptyTextView.setVisibility(View.GONE);
+					// Connectivity manager untuk mengecek state dari network connectivity
+					ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+					// Network Info object untuk melihat ada data network yang aktif
+					NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+					// Cek jika ada network connection
+					if(networkInfo != null && networkInfo.isConnected()){
+						// Cek ketika view model exist, berarti jika ada,
+						// kita tidak perlu create view model lagi dan
+						// ini berguna ketika kita kita ingin load data ketika
+						// viewmodel pas pertama kali dijalankan tidak ada
+						if(movieViewModel != null){
+							// Panggil method createObserver untuk return Observer object
+							movieObserver = createObserver();
+							// Tempelkan Observer ke LiveData object
+							movieViewModel.getMovies().observe(MovieFragment.this, movieObserver);
+						} else {
+							// Dapatkan ViewModel yang tepat dari ViewModelProviders
+							movieViewModel = ViewModelProviders.of(MovieFragment.this).get(MovieViewModel.class);
+							// Panggil method createObserver untuk return Observer object
+							movieObserver = createObserver();
+							// Tempelkan Observer ke LiveData object
+							movieViewModel.getMovies().observe(MovieFragment.this, movieObserver);
+						}
+					} else {
+						// Progress bar into gone and recycler view into invisible as the data finished on loading
+						progressBar.setVisibility(View.GONE);
+						recyclerView.setVisibility(View.INVISIBLE);
+						// Set empty view visibility into visible
+						emptyTextView.setVisibility(View.VISIBLE);
+						// Empty text view yg menunjukkan bahwa tidak ada internet yang sedang terhubung
+						emptyTextView.setText(getString(R.string.no_internet_connection));
+					}
+				}
+				// Set refreshing into false
+				fragmentMovieSwipeRefreshLayout.setRefreshing(false);
+			}
+		});
 		
 	}
 	

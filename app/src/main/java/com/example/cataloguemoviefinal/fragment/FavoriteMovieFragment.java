@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -64,7 +65,10 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	// LinearLayout untuk atur visibility dari Search keyword
 	@BindView(R.id.movie_search_keyword_result)
 	LinearLayout movieSearchKeywordResult;
-	
+	// Initiate Swipe to refresh layout
+	@BindView(R.id.fragment_movie_swipe_refresh_layout)
+	SwipeRefreshLayout fragmentMovieSwipeRefreshLayout;
+
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -109,10 +113,6 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		// Set visiblity of views ketika sedang dalam meretrieve data, kesannya seperti data sedang loading
-		recyclerView.setVisibility(View.INVISIBLE);
-		progressBar.setVisibility(View.VISIBLE);
-		emptyTextView.setVisibility(View.GONE);
 		// Cek jika bundle savedInstanceState itu ada
 		if(savedInstanceState != null) {
 			// Retrieve array list parcelable
@@ -148,8 +148,12 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 			}
 		}
 
-		// Cek jika activity exist
+		// Cek jika activity exist, line ini berguna untuk pertama kali activity dijalankan
 		if(getActivity() != null){
+			// Set visiblity of views ketika sedang dalam meretrieve data, kesannya seperti data sedang loading
+			recyclerView.setVisibility(View.INVISIBLE);
+			progressBar.setVisibility(View.VISIBLE);
+			emptyTextView.setVisibility(View.GONE);
 			// Connectivity manager untuk mengecek state dari network connectivity
 			ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 			// Network Info object untuk melihat ada data network yang aktif
@@ -168,6 +172,40 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 				emptyTextView.setText(getString(R.string.no_internet_connection));
 			}
 		}
+
+		// Set refresh listener untuk menghandle refresh event
+		fragmentMovieSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			// Line ini berguna ketika fragment sedang di refresh
+			@Override
+			public void onRefresh() {
+				// Set visiblity of views ketika sedang dalam meretrieve data, kesannya seperti data sedang loading
+				recyclerView.setVisibility(View.INVISIBLE);
+				progressBar.setVisibility(View.VISIBLE);
+				emptyTextView.setVisibility(View.GONE);
+				// Cek jika activity exist, line ini berguna untuk ketika data ingin di refresh kembali
+				if(getActivity() != null){
+					// Connectivity manager untuk mengecek state dari network connectivity
+					ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+					// Network Info object untuk melihat ada data network yang aktif
+					NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+					// Cek jika ada network connection
+					if(networkInfo != null && networkInfo.isConnected()){
+						// Lakukan AsyncTask utk meretrieve ArrayList yg isinya data dari database
+						new LoadFavoriteMoviesAsync(getActivity(), FavoriteMovieFragment.this).execute();
+					} else {
+						// Progress bar into gone and recycler view into invisible as the data finished on loading
+						progressBar.setVisibility(View.GONE);
+						recyclerView.setVisibility(View.INVISIBLE);
+						// Set empty view visibility into visible
+						emptyTextView.setVisibility(View.VISIBLE);
+						// Empty text view yg menunjukkan bahwa tidak ada internet yang sedang terhubung
+						emptyTextView.setText(getString(R.string.no_internet_connection));
+					}
+				}
+				// Set refresh jadi false menandakan bahwa datanya sudah di load
+				fragmentMovieSwipeRefreshLayout.setRefreshing(false);
+			}
+		});
 	}
 	
 	// Method tsb berguna untuk membawa value dari Intent ke Activity tujuan serta memanggil Activity tujuan

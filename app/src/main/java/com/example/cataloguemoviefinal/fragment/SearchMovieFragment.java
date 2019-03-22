@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -86,6 +87,9 @@ public class SearchMovieFragment extends Fragment{
 	// Initiate Viewmodel dan componentnya
 	SearchMovieViewModel searchMovieViewModel;
 	Observer<ArrayList<MovieItem>> searchMovieObserver;
+	// Initiate Swipe to refresh layout
+	@BindView(R.id.fragment_movie_swipe_refresh_layout)
+	SwipeRefreshLayout fragmentMovieSwipeRefreshLayout;
 	
 	public SearchMovieFragment() {
 		// Required empty public constructor
@@ -135,10 +139,6 @@ public class SearchMovieFragment extends Fragment{
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		// Set visiblity of views ketika sedang dalam meretrieve data
-		recyclerView.setVisibility(View.INVISIBLE);
-		progressBar.setVisibility(View.VISIBLE);
-		emptyTextView.setVisibility(View.GONE);
 		// Check if there is savedinstancestate (for rotation purposes), if not (when activity started), create view model (including live data) as well as putting observer on livedata
 		if(savedInstanceState != null){
 			moviekeywordResult = savedInstanceState.getString(MOVIE_KEYWORD_RESULT);
@@ -151,6 +151,10 @@ public class SearchMovieFragment extends Fragment{
 
 		// Check if activity + application exists
 		if(Objects.requireNonNull(getActivity()).getApplication() != null){
+			// Set visiblity of views ketika sedang dalam meretrieve data
+			recyclerView.setVisibility(View.INVISIBLE);
+			progressBar.setVisibility(View.VISIBLE);
+			emptyTextView.setVisibility(View.GONE);
 			// Connectivity manager untuk mengecek state dari network connectivity
 			ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 			// Network Info object untuk melihat ada data network yang aktif
@@ -173,6 +177,51 @@ public class SearchMovieFragment extends Fragment{
 				emptyTextView.setText(getString(R.string.no_internet_connection));
 			}
 		}
+
+		// Set refresh listener ke swipe to refresh layout fragment movie
+		fragmentMovieSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				// Check if activity + application exists
+				if(Objects.requireNonNull(getActivity()).getApplication() != null){
+					// Set visiblity of views ketika sedang dalam meretrieve data
+					recyclerView.setVisibility(View.INVISIBLE);
+					progressBar.setVisibility(View.VISIBLE);
+					emptyTextView.setVisibility(View.GONE);
+					// Connectivity manager untuk mengecek state dari network connectivity
+					ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+					// Network Info object untuk melihat ada data network yang aktif
+					NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+					// Cek jika ada network connection
+					if(networkInfo != null && networkInfo.isConnected()){
+						if(searchMovieViewModel != null){
+							// Create observer that return ArrayList that takes ArrayList<MovieItem>
+							searchMovieObserver = createObserver();
+							// Calling LiveData from ViewModel (since LiveData is a part of ViewModel) then observe the LiveData by putting observer
+							searchMovieViewModel.getSearchMovies().observe(SearchMovieFragment.this, searchMovieObserver);
+						} else {
+							// Create Viewmodel object
+							searchMovieViewModel = ViewModelProviders.of(SearchMovieFragment.this, new SearchMovieViewModelFactory(getActivity().getApplication(), moviekeywordResult)).get(SearchMovieViewModel.class);
+							// Create observer that return ArrayList that takes ArrayList<MovieItem>
+							searchMovieObserver = createObserver();
+							// Calling LiveData from ViewModel (since LiveData is a part of ViewModel) then observe the LiveData by putting observer
+							searchMovieViewModel.getSearchMovies().observe(SearchMovieFragment.this, searchMovieObserver);
+						}
+					} else {
+						// Progress bar into gone and recycler view into invisible as the data finished on loading
+						progressBar.setVisibility(View.GONE);
+						recyclerView.setVisibility(View.INVISIBLE);
+						// Set empty view visibility into visible
+						emptyTextView.setVisibility(View.VISIBLE);
+						// Empty text view yg menunjukkan bahwa tidak ada internet yang sedang terhubung
+						emptyTextView.setText(getString(R.string.no_internet_connection));
+					}
+				}
+				// Set refresh into false, menandakan bahwa swipe to refresh layout
+				// sudah tidak dalam mode refreshing lagi
+				fragmentMovieSwipeRefreshLayout.setRefreshing(false);
+			}
+		});
 		
 	}
 	
