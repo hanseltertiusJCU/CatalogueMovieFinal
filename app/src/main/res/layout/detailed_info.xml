@@ -195,18 +195,4 @@
         app:layout_constraintTop_toBottomOf="@+id/detailed_ninth_info_title"
         tools:text="@string/detailed_movie_overview_text" />
 
-    <TextView
-        android:id="@+id/empty_detailed_info_text"
-        style="@style/DetailedScrollViewContentText"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/no_movie_data_shown" />
-
 </android.support.constraint.ConstraintLayout>

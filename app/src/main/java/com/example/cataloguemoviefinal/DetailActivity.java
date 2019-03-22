@@ -14,9 +14,12 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
@@ -113,8 +116,8 @@ public class DetailActivity extends AppCompatActivity {
 	// Set layout value untuk dapat menjalankan process loading data
 	@BindView(R.id.detailed_progress_bar)
 	ProgressBar detailedProgressBar;
-	@BindView(R.id.detailed_content)
-	LinearLayout detailedContent;
+	@BindView(R.id.detailed_content_info)
+	LinearLayout detailedContentInfo;
 	@BindView(R.id.detailed_app_bar)
 	AppBarLayout detailedAppBarLayout;
 	@BindView(R.id.detailed_toolbar)
@@ -148,19 +151,27 @@ public class DetailActivity extends AppCompatActivity {
 	private boolean changedState;
 	// Uri value untuk membaca data (jika data ada di favorite) ataupun insert data
 	private Uri uri;
+	// Viewmodel dan Observer untuk detailed movie
+    DetailedMovieViewModel detailedMovieViewModel;
+    Observer<ArrayList<MovieItem>> detailedMovieObserver;
+    // Viewmodel dan Observer untuk detailed tv show
+    DetailedTvShowViewModel detailedTvShowViewModel;
+    Observer<ArrayList<TvShowItem>> detailedTvShowObserver;
+	// Swipe to refresh layout untuk DetailActivity content
+    @BindView(R.id.detailed_content_swipe_refresh_layout)
+    SwipeRefreshLayout detailedContentSwipeRefreshLayout;
 
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail);
-		
+
 		ButterKnife.bind(this);
-		
+
 		setSupportActionBar(detailedToolbar);
-		
+
 		accessItemMode = getIntent().getStringExtra(MovieFragment.MODE_INTENT);
-		
+
 		// Cek untuk mode yg tepat
 		if(accessItemMode.equals("open_movie_detail")) {
 			// Get intent untuk mendapatkan id, title serta favorite movie state dari {@link MainActivity}
@@ -173,12 +184,12 @@ public class DetailActivity extends AppCompatActivity {
 			detailedTvShowName = getIntent().getStringExtra(TvShowFragment.TV_SHOW_NAME_DATA);
 			detailedTvShowFavoriteStateValueComparison = getIntent().getIntExtra(TvShowFragment.TV_SHOW_BOOLEAN_STATE_DATA, 0);
 		}
-		
+
 		uri = getIntent().getData();
-		
+
 		if(uri != null){
 			Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-			
+
 			if(cursor != null){
 				if(cursor.moveToFirst()){
 					// If condition to accomodate which custom class object to create
@@ -192,8 +203,8 @@ public class DetailActivity extends AppCompatActivity {
 				}
 			}
 		}
-		
-		
+
+
 		// Cek jika savedInstanceState itu ada, jika iya, restore drawable marked as favorite icon state
 		if(savedInstanceState != null) {
 			if(accessItemMode.equals("open_movie_detail")) {
@@ -229,7 +240,7 @@ public class DetailActivity extends AppCompatActivity {
 					}
 				}
 			}
-			
+
 		} else { // Jika tidak ada Bundle savedInstanceState
 			if(accessItemMode.equals("open_movie_detail")) {
 				// Valuenya dr MovieFavoriteState d samain sm comparison
@@ -239,7 +250,7 @@ public class DetailActivity extends AppCompatActivity {
 				detailedTvShowFavoriteStateValue = detailedTvShowFavoriteStateValueComparison;
 			}
 		}
-		
+
 		// Cek kalo ada action bar
 		if(getSupportActionBar() != null) {
 			// Set action bar title untuk DetailActivity
@@ -251,37 +262,40 @@ public class DetailActivity extends AppCompatActivity {
 			// Set up button
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
-		
-		// Set visiblity of views ketika sedang dalam meretrieve data
-		detailedContent.setVisibility(View.INVISIBLE);
-		detailedProgressBar.setVisibility(View.VISIBLE);
-		detailedEmptyTextView.setVisibility(View.GONE);
-		
+
 		// Mode untuk menangani ViewModel yg berbeda
 		if(accessItemMode.equals("open_movie_detail")) {
+			// Set visiblity of views ketika sedang dalam meretrieve data
+			detailedContentInfo.setVisibility(View.INVISIBLE);
+			detailedProgressBar.setVisibility(View.VISIBLE);
+			detailedEmptyTextView.setVisibility(View.GONE);
 			// Connectivity manager untuk mengecek state dari network connectivity
 			ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
 			// Network Info object untuk melihat ada data network yang aktif
 			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 			if(networkInfo != null && networkInfo.isConnected()){
-				// Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
+			    // Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
 				// Buat ViewModel untuk detailedMovieInfo
-				DetailedMovieViewModel detailedMovieViewModel = ViewModelProviders.of(this, new DetailedMovieViewModelFactory(this.getApplication(), detailedMovieId)).get(DetailedMovieViewModel.class);
+				detailedMovieViewModel = ViewModelProviders.of(this, new DetailedMovieViewModelFactory(this.getApplication(), detailedMovieId)).get(DetailedMovieViewModel.class);
 				// Buat observer object untuk mendisplay data ke UI
 				// Buat Observer untuk detailedMovieInfo
-				Observer<ArrayList<MovieItem>> detailedMovieObserver = createDetailedMovieObserver();
+				detailedMovieObserver = createDetailedMovieObserver();
 				// Tempelkan Observer ke LiveData object
 				detailedMovieViewModel.getDetailedMovie().observe(this, detailedMovieObserver);
 			} else {
 				// Progress bar into gone and recycler view into invisible as the data finished on loading
 				detailedProgressBar.setVisibility(View.GONE);
-				detailedContent.setVisibility(View.VISIBLE);
+				detailedContentInfo.setVisibility(View.INVISIBLE);
 				// Set empty view visibility into visible
 				detailedEmptyTextView.setVisibility(View.VISIBLE);
 				// Empty text view yang menunjukkan bahwa tidak ada internet yang sedang terhubung
 				detailedEmptyTextView.setText(getString(R.string.no_internet_connection));
 			}
 		} else if(accessItemMode.equals("open_tv_show_detail")) {
+			// Set visiblity of views ketika sedang dalam meretrieve data
+			detailedContentInfo.setVisibility(View.INVISIBLE);
+			detailedProgressBar.setVisibility(View.VISIBLE);
+			detailedEmptyTextView.setVisibility(View.GONE);
 			// Connectivity manager untuk mengecek state dari network connectivity
 			ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
 			// Network Info object untuk melihat ada data network yang aktif
@@ -290,37 +304,117 @@ public class DetailActivity extends AppCompatActivity {
 			if(networkInfo != null && networkInfo.isConnected()){
 				// Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
 				// Buat ViewModel untuk detailedTvShowInfo
-				DetailedTvShowViewModel detailedTvShowViewModel = ViewModelProviders.of(this, new DetailedTvShowViewModelFactory(this.getApplication(), detailedTvShowId)).get(DetailedTvShowViewModel.class);
+				detailedTvShowViewModel = ViewModelProviders.of(this, new DetailedTvShowViewModelFactory(this.getApplication(), detailedTvShowId)).get(DetailedTvShowViewModel.class);
 				// Buat observer object untuk mendisplay data ke UI
 				// Buat Observer untuk detailedTvShowInfo
-				Observer<ArrayList<TvShowItem>> detailedTvShowObserver = createDetailedTvShowObserver();
+				detailedTvShowObserver = createDetailedTvShowObserver();
 				// Tempelkan Observer ke LiveData object
 				detailedTvShowViewModel.getDetailedTvShow().observe(this, detailedTvShowObserver);
 			} else { // Kondisi jika tidak connected ke network
 				// Progress bar into gone and recycler view into invisible as the data finished on loading
 				detailedProgressBar.setVisibility(View.GONE);
-				detailedContent.setVisibility(View.VISIBLE);
+				detailedContentInfo.setVisibility(View.INVISIBLE);
 				// Set empty view visibility into visible
 				detailedEmptyTextView.setVisibility(View.VISIBLE);
 				// Empty text view yang menunjukkan bahwa tidak ada internet yang sedang terhubung
 				detailedEmptyTextView.setText(getString(R.string.no_internet_connection));
 			}
 		}
-		
-		
+
+		// Set listener ke swipe to refresh layout
+        detailedContentSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            // Method ini trigger ketika sedang refresh
+            @Override
+            public void onRefresh() {
+                // Mode untuk menangani ViewModel yg berbeda
+                if(accessItemMode.equals("open_movie_detail")) {
+					// Set visiblity of views ketika sedang dalam meretrieve data
+					detailedContentInfo.setVisibility(View.INVISIBLE);
+					detailedProgressBar.setVisibility(View.VISIBLE);
+					detailedEmptyTextView.setVisibility(View.GONE);
+                    // Connectivity manager untuk mengecek state dari network connectivity
+                    ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                    // Network Info object untuk melihat ada data network yang aktif
+                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                    if(networkInfo != null && networkInfo.isConnected()){
+                        // Cek ketika view model dari detailed movie itu ada, berarti ga perlu initiate viewmodel lagi
+                        if(detailedMovieViewModel != null){
+                            // Buat observer object untuk mendisplay data ke UI
+                            detailedMovieObserver = createDetailedMovieObserver();
+                            // Tempelkan Observer ke LiveData object
+                            detailedMovieViewModel.getDetailedMovie().observe(DetailActivity.this, detailedMovieObserver);
+                        } else {
+                            // Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
+                            detailedMovieViewModel = ViewModelProviders.of(DetailActivity.this, new DetailedMovieViewModelFactory(getApplication(), detailedMovieId)).get(DetailedMovieViewModel.class);
+                            // Buat observer object untuk mendisplay data ke UI
+                            detailedMovieObserver = createDetailedMovieObserver();
+                            // Tempelkan Observer ke LiveData object
+                            detailedMovieViewModel.getDetailedMovie().observe(DetailActivity.this, detailedMovieObserver);
+                        }
+
+                    } else {
+                        // Progress bar into gone and recycler view into invisible as the data finished on loading
+                        detailedProgressBar.setVisibility(View.GONE);
+                        detailedContentInfo.setVisibility(View.INVISIBLE);
+                        // Set empty view visibility into visible
+                        detailedEmptyTextView.setVisibility(View.VISIBLE);
+                        // Empty text view yang menunjukkan bahwa tidak ada internet yang sedang terhubung
+                        detailedEmptyTextView.setText(getString(R.string.no_internet_connection));
+                    }
+                } else if(accessItemMode.equals("open_tv_show_detail")) {
+					// Set visiblity of views ketika sedang dalam meretrieve data
+					detailedContentInfo.setVisibility(View.INVISIBLE);
+					detailedProgressBar.setVisibility(View.VISIBLE);
+					detailedEmptyTextView.setVisibility(View.GONE);
+                    // Connectivity manager untuk mengecek state dari network connectivity
+                    ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                    // Network Info object untuk melihat ada data network yang aktif
+                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                    // Cek jika ada network connection
+                    if(networkInfo != null && networkInfo.isConnected()){
+                        // Cek ketika view model dari detailed movie itu ada, berarti ga perlu initiate viewmodel lagi
+                        if(detailedTvShowViewModel != null){
+                            // Buat observer object untuk mendisplay data ke UI
+                            detailedTvShowObserver = createDetailedTvShowObserver();
+                            // Tempelkan Observer ke LiveData object
+                            detailedTvShowViewModel.getDetailedTvShow().observe(DetailActivity.this, detailedTvShowObserver);
+                        } else {
+                            // Panggil MovieViewModel dengan menggunakan ViewModelFactory sebagai parameter tambahan (dan satu-satunya pilihan) selain activity
+                            detailedTvShowViewModel = ViewModelProviders.of(DetailActivity.this, new DetailedTvShowViewModelFactory(getApplication(), detailedTvShowId)).get(DetailedTvShowViewModel.class);
+                            // Buat observer object untuk mendisplay data ke UI
+                            detailedTvShowObserver = createDetailedTvShowObserver();
+                            // Tempelkan Observer ke LiveData object
+                            detailedTvShowViewModel.getDetailedTvShow().observe(DetailActivity.this, detailedTvShowObserver);
+                        }
+                    } else { // Kondisi jika tidak connected ke network
+                        // Progress bar into gone and recycler view into invisible as the data finished on loading
+                        detailedProgressBar.setVisibility(View.GONE);
+                        detailedContentInfo.setVisibility(View.INVISIBLE);
+                        // Set empty view visibility into visible
+                        detailedEmptyTextView.setVisibility(View.VISIBLE);
+                        // Empty text view yang menunjukkan bahwa tidak ada internet yang sedang terhubung
+                        detailedEmptyTextView.setText(getString(R.string.no_internet_connection));
+                    }
+                }
+                // Set refresh into false, meaning that datanya sudah tidak di load lagi
+                detailedContentSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+
 		// Add on offset changed listener ke AppBarLayout untuk mengatur
 		// ketika app barnya itu gede/collapse
 		detailedAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
 			boolean isAppBarLayoutShow = false;
 			int scrollRange = - 1;
-			
+
 			@Override
 			public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
 				// Jika scrollRange berada di posisi default atau -1, maka set value untuk scrollRange
 				if(scrollRange == - 1) {
 					scrollRange = appBarLayout.getTotalScrollRange();
 				}
-				
+
 				// Jika scroll range dengan vertical offset (parameter) berjumlah 0, maka gedein
 				// app bar layout
 				if(scrollRange + verticalOffset == 0) {
@@ -329,25 +423,26 @@ public class DetailActivity extends AppCompatActivity {
 					// Collapse app bar layout jika booleannya true
 					isAppBarLayoutShow = false;
 				}
-				
+
 			}
 		});
 	}
-	
+
 	private Observer<ArrayList<MovieItem>> createDetailedMovieObserver() {
 		return new Observer<ArrayList<MovieItem>>() {
 			@Override
 			public void onChanged(@Nullable ArrayList<MovieItem> detailedMovieItems) {
 				// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
 				// yang menandakan bahwa loadingnya sudah selesai
-				detailedContent.setVisibility(View.VISIBLE);
+				detailedContentInfo.setVisibility(View.VISIBLE);
 				detailedProgressBar.setVisibility(View.GONE);
-				
+				detailedEmptyTextView.setVisibility(View.GONE);
+
 				if(detailedMovieItems != null) {
 					// Set semua data ke dalam detail activity
 					// Load image jika ada poster path
 					Picasso.get().load(baseImageUrl + detailedMovieItems.get(0).getMoviePosterPath()).into(imageViewDetailedPosterImage);
-					
+
 					// Cek jika ada value dari variable
 					if(detailedMovieItems.get(0).getMovieTitle() != null && !detailedMovieItems.get(0).getMovieTitle().isEmpty()){
 						textViewDetailedFirstInfoText.setText(detailedMovieItems.get(0).getMovieTitle());
@@ -361,7 +456,7 @@ public class DetailActivity extends AppCompatActivity {
 					} else {
 						textViewDetailedSecondInfoText.setText(String.format("\"%s\"", getString(R.string.detailed_movie_unknown_tagline)));
 					}
-					
+
 					// Set textview content in detailed movie runtime to contain a variety of different colors
 					Spannable runtimeWord = new SpannableString(getString(R.string.span_movie_detail_runtime) + " ");
 					runtimeWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, runtimeWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -372,7 +467,7 @@ public class DetailActivity extends AppCompatActivity {
 						Spannable runtimeDetailedMovie = new SpannableString(detailedMovieItems.get(0).getMovieRuntime() + " ");
 						runtimeDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, runtimeDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 						textViewDetailedThirdInfoText.append(runtimeDetailedMovie);
-						
+
 						Spannable runtimeDetailedMovieMinutes = new SpannableString(getString(R.string.span_movie_detail_runtime_minutes));
 						runtimeDetailedMovieMinutes.setSpan(new ForegroundColorSpan(Color.BLACK), 0, runtimeDetailedMovieMinutes.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 						textViewDetailedThirdInfoText.append(runtimeDetailedMovieMinutes);
@@ -381,7 +476,7 @@ public class DetailActivity extends AppCompatActivity {
 						runtimeDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, runtimeDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 						textViewDetailedThirdInfoText.append(runtimeDetailedMovie);
 					}
-					
+
 					// Set textview content in detailed movie status to contain a variety of different colors
 					Spannable statusWord = new SpannableString(getString(R.string.span_movie_detail_status) + " ");
 					statusWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, statusWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -397,8 +492,8 @@ public class DetailActivity extends AppCompatActivity {
 						statusDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, statusDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 						textViewDetailedFourthInfoText.append(statusDetailedMovie);
 					}
-					
-					
+
+
 					// Set textview content in detailed movie rating to contain a variety of different colors
 					Spannable ratingWord = new SpannableString(getString(R.string.span_movie_detail_rating) + " ");
 					ratingWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -414,8 +509,8 @@ public class DetailActivity extends AppCompatActivity {
 						ratingDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, ratingDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 						textViewDetailedFifthInfoText.append(ratingDetailedMovie);
 					}
-					
-					
+
+
 					Spannable ratingFromWord = new SpannableString(" " + getString(R.string.span_movie_detail_from) + " ");
 					ratingFromWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingFromWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 					textViewDetailedFifthInfoText.append(ratingFromWord);
@@ -430,12 +525,12 @@ public class DetailActivity extends AppCompatActivity {
 						ratingDetailedMovieVotes.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, ratingDetailedMovieVotes.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 						textViewDetailedFifthInfoText.append(ratingDetailedMovieVotes);
 					}
-					
-					
+
+
 					Spannable ratingVotesWord = new SpannableString(" " + getString(R.string.span_movie_detail_votes));
 					ratingVotesWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingVotesWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 					textViewDetailedFifthInfoText.append(ratingVotesWord);
-					
+
 					textViewDetailedSixthInfoTitle.setText(getString(R.string.detailed_movie_languages_title));
 
 					// Cek jika ada value dari variable
@@ -444,7 +539,7 @@ public class DetailActivity extends AppCompatActivity {
 					} else {
 						textViewDetailedSixthInfoText.setText(getString(R.string.detailed_movie_unknown_language));
 					}
-					
+
 					textViewDetailedSeventhInfoTitle.setText(getString(R.string.detailed_movie_genres_title));
 
 					// Cek jika ada value dari variable
@@ -453,7 +548,7 @@ public class DetailActivity extends AppCompatActivity {
 					} else {
 						textViewDetailedSeventhInfoText.setText(getString(R.string.detailed_movie_unknown_genres));
 					}
-					
+
 					textViewDetailedEighthInfoTitle.setText(getString(R.string.detailed_movie_release_date_title));
 
 					// Cek jika ada value dari variable
@@ -462,7 +557,7 @@ public class DetailActivity extends AppCompatActivity {
 					} else {
 						textViewDetailedEighthInfoText.setText(getString(R.string.detailed_movie_unknown_release_date));
 					}
-					
+
 					textViewDetailedNinthInfoTitle.setText(getString(R.string.detailed_movie_overview_title));
 
 					// Cek jika ada value dari variable
@@ -471,14 +566,14 @@ public class DetailActivity extends AppCompatActivity {
 					} else {
 						textViewDetailedNinthInfoText.setText(getString(R.string.detailed_movie_unknown_overview));
 					}
-					
-					
+
+
 					// Cek jika Uri tidak ada alias null
 					if(uri == null){
 						// Set value dari Item bedasarkan parameter lalu akses object pertama
 						detailedMovieItem = detailedMovieItems.get(0);
 					}
-					
+
 					// Set menu clickable into true, literally setelah asynctask kelar,
 					// maka menu bs d click
 					menuClickable = true;
@@ -488,16 +583,17 @@ public class DetailActivity extends AppCompatActivity {
 			}
 		};
 	}
-	
+
 	private Observer<ArrayList<TvShowItem>> createDetailedTvShowObserver() {
-		
+
 		return new Observer<ArrayList<TvShowItem>>() {
 			@Override
 			public void onChanged(@Nullable ArrayList<TvShowItem> detailedTvShowItems) {
 				// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
 				// yang menandakan bahwa loadingnya sudah selesai
-				detailedContent.setVisibility(View.VISIBLE);
+				detailedContentInfo.setVisibility(View.VISIBLE);
 				detailedProgressBar.setVisibility(View.GONE);
+				detailedEmptyTextView.setVisibility(View.GONE);
 
 				if(detailedTvShowItems != null) {
 					// Set semua data ke dalam detail activity
@@ -510,7 +606,7 @@ public class DetailActivity extends AppCompatActivity {
 					} else {
 						textViewDetailedFirstInfoText.setText(getString(R.string.detailed_tv_show_unknown_name));
 					}
-					
+
 					Spannable seasonsWord = new SpannableString(getString(R.string.span_tv_show_detail_number_of_seasons) + " ");
 					seasonsWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, seasonsWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 					textViewDetailedSecondInfoText.setText(seasonsWord);
@@ -524,7 +620,7 @@ public class DetailActivity extends AppCompatActivity {
 						seasonsDetailedTvShow.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, seasonsDetailedTvShow.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 						textViewDetailedSecondInfoText.append(seasonsDetailedTvShow);
 					}
-					
+
 					// Set textview content in detailed movie runtime to contain a variety of different colors
 					Spannable episodesWord = new SpannableString(getString(R.string.span_tv_show_detail_number_of_episodes) + " ");
 					episodesWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, episodesWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -539,7 +635,7 @@ public class DetailActivity extends AppCompatActivity {
 						episodesDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, episodesDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 						textViewDetailedThirdInfoText.append(episodesDetailedMovie);
 					}
-					
+
 					Spannable episodesRuntimeWord = new SpannableString(getString(R.string.span_tv_show_detail_runtime_episodes) + " ");
 					episodesRuntimeWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, episodesRuntimeWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 					textViewDetailedFourthInfoText.setText(episodesRuntimeWord);
@@ -549,12 +645,12 @@ public class DetailActivity extends AppCompatActivity {
 						Spannable episodesRuntimeDetailTvShow = new SpannableString(detailedTvShowItems.get(0).getTvShowRuntimeEpisodes() + " ");
 						episodesRuntimeDetailTvShow.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, episodesRuntimeDetailTvShow.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 						textViewDetailedFourthInfoText.append(episodesRuntimeDetailTvShow);
-						
+
 						Spannable episodesRuntimeDetailTvShowMinutes = new SpannableString(getString(R.string.span_tv_show_detail_runtime_episodes_minutes));
 						episodesRuntimeDetailTvShowMinutes.setSpan(new ForegroundColorSpan(Color.BLACK), 0, episodesRuntimeDetailTvShowMinutes.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 						textViewDetailedFourthInfoText.append(episodesRuntimeDetailTvShowMinutes);
 					}
-					
+
 					// Set textview content in detailed movie rating to contain a variety of different colors
 					Spannable ratingWord = new SpannableString(getString(R.string.span_tv_show_detail_rating) + " ");
 					ratingWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -569,8 +665,8 @@ public class DetailActivity extends AppCompatActivity {
 						tvShowDetailedMovie.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, tvShowDetailedMovie.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 						textViewDetailedFifthInfoText.append(tvShowDetailedMovie);
 					}
-					
-					
+
+
 					Spannable ratingFromWord = new SpannableString(" " + getString(R.string.span_tv_show_detail_from) + " ");
 					ratingFromWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingFromWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 					textViewDetailedFifthInfoText.append(ratingFromWord);
@@ -584,12 +680,12 @@ public class DetailActivity extends AppCompatActivity {
 						ratingDetailedTvShowVotes.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0, ratingDetailedTvShowVotes.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 						textViewDetailedFifthInfoText.append(ratingDetailedTvShowVotes);
 					}
-					
-					
+
+
 					Spannable ratingVotesWord = new SpannableString(" " + getString(R.string.span_tv_show_detail_votes));
 					ratingVotesWord.setSpan(new ForegroundColorSpan(Color.BLACK), 0, ratingVotesWord.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 					textViewDetailedFifthInfoText.append(ratingVotesWord);
-					
+
 					textViewDetailedSixthInfoTitle.setText(getString(R.string.detailed_tv_show_networks_title));
 					// Cek jika ada value dari variable
 					if(detailedTvShowItems.get(0).getTvShowNetworks() != null && !detailedTvShowItems.get(0).getTvShowNetworks().isEmpty()){
@@ -597,7 +693,7 @@ public class DetailActivity extends AppCompatActivity {
 					} else {
 						textViewDetailedSixthInfoText.setText(getString(R.string.detailed_tv_show_unknown_networks));
 					}
-					
+
 					textViewDetailedSeventhInfoTitle.setText(getString(R.string.detailed_tv_show_genres_title));
 					// Cek jika ada value dari variable
 					if(detailedTvShowItems.get(0).getTvShowGenres() != null && !detailedTvShowItems.get(0).getTvShowGenres().isEmpty()){
@@ -605,8 +701,8 @@ public class DetailActivity extends AppCompatActivity {
 					} else {
 						textViewDetailedSeventhInfoText.setText(getString(R.string.detailed_tv_show_unknown_genres));
 					}
-					
-					
+
+
 					textViewDetailedEighthInfoTitle.setText(getString(R.string.detailed_tv_show_first_air_date_title));
 					// Cek jika ada value dari variable
 					if(detailedTvShowItems.get(0).getTvShowFirstAirDate() != null && !detailedTvShowItems.get(0).getTvShowFirstAirDate().isEmpty()){
@@ -614,7 +710,7 @@ public class DetailActivity extends AppCompatActivity {
 					} else {
 						textViewDetailedEighthInfoText.setText(getString(R.string.detailed_tv_show_unknown_first_air_date));
 					}
-					
+
 					textViewDetailedNinthInfoTitle.setText(getString(R.string.detailed_tv_show_overview_title));
 					// Cek jika ada value dari variable
 					if(detailedTvShowItems.get(0).getTvShowOverview() != null && !detailedTvShowItems.get(0).getTvShowOverview().isEmpty()){
@@ -622,24 +718,24 @@ public class DetailActivity extends AppCompatActivity {
 					} else {
 						textViewDetailedNinthInfoText.setText(getString(R.string.detailed_tv_show_unknown_overview));
 					}
-					
-					
+
+
 					if(uri == null){
 						// Set value dari Item bedasarkan parameter lalu akses object pertama, kesannya kyk Uri null atau tidak, object dari custom class tetap ada
 						detailedTvShowItem = detailedTvShowItems.get(0);
 					}
-					
+
 					// Set menu clickable into true, literally setelah asynctask kelar,
 					// maka menu bs d click
 					menuClickable = true;
-					
+
 					// Update option menu to recall onPrepareOptionMenu method
 					invalidateOptionsMenu();
 				}
 			}
 		};
 	}
-	
+
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if(menuClickable) {
@@ -647,10 +743,10 @@ public class DetailActivity extends AppCompatActivity {
 		} else {
 			menu.findItem(R.id.action_marked_as_favorite).setEnabled(false);
 		}
-		
+
 		return super.onPrepareOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate menu
@@ -672,7 +768,7 @@ public class DetailActivity extends AppCompatActivity {
 				drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_off;
 			}
 		}
-		
+
 		// Set inflated menu icon
 		menu.findItem(R.id.action_marked_as_favorite).setIcon(drawableMenuMarkedAsFavouriteResourceId);
 		// Get icon from drawable
@@ -683,7 +779,7 @@ public class DetailActivity extends AppCompatActivity {
 		menu.findItem(R.id.action_marked_as_favorite).setIcon(menuDrawable);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Boolean untuk mengetahui apakah state dari movie item itu berganti atau tidak
@@ -699,10 +795,10 @@ public class DetailActivity extends AppCompatActivity {
 						detailedMovieItem.setDateAddedFavorite(getCurrentDate());
 						// Set boolean state value into MovieItem
 						detailedMovieItem.setFavoriteBooleanState(detailedMovieFavoriteStateValue);
-						
+
 						// Cek jika value dari detailedMovieFavoriteStateValue sama dengan value bawaan intent dengan key MOVIE_BOOLEAN_STATE_EXTRA
 						changedState = detailedMovieFavoriteStateValue != detailedMovieFavoriteStateValueComparison;
-						
+
 						ContentValues movieColumnValues = new ContentValues();
 						// Put columns values in content values
 						movieColumnValues.put(_ID, detailedMovieItem.getId());
@@ -713,8 +809,8 @@ public class DetailActivity extends AppCompatActivity {
 						movieColumnValues.put(MOVIE_FILE_PATH_COLUMN, detailedMovieItem.getMoviePosterPath());
 						movieColumnValues.put(MOVIE_DATE_ADDED_FAVORITE_COLUMN, detailedMovieItem.getDateAddedFavorite());
 						movieColumnValues.put(MOVIE_FAVORITE_COLUMN, detailedMovieItem.getFavoriteBooleanState());
-						
-						
+
+
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState) {
 							uri = getContentResolver().insert(MOVIE_FAVORITE_CONTENT_URI, movieColumnValues); // todo: bikin ga usah return apa2
@@ -728,7 +824,7 @@ public class DetailActivity extends AppCompatActivity {
 								appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.favorite_movie_stack_view);
 							}
 						}
-						
+
 						// Update option menu
 						invalidateOptionsMenu();
 					} else {
@@ -752,7 +848,7 @@ public class DetailActivity extends AppCompatActivity {
 								appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.favorite_movie_stack_view);
 							}
 						}
-						
+
 						// Update option menu
 						invalidateOptionsMenu();
 					}
@@ -768,7 +864,7 @@ public class DetailActivity extends AppCompatActivity {
 						// Cek jika value dari detailedTvShowFavoriteStateValue sama dengan value
 						// bawaan intent dengan key TV_SHOW_BOOLEAN_STATE_EXTRA
 						changedState = detailedTvShowFavoriteStateValue != detailedTvShowFavoriteStateValueComparison;
-						
+
 						ContentValues tvShowColumnValues = new ContentValues();
 						// Tambahkan value ke content values
 						tvShowColumnValues.put(_ID, detailedTvShowItem.getId());
@@ -779,13 +875,13 @@ public class DetailActivity extends AppCompatActivity {
 						tvShowColumnValues.put(TV_SHOW_FILE_PATH_COLUMN, detailedTvShowItem.getTvShowPosterPath());
 						tvShowColumnValues.put(TV_SHOW_DATE_ADDED_COLUMN, detailedTvShowItem.getDateAddedFavorite());
 						tvShowColumnValues.put(TV_SHOW_FAVORITE_COLUMN, detailedTvShowItem.getFavoriteBooleanState());
-						
+
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState) {
 							getContentResolver().insert(TV_SHOW_FAVORITE_CONTENT_URI, tvShowColumnValues);
 							detailedTvShowFavoriteStateValueComparison = 1; // Ganti value untuk mengupdate comparison
 						}
-						
+
 						// Update option menu
 						invalidateOptionsMenu();
 					} else {
@@ -803,7 +899,7 @@ public class DetailActivity extends AppCompatActivity {
 							getContentResolver().delete(uri, null, null);
 							detailedTvShowFavoriteStateValueComparison = 0; // Ganti value untuk mengupdate comparison
 						}
-						
+
 						// Update option menu
 						invalidateOptionsMenu();
 					}
@@ -818,14 +914,14 @@ public class DetailActivity extends AppCompatActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
 		// Finish method untuk membawa Intent ke MainActivity
 		finish();
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		if(accessItemMode.equals("open_movie_detail")) {
@@ -843,12 +939,12 @@ public class DetailActivity extends AppCompatActivity {
 		}
 		super.onSaveInstanceState(outState);
 	}
-	
+
 	// Method tsb berguna untuk mendapatkan waktu dimana sebuah item di tambahkan
 	private String getCurrentDate() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
 		Date date = new Date();
-		
+
 		return dateFormat.format(date);
 	}
 }

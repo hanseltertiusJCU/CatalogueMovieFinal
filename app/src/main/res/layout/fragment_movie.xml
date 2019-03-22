@@ -1,52 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_movie_swipe_refresh_layout"
+    android:id="@+id/fragment_movie_items_list"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/fragment_movie_items_list"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context=".MovieFragment">
 
         <LinearLayout
+            android:id="@+id/movie_search_keyword_result"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            tools:context=".MovieFragment">
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:background="@drawable/border"
+            android:orientation="horizontal"
+            android:weightSum="3">
 
-            <LinearLayout
-                android:id="@+id/movie_search_keyword_result"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:background="@drawable/border"
-                android:orientation="horizontal"
-                android:weightSum="3">
+            <TextView
+                style="@style/KeywordText"
+                android:layout_weight="1"
+                android:text="@string/keyword_title"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/item_section_title"/>
 
-                <TextView
-                    style="@style/KeywordText"
-                    android:layout_weight="1"
-                    android:text="@string/keyword_title"
-                    android:background="@color/colorPrimary"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/item_section_title"/>
+            <TextView
+                android:id="@+id/movie_search_keyword_content"
+                style="@style/KeywordText"
+                android:layout_weight="2"
+                android:textColor="@color/colorBlack"
+                android:layout_gravity="center"
+                android:paddingRight="@dimen/inner_view_margin"/>
 
-                <TextView
-                    android:id="@+id/movie_search_keyword_content"
-                    style="@style/KeywordText"
-                    android:layout_weight="2"
-                    android:textColor="@color/colorBlack"
-                    android:layout_gravity="center"
-                    android:paddingRight="@dimen/inner_view_margin"/>
+        </LinearLayout>
 
-            </LinearLayout>
+        <!-- Set swipe to refresh layout di dalam recycler view -->
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/fragment_movie_swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_movie_item_list"
@@ -56,18 +55,17 @@
                 android:scrollbars="vertical"
                 tools:listitem="@layout/movie_items" />
 
-        </LinearLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            style="@style/ProgressBar" />
+    </LinearLayout>
 
-        <TextView
-            android:id="@+id/movie_empty_state_text"
-            style="@style/NoDataText"
-            tools:text="@string/no_movie_data_shown"/>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@style/ProgressBar" />
 
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/movie_empty_state_text"
+        style="@style/NoDataText"
+        tools:text="@string/no_movie_data_shown"/>
 
-
-</android.support.v4.widget.SwipeRefreshLayout>
+</RelativeLayout>

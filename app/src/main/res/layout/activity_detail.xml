@@ -34,12 +34,29 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <!-- Masukkin layout NestedScrollView -->
-    <include layout="@layout/detailed_content_scrolling" />
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/detailed_content_swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!-- Masukkin layout NestedScrollView -->
+        <include
+            layout="@layout/detailed_content_scrolling" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <ProgressBar
         android:id="@+id/detailed_progress_bar"
         style="@style/ProgressBar"
         android:layout_gravity="center" />
+
+    <TextView
+        android:id="@+id/empty_detailed_info_text"
+        style="@style/NoDataText"
+        android:layout_gravity="center"
+        tools:text="@string/no_movie_data_shown" />
+
 
 </android.support.design.widget.CoordinatorLayout>
