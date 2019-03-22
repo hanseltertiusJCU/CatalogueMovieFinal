@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.example.cataloguemoviefinal.database.FavoriteItemsHelper;
 import com.example.cataloguemoviefinal.observer.FavoriteMovieDataObserver;
@@ -33,10 +34,6 @@ public class FavoriteItemsProvider extends ContentProvider {
 	private static final UriMatcher sFavoriteItemUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 	// Create FavoriteItemHelper object
 	private FavoriteItemsHelper favoriteItemsHelper;
-	// Long variable for handling different cases (last segment of Uri in insert method)
-	long idFavoriteItemAdded;
-	// Int variable for handling different cases (return type of delete method)
-	int rowDeleted;
 	// Uri global variable for handling values in different cases
 	private Uri favoriteItemUri = null;
 	// Cursor variable for handling different different items
@@ -85,6 +82,10 @@ public class FavoriteItemsProvider extends ContentProvider {
 				cursor = null;
 				break;
 		}
+		// Cek jika cursor nya itu tidak null atau exists
+		if(cursor != null){
+			cursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri);
+		}
 		return cursor;
 	}
 	
@@ -98,15 +99,20 @@ public class FavoriteItemsProvider extends ContentProvider {
 	@Override
 	public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
 		favoriteItemsHelper.open();
+		long idFavoriteItemAdded;
 		switch(sFavoriteItemUriMatcher.match(uri)){
 			case FAVORITE_MOVIE_ITEM:
 				idFavoriteItemAdded = favoriteItemsHelper.insertFavoriteMovieProvider(values);
+				// yang anehnya itu disini, soalnya ga ad handler = ga bs di notify
 				Objects.requireNonNull(getContext()).getContentResolver().notifyChange(MOVIE_FAVORITE_CONTENT_URI, new FavoriteMovieDataObserver(new Handler(), getContext())); // Notify change ke {@link FavoriteMovieDataObserver} atau class yg extend ContentObserver
+				Log.d("data change", "data change notified");
 				favoriteItemUri = Uri.parse(MOVIE_FAVORITE_CONTENT_URI + "/" + idFavoriteItemAdded);
 				break;
 			case FAVORITE_TV_SHOW_ITEM:
 				idFavoriteItemAdded = favoriteItemsHelper.insertFavoriteTvShowProvider(values);
+				// yang anehnya itu disini, soalnya ga ad handler = ga bs di notify
 				Objects.requireNonNull(getContext()).getContentResolver().notifyChange(TV_SHOW_FAVORITE_CONTENT_URI, new FavoriteTvShowDataObserver(new Handler(), getContext())); // Notify change ke {@link FavoriteTvShowDataObserver} atau class yg extend ContentObserver
+				Log.d("data change", "data change notified");
 				favoriteItemUri = Uri.parse(TV_SHOW_FAVORITE_CONTENT_URI + "/" + idFavoriteItemAdded);
 				break;
 			default:
@@ -123,11 +129,15 @@ public class FavoriteItemsProvider extends ContentProvider {
 		switch(sFavoriteItemUriMatcher.match(uri)){
 			case FAVORITE_MOVIE_ITEM_ID:
 				rowDeleted = favoriteItemsHelper.deleteFavoriteMovieProvider(uri.getLastPathSegment());
+				// yang anehnya itu disini, soalnya ga ad handler = ga bs di notify
 				Objects.requireNonNull(getContext()).getContentResolver().notifyChange(MOVIE_FAVORITE_CONTENT_URI, new FavoriteMovieDataObserver(new Handler(), getContext()));
+				Log.d("data change", "data change notified");
 				break;
 			case FAVORITE_TV_SHOW_ITEM_ID:
 				rowDeleted = favoriteItemsHelper.deleteFavoriteTvShowProvider(uri.getLastPathSegment());
+				// yang anehnya itu disini, soalnya ga ad handler = ga bs di notify
 				Objects.requireNonNull(getContext()).getContentResolver().notifyChange(TV_SHOW_FAVORITE_CONTENT_URI, new FavoriteTvShowDataObserver(new Handler(), getContext()));
+				Log.d("data change", "data change notified"); // log bwt test
 				break;
 			default:
 				rowDeleted = 0;

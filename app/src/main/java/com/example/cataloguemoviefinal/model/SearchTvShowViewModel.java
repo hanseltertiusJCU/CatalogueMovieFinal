@@ -76,12 +76,13 @@ public class SearchTvShowViewModel extends AndroidViewModel {
 					final ArrayList<TvShowItem> tvShowItems = new ArrayList<>();
 					
 					String tvShowSearchUrl = searchTvShowUrlBase + apiKey + tvShowSearchQuery + mTvShowSearchKeyword;
-					
+
 					syncHttpClient.get(tvShowSearchUrl, new AsyncHttpResponseHandler() {
-						
+
 						@Override
-						public void onStart() {
+						public void onStart(){
 							super.onStart();
+							// make the handler synchronous
 							setUseSynchronousMode(true);
 						}
 						

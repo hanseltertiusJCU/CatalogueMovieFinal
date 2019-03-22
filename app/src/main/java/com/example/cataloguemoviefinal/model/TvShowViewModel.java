@@ -63,7 +63,16 @@ public class TvShowViewModel extends AndroidViewModel{
 					final ArrayList <TvShowItem> tvShowItems = new ArrayList <>();
 					
 					String tvShowUrl = tvShowUrlBase + apiKey + languageUs;
+
 					syncHttpClient.get(tvShowUrl , new AsyncHttpResponseHandler(){
+
+						@Override
+						public void onStart(){
+							super.onStart();
+							// make the handler synchronous
+							setUseSynchronousMode(true);
+						}
+
 						@Override
 						public void onSuccess(int statusCode , Header[] headers , byte[] responseBody){
 							try{

@@ -14,7 +14,7 @@ import com.example.cataloguemoviefinal.R;
 /**
  * Implementation of App Widget functionality.
  */
-public class FavoriteMovieItemWidget extends AppWidgetProvider {
+public class FavoriteMovieItemWidget extends AppWidgetProvider{
 	
 	private static final String TOAST_ACTION = "com.example.cataloguemoviefinal.TOAST_ACTION";
 	public static final String EXTRA_FAVORITE_MOVIE_ITEM = "com.example.cataloguemoviefinal.EXTRA_FAVORITE_MOVIE_ITEM";

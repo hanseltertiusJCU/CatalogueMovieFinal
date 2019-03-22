@@ -76,12 +76,13 @@ public class SearchMovieViewModel extends AndroidViewModel {
 					final ArrayList<MovieItem> movieItems = new ArrayList<>();
 					
 					String movieSearchUrl = searchMovieUrlBase + apiKey + movieSearchQuery + mMovieSearchKeyword;
-					
+
 					syncHttpClient.get(movieSearchUrl, new AsyncHttpResponseHandler() {
-						
+
 						@Override
 						public void onStart() {
 							super.onStart();
+							// make the handler synchronous
 							setUseSynchronousMode(true);
 						}
 						

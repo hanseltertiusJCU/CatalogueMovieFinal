@@ -65,13 +65,13 @@ public class DetailedTvShowViewModel extends AndroidViewModel{
 					final ArrayList <TvShowItem> tvShowItems = new ArrayList <>();
 					
 					String detailedTvShowUrl = detailedTvShowUrlBase + mDetailedTvShowId + apiKeyFiller + apiKey;
-					
+
 					syncHttpClient.get(detailedTvShowUrl , new AsyncHttpResponseHandler(){
-						
+
 						@Override
 						public void onStart(){
 							super.onStart();
-							
+							// make the handler synchronous
 							setUseSynchronousMode(true);
 						}
 						

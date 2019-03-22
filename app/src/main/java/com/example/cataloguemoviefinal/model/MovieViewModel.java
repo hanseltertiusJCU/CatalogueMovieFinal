@@ -66,7 +66,16 @@ public class MovieViewModel extends AndroidViewModel{
 					final ArrayList <MovieItem> movieItemses = new ArrayList <>();
 					
 					String movieUrl = discoverMovieUrlBase + apiKey + languageUs;
+
 					syncHttpClient.get(movieUrl , new AsyncHttpResponseHandler(){
+
+						@Override
+						public void onStart(){
+							super.onStart();
+							// make the handler synchronous
+							setUseSynchronousMode(true);
+						}
+
 						@Override
 						public void onSuccess(int statusCode , Header[] headers , byte[] responseBody){
 							try{

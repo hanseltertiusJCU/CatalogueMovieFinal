@@ -67,13 +67,13 @@ public class DetailedMovieViewModel extends AndroidViewModel{
 					final ArrayList <MovieItem> movieItemses = new ArrayList <>();
 					
 					String detailedMovieUrl = detailedUrlBase + mDetailedMovieId + apiKeyFiller + apiKey;
-					
+
 					syncHttpClient.get(detailedMovieUrl , new AsyncHttpResponseHandler(){
-						
+
 						@Override
 						public void onStart(){
 							super.onStart();
-							
+							// make the handler synchronous
 							setUseSynchronousMode(true);
 						}
 						

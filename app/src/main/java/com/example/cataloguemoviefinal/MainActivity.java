@@ -92,12 +92,6 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		
 		setSupportActionBar(mainToolbar);
 		
-		if(savedInstanceState == null){
-			// Load async task for getting the cursor in Movies and TV Show favorite
-			new LoadFavoriteMoviesAsync(this, this).execute();
-			new LoadFavoriteTvShowAsync(this, this).execute();
-		}
-		
 		// Cek kalo ada action bar
 		if(getSupportActionBar() != null) {
 			// Set default action bar title, yaitu "Movie", alias item yg ada di posisi 0
@@ -108,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		HandlerThread movieHandlerThread = new HandlerThread("FavoriteMovieDataObserver"); // Initiate HandlerThread
 		movieHandlerThread.start();
 		Handler movieHandler = new Handler(movieHandlerThread.getLooper()); // Initiate Handler
+		Log.d("movie looper", String.valueOf(movieHandlerThread.getLooper()));
 		FavoriteMovieDataObserver myFavoriteMovieObserver = new FavoriteMovieDataObserver(movieHandler, this); // Initiate ContentObserver
 		getContentResolver().registerContentObserver(MOVIE_FAVORITE_CONTENT_URI, true, myFavoriteMovieObserver);
 		
@@ -115,8 +110,15 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		HandlerThread tvShowHandlerThread = new HandlerThread("FavoriteTvShowDataObserver"); // Initiate HandlerThread
 		tvShowHandlerThread.start();
 		Handler tvShowHandler = new Handler(tvShowHandlerThread.getLooper()); // Initiate Handler
+		Log.d("tv show looper", String.valueOf(tvShowHandlerThread.getLooper()));
 		FavoriteTvShowDataObserver myFavoriteTvShowObserver = new FavoriteTvShowDataObserver(tvShowHandler, this); // Initiate ContentObserver
 		getContentResolver().registerContentObserver(TV_SHOW_FAVORITE_CONTENT_URI, true, myFavoriteTvShowObserver);
+
+		if(savedInstanceState == null){
+			// Load async task for getting the cursor in Movies and TV Show favorite
+			new LoadFavoriteMoviesAsync(this, this).execute();
+			new LoadFavoriteTvShowAsync(this, this).execute();
+		}
 		
 		// Panggil method ini untuk saving Fragment state di ViewPager, kesannya kyk simpen
 		// fragment ketika sebuah fragment sedang tidak di display.
