@@ -26,6 +26,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -84,6 +85,7 @@ public class DetailActivity extends AppCompatActivity {
 	private static final String EXTRA_MOVIE_ITEM = "extra_movie_item";
 	// Constant untuk key object TV Show
 	private static final String EXTRA_TV_SHOW_ITEM = "extra_tv_show_item";
+
 	// Setup views bedasarkan id yang ada di layout xml
 	@BindView(R.id.detailed_poster_image)
 	ImageView imageViewDetailedPosterImage;
@@ -113,6 +115,7 @@ public class DetailActivity extends AppCompatActivity {
 	TextView textViewDetailedNinthInfoTitle;
 	@BindView(R.id.detailed_ninth_info_text)
 	TextView textViewDetailedNinthInfoText;
+
 	// Set layout value untuk dapat menjalankan process loading data
 	@BindView(R.id.detailed_progress_bar)
 	ProgressBar detailedProgressBar;
@@ -125,38 +128,46 @@ public class DetailActivity extends AppCompatActivity {
 	// Set empty text view
 	@BindView(R.id.empty_detailed_info_text)
 	TextView detailedEmptyTextView;
+
 	// Setup intent value untuk movie items
 	private int detailedMovieId;
 	private String detailedMovieTitle;
 	private int detailedMovieFavoriteStateValue;
 	private int detailedMovieFavoriteStateValueComparison;
+
 	// Setup intent value untuk tv show items
 	private int detailedTvShowId;
 	private String detailedTvShowName;
 	private int detailedTvShowFavoriteStateValue;
 	private int detailedTvShowFavoriteStateValueComparison;
+
 	// Setup boolean menu clickable state
 	private boolean menuClickable = false;
 	// Gunakan BuildConfig untuk menjaga credential
 	private String baseImageUrl = BuildConfig.POSTER_IMAGE_ITEM_URL;
 	// Drawable Global variable to handle orientation changes
 	private int drawableMenuMarkedAsFavouriteResourceId;
+
 	// Initiate MovieItem class untuk mengotak-atik value dr sebuah item di MovieItem class
 	private MovieItem detailedMovieItem;
 	// Initiate TvShowItem class untuk mengotak-atik value dr sebuah item di TvShowItem class
 	private TvShowItem detailedTvShowItem;
+
 	// String value untuk mengetahui mode data yg dibuka
 	private String accessItemMode;
 	// Boolean value untuk extra di Intent
 	private boolean changedState;
 	// Uri value untuk membaca data (jika data ada di favorite) ataupun insert data
 	private Uri uri;
+
 	// Viewmodel dan Observer untuk detailed movie
     DetailedMovieViewModel detailedMovieViewModel;
     Observer<ArrayList<MovieItem>> detailedMovieObserver;
+
     // Viewmodel dan Observer untuk detailed tv show
     DetailedTvShowViewModel detailedTvShowViewModel;
     Observer<ArrayList<TvShowItem>> detailedTvShowObserver;
+
 	// Swipe to refresh layout untuk DetailActivity content
     @BindView(R.id.detailed_content_swipe_refresh_layout)
     SwipeRefreshLayout detailedContentSwipeRefreshLayout;
@@ -813,7 +824,9 @@ public class DetailActivity extends AppCompatActivity {
 
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState) {
-							uri = getContentResolver().insert(MOVIE_FAVORITE_CONTENT_URI, movieColumnValues); // todo: bikin ga usah return apa2
+							uri = getContentResolver().insert(MOVIE_FAVORITE_CONTENT_URI, movieColumnValues);
+							Log.d("movie uri", String.valueOf(uri));
+							Log.d("insert movie item", "inserted movie item");
 							detailedMovieFavoriteStateValueComparison = 1; // Ganti value untuk mengupdate comparison
 							if(uri != null){
 								// Panggil AppWidgetManager class
@@ -837,15 +850,20 @@ public class DetailActivity extends AppCompatActivity {
 						changedState = detailedMovieFavoriteStateValue != detailedMovieFavoriteStateValueComparison;
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState) {
-							int deletedIdItem = getContentResolver().delete(uri, null, null);
-							detailedMovieFavoriteStateValueComparison = 0; // Ganti value untuk mengupdate comparison
-							if(deletedIdItem > 0) {
-								// Panggil AppWidgetManager class
-								AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
-								// Get App widget ids dari FavoriteMovieItemWidget class
-								int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(getApplicationContext(), FavoriteMovieItemWidget.class));
-								// Notify R.id.favorite_movie_stack_view {@link StackView di favorite_movie_item_widget.xml} agar dpt memanggil onDataSetChanged method
-								appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.favorite_movie_stack_view);
+							Log.d("movie uri", String.valueOf(uri));
+							// Cek jika ada Uri
+							if(uri != null){
+								int deletedIdItem = getContentResolver().delete(uri, null, null);
+								Log.d("delete movie item", "deleted movie item");
+								detailedMovieFavoriteStateValueComparison = 0; // Ganti value untuk mengupdate comparison
+								if(deletedIdItem > 0) {
+									// Panggil AppWidgetManager class
+									AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+									// Get App widget ids dari FavoriteMovieItemWidget class
+									int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(getApplicationContext(), FavoriteMovieItemWidget.class));
+									// Notify R.id.favorite_movie_stack_view {@link StackView di favorite_movie_item_widget.xml} agar dpt memanggil onDataSetChanged method
+									appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.favorite_movie_stack_view);
+								}
 							}
 						}
 
@@ -878,7 +896,9 @@ public class DetailActivity extends AppCompatActivity {
 
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState) {
-							getContentResolver().insert(TV_SHOW_FAVORITE_CONTENT_URI, tvShowColumnValues);
+							uri = getContentResolver().insert(TV_SHOW_FAVORITE_CONTENT_URI, tvShowColumnValues);
+							Log.d("tv show uri", String.valueOf(uri));
+							Log.d("insert tv show item", "inserted tv show item");
 							detailedTvShowFavoriteStateValueComparison = 1; // Ganti value untuk mengupdate comparison
 						}
 
@@ -895,9 +915,14 @@ public class DetailActivity extends AppCompatActivity {
 						changedState = detailedTvShowFavoriteStateValue != detailedTvShowFavoriteStateValueComparison;
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState) {
-							// Remove from database
-							getContentResolver().delete(uri, null, null);
-							detailedTvShowFavoriteStateValueComparison = 0; // Ganti value untuk mengupdate comparison
+							Log.d("tv show uri", String.valueOf(uri));
+							// Cek jika uri tidak null
+							if(uri != null){
+								// Remove from database
+								getContentResolver().delete(uri, null, null);
+								Log.d("delete tv show item", "deleted tv show item");
+								detailedTvShowFavoriteStateValueComparison = 0; // Ganti value untuk mengupdate comparison
+							}
 						}
 
 						// Update option menu

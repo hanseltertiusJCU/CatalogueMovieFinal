@@ -71,6 +71,7 @@ public class FavoriteMovieItemWidget extends AppWidgetProvider{
 			// Cek jika action dari intent itu sama dengan TOAST_ACTION (bawaan dari Intent yg di plant ke PendingIntent)
 			if(intent.getAction().equals(TOAST_ACTION)){
 				int viewIndex = intent.getIntExtra(EXTRA_FAVORITE_MOVIE_ITEM, 0);
+				// todo: bikin widget buka activity lain dan bs update data gt
 				Toast.makeText(context, "Touched view : " + viewIndex, Toast.LENGTH_SHORT).show(); // Make Toast message bedasarkan viewindex (item position)
 			}
 		}

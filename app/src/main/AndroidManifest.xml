@@ -3,9 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.cataloguemoviefinal">
 
-    <!-- Code ini berguna untuk menyebutkan uses permission yang ada -->
+    <!-- Code ini berguna untuk uses permission untuk internet access -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Code ini berguna untuk uses permission untuk alarm -->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
 
@@ -26,6 +27,7 @@
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
 
+        <!-- Broadcast receiver untuk widget -->
         <receiver android:name=".widget.FavoriteMovieItemWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -48,6 +50,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- Menggunakan config changes orientation di main activity and settings activity agar tidak perlu load activity pas orientation changes -->
         <activity
             android:name=".DetailActivity"
             android:parentActivityName=".MainActivity"

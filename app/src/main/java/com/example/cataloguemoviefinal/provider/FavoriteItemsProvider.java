@@ -84,7 +84,7 @@ public class FavoriteItemsProvider extends ContentProvider {
 		}
 		// Cek jika cursor nya itu tidak null atau exists
 		if(cursor != null){
-			cursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri);
+			cursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri); // Set notification uri
 		}
 		return cursor;
 	}
