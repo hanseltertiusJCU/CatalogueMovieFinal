@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -71,6 +72,12 @@ public class TvShowFragment extends Fragment{
 	private Parcelable mTvShowListState = null;
 	// Bikin linearlayout manager untuk dapat call onsaveinstancestate dan onrestoreinstancestate method
 	private LinearLayoutManager tvShowLinearLayoutManager;
+	// Bikin Viewmodel beserta Observer
+	TvShowViewModel tvShowViewModel;
+	Observer<ArrayList<TvShowItem>> tvShowObserver;
+	// Initiate Swipe to refresh layout
+	@BindView(R.id.fragment_tv_show_swipe_refresh_layout)
+	SwipeRefreshLayout fragmentTvShowSwipeRefreshLayout;
 	
 	public TvShowFragment() {
 		// Required empty public constructor
@@ -140,11 +147,9 @@ public class TvShowFragment extends Fragment{
 			// Cek jika ada network connection
 			if(networkInfo != null && networkInfo.isConnected()){
 				// Dapatkan ViewModel yang tepat dari ViewModelProviders
-				TvShowViewModel tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
-
+				tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
 				// Panggil method createObserver untuk return Observer object
-				Observer<ArrayList<TvShowItem>> tvShowObserver = createObserver();
-
+				tvShowObserver = createObserver();
 				// Tempelkan Observer ke LiveData object
 				tvShowViewModel.getTvShows().observe(this, tvShowObserver);
 			} else {
@@ -157,6 +162,49 @@ public class TvShowFragment extends Fragment{
 				emptyTextView.setText(getString(R.string.no_internet_connection));
 			}
 		}
+
+		// Set event refresh listener untuk swipe to refresh layout
+		fragmentTvShowSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				// Cek jika activity exists
+				if(getActivity() != null){
+					// Connectivity manager untuk mengecek state dari network connectivity
+					ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+					// Network Info object untuk melihat ada data network yang aktif
+					NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+					// Cek jika ada network connection
+					if(networkInfo != null && networkInfo.isConnected()){
+						// Cek jika view model ada
+						if(tvShowViewModel != null){
+							// Panggil method createObserver untuk return Observer object
+							tvShowObserver = createObserver();
+							// Tempelkan Observer ke LiveData object
+							tvShowViewModel.getTvShows().observe(TvShowFragment.this, tvShowObserver);
+						} else {
+							// Dapatkan ViewModel yang tepat dari ViewModelProviders
+							tvShowViewModel = ViewModelProviders.of(TvShowFragment.this).get(TvShowViewModel.class);
+							// Panggil method createObserver untuk return Observer object
+							tvShowObserver = createObserver();
+							// Tempelkan Observer ke LiveData object
+							tvShowViewModel.getTvShows().observe(TvShowFragment.this, tvShowObserver);
+						}
+					} else {
+						// Progress bar into gone and recycler view into invisible as the data finished on loading
+						progressBar.setVisibility(View.GONE);
+						recyclerView.setVisibility(View.INVISIBLE);
+						// Set empty view visibility into visible
+						emptyTextView.setVisibility(View.VISIBLE);
+						// Empty text view yg menunjukkan bahwa tidak ada internet yang sedang terhubung
+						emptyTextView.setText(getString(R.string.no_internet_connection));
+					}
+				}
+				// Set refresh into false, menandakan bahwa proses refresh sudah selesai
+				fragmentTvShowSwipeRefreshLayout.setRefreshing(false);
+			}
+		});
+
+
 	}
 	
 	private void showSelectedTvShowItems(TvShowItem tvShowItem) {

@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -82,6 +83,9 @@ public class SearchTvShowFragment extends Fragment{
 	// Initiate Viewmodel dan componentnya
 	SearchTvShowViewModel searchTvShowViewModel;
 	Observer<ArrayList<TvShowItem>> searchTvShowObserver;
+	// Initiate Swipe to refresh layout
+	@BindView(R.id.fragment_tv_show_swipe_refresh_layout)
+	SwipeRefreshLayout fragmentTvShowSwipeRefreshLayout;
 
 	public SearchTvShowFragment() {
 		// Required empty public constructor
@@ -133,12 +137,7 @@ public class SearchTvShowFragment extends Fragment{
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		// Set visiblity of views ketika sedang dalam meretrieve data
-		recyclerView.setVisibility(View.INVISIBLE);
-		progressBar.setVisibility(View.VISIBLE);
-		emptyTextView.setVisibility(View.GONE);
-
+		// Cek jika ada bundle savedinstancestate
 		if(savedInstanceState != null){
 			// Retrieve search keyword
 			tvKeywordResult = savedInstanceState.getString(TV_KEYWORD_RESULT);
@@ -153,13 +152,14 @@ public class SearchTvShowFragment extends Fragment{
 
 		// Cek jika activity dan application exist
 		if(Objects.requireNonNull(getActivity()).getApplication() != null){
-
+			// Set visiblity of views ketika sedang dalam meretrieve data
+			recyclerView.setVisibility(View.INVISIBLE);
+			progressBar.setVisibility(View.VISIBLE);
+			emptyTextView.setVisibility(View.GONE);
 			// Connectivity manager untuk mengecek state dari network connectivity
 			ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-
 			// Network Info object untuk melihat ada data network yang aktif
 			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
 			// Cek jika ada network connection
 			if(networkInfo != null && networkInfo.isConnected()){
 				// Create Viewmodel object
@@ -178,6 +178,51 @@ public class SearchTvShowFragment extends Fragment{
 				emptyTextView.setText(getString(R.string.no_internet_connection));
 			}
 		}
+
+		// Set refresh listener
+		fragmentTvShowSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				// Cek jika activity dan application exist
+				if(Objects.requireNonNull(getActivity()).getApplication() != null){
+					// Set visiblity of views ketika sedang dalam meretrieve data
+					recyclerView.setVisibility(View.INVISIBLE);
+					progressBar.setVisibility(View.VISIBLE);
+					emptyTextView.setVisibility(View.GONE);
+					// Connectivity manager untuk mengecek state dari network connectivity
+					ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+					// Network Info object untuk melihat ada data network yang aktif
+					NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+					// Cek jika ada network connection
+					if(networkInfo != null && networkInfo.isConnected()){
+						// Cek jika view model dari tv show itu exist
+						if(searchTvShowViewModel != null){
+							// Create observer that return ArrayList that takes ArrayList<TvShowItem>
+							searchTvShowObserver = createObserver();
+							// Calling LiveData from ViewModel (since LiveData is a part of ViewModel)
+							searchTvShowViewModel.getSearchTvShows().observe(SearchTvShowFragment.this, searchTvShowObserver);
+						} else {
+							// Create Viewmodel object
+							searchTvShowViewModel = ViewModelProviders.of(SearchTvShowFragment.this, new SearchTvShowViewModelFactory(getActivity().getApplication(), tvKeywordResult)).get(SearchTvShowViewModel.class);
+							// Create observer that return ArrayList that takes ArrayList<TvShowItem>
+							searchTvShowObserver = createObserver();
+							// Calling LiveData from ViewModel (since LiveData is a part of ViewModel)
+							searchTvShowViewModel.getSearchTvShows().observe(SearchTvShowFragment.this, searchTvShowObserver);
+						}
+					} else {
+						// Progress bar into gone and recycler view into invisible as the data finished on loading
+						progressBar.setVisibility(View.GONE);
+						recyclerView.setVisibility(View.INVISIBLE);
+						// Set empty view visibility into visible
+						emptyTextView.setVisibility(View.VISIBLE);
+						// Empty text view yg menunjukkan bahwa tidak ada internet yang sedang terhubung
+						emptyTextView.setText(getString(R.string.no_internet_connection));
+					}
+				}
+				// Set refresh into false, menandakan bahwa proses refresh sudah selesai
+				fragmentTvShowSwipeRefreshLayout.setRefreshing(false);
+			}
+		});
 	}
 	
 	@Override

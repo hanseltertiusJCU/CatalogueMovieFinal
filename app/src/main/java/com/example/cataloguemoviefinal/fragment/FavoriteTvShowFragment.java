@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -59,6 +60,9 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 	@BindView(R.id.tv_show_search_keyword_result)
 	LinearLayout tvShowSearchKeywordResult;
 	TvShowAdapter tvShowAdapter;
+	// Initiate Swipe to refresh layout
+	@BindView(R.id.fragment_tv_show_swipe_refresh_layout)
+	SwipeRefreshLayout fragmentTvShowSwipeRefreshLayout;
 	
 	@Nullable
 	@Override
@@ -105,11 +109,6 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		// Set progress bar visibility into visible and recyclerview visibility into visible
-		// to prepare loading data
-		progressBar.setVisibility(View.VISIBLE);
-		recyclerView.setVisibility(View.INVISIBLE);
-		emptyTextView.setVisibility(View.GONE);
 		// Cek jika bundle savedInstanceState itu ada
 		if(savedInstanceState != null) {
 			// Retrieve array list parcelable untuk retrieve scroll position
@@ -146,6 +145,11 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 
 		// Cek jika activity exist
 		if(getActivity() != null){
+			// Set progress bar visibility into visible and recyclerview visibility into visible
+			// to prepare loading data
+			progressBar.setVisibility(View.VISIBLE);
+			recyclerView.setVisibility(View.INVISIBLE);
+			emptyTextView.setVisibility(View.GONE);
 			// Connectivity manager untuk mengecek state dari network connectivity
 			ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 			// Network Info object untuk melihat ada data network yang aktif
@@ -163,6 +167,40 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 				emptyTextView.setText(getString(R.string.no_internet_connection));
 			}
 		}
+
+		// Set on refresh listener on fragment tv show
+		fragmentTvShowSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			// Code ini di execute ketika sedang refresh
+			@Override
+			public void onRefresh() {
+				// Cek jika activity exist
+				if(getActivity() != null){
+					// Set progress bar visibility into visible and recyclerview visibility into visible
+					// to prepare loading data
+					progressBar.setVisibility(View.VISIBLE);
+					recyclerView.setVisibility(View.INVISIBLE);
+					emptyTextView.setVisibility(View.GONE);
+					// Connectivity manager untuk mengecek state dari network connectivity
+					ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+					// Network Info object untuk melihat ada data network yang aktif
+					NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+					// Cek jika ada active network connection
+					if(networkInfo != null && networkInfo.isConnected()){
+						new LoadFavoriteTvShowAsync(getActivity(), FavoriteTvShowFragment.this).execute();
+					} else {
+						// Progress bar into done and recycler view into invisible as the data finished on loading
+						progressBar.setVisibility(View.GONE);
+						recyclerView.setVisibility(View.INVISIBLE);
+						// Set empty view visibility into visible
+						emptyTextView.setVisibility(View.VISIBLE);
+						// Empty text view yg menunjukkan bahwa tidak ada internet yang sedang terhubung
+						emptyTextView.setText(getString(R.string.no_internet_connection));
+					}
+				}
+				// Set refresh jadi false menandakan bahwa datanya sudah di load
+				fragmentTvShowSwipeRefreshLayout.setRefreshing(false);
+			}
+		});
 	}
 	
 	// Callback method dari Interface LoadFavoriteTvShowCallback
