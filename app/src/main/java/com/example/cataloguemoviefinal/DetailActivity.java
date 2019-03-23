@@ -13,13 +13,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,7 +24,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,11 +37,8 @@ import com.example.cataloguemoviefinal.entity.MovieItem;
 import com.example.cataloguemoviefinal.entity.TvShowItem;
 import com.example.cataloguemoviefinal.factory.DetailedMovieViewModelFactory;
 import com.example.cataloguemoviefinal.factory.DetailedTvShowViewModelFactory;
-import com.example.cataloguemoviefinal.fragment.MovieFragment;
-import com.example.cataloguemoviefinal.fragment.TvShowFragment;
 import com.example.cataloguemoviefinal.model.DetailedMovieViewModel;
 import com.example.cataloguemoviefinal.model.DetailedTvShowViewModel;
-import com.example.cataloguemoviefinal.widget.FavoriteMovieItemWidget;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -58,6 +51,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.provider.BaseColumns._ID;
+import static com.example.cataloguemoviefinal.BuildConfig.EXTRA_CHANGED_STATE;
+import static com.example.cataloguemoviefinal.BuildConfig.EXTRA_MOVIE_ITEM;
+import static com.example.cataloguemoviefinal.BuildConfig.EXTRA_TV_SHOW_ITEM;
+import static com.example.cataloguemoviefinal.BuildConfig.EXTRA_URI;
+import static com.example.cataloguemoviefinal.BuildConfig.KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_DATE_ADDED_FAVORITE_COLUMN;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_COLUMN;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FILE_PATH_COLUMN;
@@ -76,17 +74,6 @@ import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_RATINGS_COLUMN;
 
 public class DetailActivity extends AppCompatActivity {
-	// Constant untuk dibawa ke FavoriteMovieFragment ataupun FavoriteTvShowFragment
-	public static final String EXTRA_CHANGED_STATE = "extra_changed_state";
-	// Constant untuk key dri drawable dan boolean state, as well as its comparisons
-	private static final String KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE = "drawable_favorite_state";
-	// Constant untuk key dari URI
-	private static final String EXTRA_URI = "extra_uri";
-	// Constant untuk key object Movie
-	private static final String EXTRA_MOVIE_ITEM = "extra_movie_item";
-	// Constant untuk key object TV Show
-	private static final String EXTRA_TV_SHOW_ITEM = "extra_tv_show_item";
-
 	// Setup views bedasarkan id yang ada di layout xml
 	@BindView(R.id.detailed_poster_image)
 	ImageView imageViewDetailedPosterImage;
@@ -182,19 +169,19 @@ public class DetailActivity extends AppCompatActivity {
 
 		setSupportActionBar(detailedToolbar);
 
-		accessItemMode = getIntent().getStringExtra(MovieFragment.MODE_INTENT);
+		accessItemMode = getIntent().getStringExtra(BuildConfig.MODE_INTENT);
 
 		// Cek untuk mode yg tepat
 		if(accessItemMode.equals("open_movie_detail")) {
 			// Get intent untuk mendapatkan id, title serta favorite movie state dari {@link MainActivity}
-			detailedMovieId = getIntent().getIntExtra(MovieFragment.MOVIE_ID_DATA, 0);
-			detailedMovieTitle = getIntent().getStringExtra(MovieFragment.MOVIE_TITLE_DATA);
-			detailedMovieFavoriteStateValueComparison = getIntent().getIntExtra(MovieFragment.MOVIE_BOOLEAN_STATE_DATA, 0);
+			detailedMovieId = getIntent().getIntExtra(BuildConfig.MOVIE_ID_DATA, 0);
+			detailedMovieTitle = getIntent().getStringExtra(BuildConfig.MOVIE_TITLE_DATA);
+			detailedMovieFavoriteStateValueComparison = getIntent().getIntExtra(BuildConfig.MOVIE_BOOLEAN_STATE_DATA, 0);
 		} else if(accessItemMode.equals("open_tv_show_detail")) {
 			// Get intent untuk mendapatkan id, title serta favorite tv show state dari {@link MainActivity}
-			detailedTvShowId = getIntent().getIntExtra(TvShowFragment.TV_SHOW_ID_DATA, 0);
-			detailedTvShowName = getIntent().getStringExtra(TvShowFragment.TV_SHOW_NAME_DATA);
-			detailedTvShowFavoriteStateValueComparison = getIntent().getIntExtra(TvShowFragment.TV_SHOW_BOOLEAN_STATE_DATA, 0);
+			detailedTvShowId = getIntent().getIntExtra(BuildConfig.TV_SHOW_ID_DATA, 0);
+			detailedTvShowName = getIntent().getStringExtra(BuildConfig.TV_SHOW_NAME_DATA);
+			detailedTvShowFavoriteStateValueComparison = getIntent().getIntExtra(BuildConfig.TV_SHOW_BOOLEAN_STATE_DATA, 0);
 		}
 
 		uri = getIntent().getData();
@@ -827,14 +814,6 @@ public class DetailActivity extends AppCompatActivity {
 						if(changedState) {
 							uri = getContentResolver().insert(MOVIE_FAVORITE_CONTENT_URI, movieColumnValues); // Call insert method from content resolver, which is then passed into content provider
 							detailedMovieFavoriteStateValueComparison = 1; // Ganti value untuk mengupdate comparison
-							if(uri != null){
-								// Panggil AppWidgetManager class
-								AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
-								// Get App widget ids dari FavoriteMovieItemWidget class
-								int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(getApplicationContext(), FavoriteMovieItemWidget.class));
-								// Notify R.id.favorite_movie_stack_view {@link StackView di favorite_movie_item_widget.xml} agar dpt memanggil onDataSetChanged method
-								appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.favorite_movie_stack_view);
-							}
 						}
 
 						// Update option menu
@@ -851,16 +830,8 @@ public class DetailActivity extends AppCompatActivity {
 						if(changedState) {
 							// Cek jika ada Uri
 							if(uri != null){
-								int deletedIdItem = getContentResolver().delete(uri, null, null); // Call delete method from content resolver, which is then passed into content provider
+								getContentResolver().delete(uri, null, null); // Call delete method from content resolver, which is then passed into content provider
 								detailedMovieFavoriteStateValueComparison = 0; // Ganti value untuk mengupdate comparison
-								if(deletedIdItem > 0) {
-									// Panggil AppWidgetManager class
-									AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
-									// Get App widget ids dari FavoriteMovieItemWidget class
-									int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(getApplicationContext(), FavoriteMovieItemWidget.class));
-									// Notify R.id.favorite_movie_stack_view {@link StackView di favorite_movie_item_widget.xml} agar dpt memanggil onDataSetChanged method
-									appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.favorite_movie_stack_view);
-								}
 							}
 						}
 

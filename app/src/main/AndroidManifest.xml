@@ -73,8 +73,8 @@
 
         <!-- Content provider agar app/modul lain dapat di akses -->
         <provider
-            android:name=".provider.FavoriteItemsProvider"
             android:authorities="com.example.cataloguemoviefinal"
+            android:name=".provider.FavoriteItemsProvider"
             android:exported="true"
             android:readPermission="com.example.cataloguemoviefinal.READ_DATABASE"
             android:writePermission="com.example.cataloguemoviefinal.WRITE_DATABASE" />

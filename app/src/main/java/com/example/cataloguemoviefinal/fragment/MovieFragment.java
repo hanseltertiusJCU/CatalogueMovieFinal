@@ -46,6 +46,11 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.cataloguemoviefinal.BuildConfig.MODE_INTENT;
+import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_BOOLEAN_STATE_DATA;
+import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_ID_DATA;
+import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_LIST_STATE;
+import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_TITLE_DATA;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
 import static com.example.cataloguemoviefinal.helper.FavoriteMovieMappingHelper.mapCursorToFavoriteMovieArrayList;
 
@@ -54,14 +59,7 @@ import static com.example.cataloguemoviefinal.helper.FavoriteMovieMappingHelper.
  */
 public class MovieFragment extends Fragment{
 	
-	// Key untuk membawa data ke intent (data tidak d private untuk dapat diapplikasikan di berbagai Fragments dan diakses ke {@link DetailActivity})
-	public static final String MOVIE_ID_DATA = "MOVIE_ID_DATA";
-	public static final String MOVIE_TITLE_DATA = "MOVIE_TITLE_DATA";
-	public static final String MOVIE_BOOLEAN_STATE_DATA = "MOVIE_BOOLEAN_STATE_DATA";
-	// Constant untuk represent mode agar membuka data tertentu
-	public static final String MODE_INTENT = "MODE_INTENT";
-	// Bikin constant (key) yang merepresent Parcelable object
-	private static final String MOVIE_LIST_STATE = "movieListState";
+	// Bind Views
 	@BindView(R.id.rv_movie_item_list)
 	RecyclerView recyclerView;
 	@BindView(R.id.progress_bar)

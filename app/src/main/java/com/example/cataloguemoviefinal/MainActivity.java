@@ -1,5 +1,7 @@
 package com.example.cataloguemoviefinal;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -7,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -34,6 +35,7 @@ import com.example.cataloguemoviefinal.fragment.SearchTvShowFragment;
 import com.example.cataloguemoviefinal.fragment.TvShowFragment;
 import com.example.cataloguemoviefinal.observer.FavoriteMovieDataObserver;
 import com.example.cataloguemoviefinal.observer.FavoriteTvShowDataObserver;
+import com.example.cataloguemoviefinal.widget.FavoriteMovieItemWidget;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -119,9 +121,11 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		myFavoriteTvShowObserver = new FavoriteTvShowDataObserver(tvShowHandler, this); // Initiate ContentObserver
 		getContentResolver().registerContentObserver(TV_SHOW_FAVORITE_CONTENT_URI, true, myFavoriteTvShowObserver);
 
-		// Load async task for getting the cursor in Movies and TV Show favorite
-		new LoadFavoriteMoviesAsync(this, this).execute();
-		new LoadFavoriteTvShowAsync(this, this).execute();
+		if(savedInstanceState == null){
+			// Load async task for getting the cursor in Movies and TV Show favorite
+			new LoadFavoriteMoviesAsync(this, this).execute();
+			new LoadFavoriteTvShowAsync(this, this).execute();
+		}
 		
 		// Panggil method ini untuk saving Fragment state di ViewPager, kesannya kyk simpen
 		// fragment ketika sebuah fragment sedang tidak di display.
@@ -357,7 +361,6 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	@Override
 	public void favoriteMoviePostExecute(Cursor movieItems) {
 		favoriteMovieItemArrayList = mapCursorToFavoriteMovieArrayList(movieItems); // Change cursor to ArrayList that contains MovieItem
-
 		// Line code tsb bertujuan untuk refresh fragment favorite movie ketika ada perubahan data di database
 		Fragment favoriteMovieFragment = itemSectionsFragmentPagerAdapter.getItem(2); // Panggil Fragment favorite movie item
 		// Initiate fragment transaction untuk melakukan fragment operation
@@ -372,8 +375,16 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 			}
 		}
 
+		// Line ini berguna untuk update isi widget ketika ada pergantian data dari movie favorite
+        // (baik dari CatalogueMovieFinal maupun FavoriteFilmApp)
 
-		// todo: update isi dari widget (ngaru klo dr app lain ga ya?)
+        // Panggil AppWidgetManager class
+		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+		// Get App widget ids dari FavoriteMovieItemWidget class
+		int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(getApplicationContext(), FavoriteMovieItemWidget.class));
+		// Notify R.id.favorite_movie_stack_view {@link StackView di favorite_movie_item_widget.xml} agar dpt memanggil onDataSetChanged method
+		appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.favorite_movie_stack_view);
+
 	}
 	
 	// Method dari LoadFavoriteTvShowCallback interface dan kita coba implement dari method tsb

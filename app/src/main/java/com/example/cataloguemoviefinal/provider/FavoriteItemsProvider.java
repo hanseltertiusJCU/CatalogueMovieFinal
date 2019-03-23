@@ -34,8 +34,6 @@ public class FavoriteItemsProvider extends ContentProvider {
 	private static final UriMatcher sFavoriteItemUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 	// Create FavoriteItemHelper object
 	private FavoriteItemsHelper favoriteItemsHelper;
-	// Uri global variable for handling values in different cases
-	private Uri favoriteItemUri = null;
 	
 	static {
 		// content://com.example.cataloguemoviefinal/favorite_movies
@@ -80,10 +78,7 @@ public class FavoriteItemsProvider extends ContentProvider {
 				cursor = null;
 				break;
 		}
-		// Cek jika cursor nya itu tidak null atau exists
-		if(cursor != null){
-			cursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri); // Set notification uri
-		}
+
 		return cursor;
 	}
 	
@@ -97,7 +92,10 @@ public class FavoriteItemsProvider extends ContentProvider {
 	@Override
 	public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
 		favoriteItemsHelper.open();
+		// initiate id
 		long idFavoriteItemAdded;
+		// initiate URI
+		Uri favoriteItemUri = null;
 		switch(sFavoriteItemUriMatcher.match(uri)){
 			case FAVORITE_MOVIE_ITEM:
 				idFavoriteItemAdded = favoriteItemsHelper.insertFavoriteMovieProvider(values);

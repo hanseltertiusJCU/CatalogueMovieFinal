@@ -37,18 +37,16 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.cataloguemoviefinal.BuildConfig.MODE_INTENT;
+import static com.example.cataloguemoviefinal.BuildConfig.TV_SHOW_BOOLEAN_STATE_DATA;
+import static com.example.cataloguemoviefinal.BuildConfig.TV_SHOW_ID_DATA;
+import static com.example.cataloguemoviefinal.BuildConfig.TV_SHOW_LIST_STATE;
+import static com.example.cataloguemoviefinal.BuildConfig.TV_SHOW_NAME_DATA;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FAVORITE_CONTENT_URI;
 
 public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvShowCallback {
-	
-	// Key untuk membawa data ke intent (data tidak d private untuk dapat diapplikasikan di berbagai Fragments dan diakses ke {@link DetailActivity})
-	public static final String TV_SHOW_ID_DATA = "TV_SHOW_ID_DATA";
-	public static final String TV_SHOW_NAME_DATA = "TV_SHOW_NAME_DATA";
-	public static final String TV_SHOW_BOOLEAN_STATE_DATA = "TV_SHOW_BOOLEAN_STATE_DATA";
-	// Constant untuk represent mode agar membuka data tertentu
-	public static final String MODE_INTENT = "MODE_INTENT";
-	// Bikin constant (key) yang merepresent Parcelable object
-	private static final String TV_SHOW_LIST_STATE = "tvShowListState";
+
+	// Bind views
 	@BindView(R.id.rv_tv_shows_item_list)
 	RecyclerView recyclerView;
 	@BindView(R.id.progress_bar)
