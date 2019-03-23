@@ -101,16 +101,14 @@ public class FavoriteItemsProvider extends ContentProvider {
 		switch(sFavoriteItemUriMatcher.match(uri)){
 			case FAVORITE_MOVIE_ITEM:
 				idFavoriteItemAdded = favoriteItemsHelper.insertFavoriteMovieProvider(values);
-				// yang anehnya itu disini, soalnya ga ad handler = ga bs di notify
-				Objects.requireNonNull(getContext()).getContentResolver().notifyChange(MOVIE_FAVORITE_CONTENT_URI, new FavoriteMovieDataObserver(new Handler(), getContext())); // Notify change ke {@link FavoriteMovieDataObserver} atau class yg extend ContentObserver
-				Log.d("data change", "data change notified");
+				// Call handler with getMainLooper method as the activity detail from FavoriteMovieApp and CatalogueMovieFinal are both run on a main thread (myLooper == getMainLooper)
+				Objects.requireNonNull(getContext()).getContentResolver().notifyChange(MOVIE_FAVORITE_CONTENT_URI, new FavoriteMovieDataObserver(new Handler(getContext().getMainLooper()), getContext())); // Notify change ke {@link FavoriteMovieDataObserver} atau class yg extend ContentObserver
 				favoriteItemUri = Uri.parse(MOVIE_FAVORITE_CONTENT_URI + "/" + idFavoriteItemAdded);
 				break;
 			case FAVORITE_TV_SHOW_ITEM:
 				idFavoriteItemAdded = favoriteItemsHelper.insertFavoriteTvShowProvider(values);
-				// yang anehnya itu disini, soalnya ga ad handler = ga bs di notify
-				Objects.requireNonNull(getContext()).getContentResolver().notifyChange(TV_SHOW_FAVORITE_CONTENT_URI, new FavoriteTvShowDataObserver(new Handler(), getContext())); // Notify change ke {@link FavoriteTvShowDataObserver} atau class yg extend ContentObserver
-				Log.d("data change", "data change notified");
+				// Call handler with getMainLooper method as the activity detail from FavoriteMovieApp and CatalogueMovieFinal are both run on a main thread (myLooper == getMainLooper)
+				Objects.requireNonNull(getContext()).getContentResolver().notifyChange(TV_SHOW_FAVORITE_CONTENT_URI, new FavoriteTvShowDataObserver(new Handler(getContext().getMainLooper()), getContext())); // Notify change ke {@link FavoriteTvShowDataObserver} atau class yg extend ContentObserver
 				favoriteItemUri = Uri.parse(TV_SHOW_FAVORITE_CONTENT_URI + "/" + idFavoriteItemAdded);
 				break;
 			default:
@@ -127,15 +125,13 @@ public class FavoriteItemsProvider extends ContentProvider {
 		switch(sFavoriteItemUriMatcher.match(uri)){
 			case FAVORITE_MOVIE_ITEM_ID:
 				rowDeleted = favoriteItemsHelper.deleteFavoriteMovieProvider(uri.getLastPathSegment());
-				// yang anehnya itu disini, soalnya ga ad handler = ga bs di notify
-				Objects.requireNonNull(getContext()).getContentResolver().notifyChange(MOVIE_FAVORITE_CONTENT_URI, new FavoriteMovieDataObserver(new Handler(), getContext()));
-				Log.d("data change", "data change notified");
+				// Call handler with getMainLooper method as the activity detail from FavoriteMovieApp and CatalogueMovieFinal are both run on a main thread (myLooper == getMainLooper)
+				Objects.requireNonNull(getContext()).getContentResolver().notifyChange(MOVIE_FAVORITE_CONTENT_URI, new FavoriteMovieDataObserver(new Handler(getContext().getMainLooper()), getContext()));
 				break;
 			case FAVORITE_TV_SHOW_ITEM_ID:
 				rowDeleted = favoriteItemsHelper.deleteFavoriteTvShowProvider(uri.getLastPathSegment());
-				// yang anehnya itu disini, soalnya ga ad handler = ga bs di notify
-				Objects.requireNonNull(getContext()).getContentResolver().notifyChange(TV_SHOW_FAVORITE_CONTENT_URI, new FavoriteTvShowDataObserver(new Handler(), getContext()));
-				Log.d("data change", "data change notified"); // log bwt test
+				// Call handler with getMainLooper method as the activity detail from FavoriteMovieApp and CatalogueMovieFinal are both run on a main thread (myLooper == getMainLooper)
+				Objects.requireNonNull(getContext()).getContentResolver().notifyChange(TV_SHOW_FAVORITE_CONTENT_URI, new FavoriteTvShowDataObserver(new Handler(getContext().getMainLooper()), getContext()));
 				break;
 			default:
 				rowDeleted = 0;

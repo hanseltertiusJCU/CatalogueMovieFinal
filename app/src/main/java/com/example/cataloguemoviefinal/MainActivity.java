@@ -81,6 +81,13 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	public static ArrayList<MovieItem> favoriteMovieItemArrayList = new ArrayList<>();
 	// ArrayList object untuk TvShowItem
 	public static ArrayList<TvShowItem> favoriteTvShowItemArrayList = new ArrayList<>();
+	// Handler thread beserta observer untuk movie dan tv show (mungkin coba ke local lagi)
+	static HandlerThread movieHandlerThread;
+	Handler movieHandler;
+	FavoriteMovieDataObserver myFavoriteMovieObserver;
+	static HandlerThread tvShowHandlerThread;
+	Handler tvShowHandler;
+	FavoriteTvShowDataObserver myFavoriteTvShowObserver;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,19 +106,17 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		}
 		
 		// Initiate handler thread operation in Movie
-		HandlerThread movieHandlerThread = new HandlerThread("FavoriteMovieDataObserver"); // Initiate HandlerThread
+		movieHandlerThread = new HandlerThread("FavoriteMovieDataObserver"); // Initiate HandlerThread
 		movieHandlerThread.start();
-		Handler movieHandler = new Handler(movieHandlerThread.getLooper()); // Initiate Handler
-		Log.d("movie looper", String.valueOf(movieHandlerThread.getLooper()));
-		FavoriteMovieDataObserver myFavoriteMovieObserver = new FavoriteMovieDataObserver(movieHandler, this); // Initiate ContentObserver
+		movieHandler = new Handler(movieHandlerThread.getLooper()); // Initiate Handler
+		myFavoriteMovieObserver = new FavoriteMovieDataObserver(movieHandler, this); // Initiate ContentObserver
 		getContentResolver().registerContentObserver(MOVIE_FAVORITE_CONTENT_URI, true, myFavoriteMovieObserver);
 		
 		// Initiate handler thread operation in TV Show
-		HandlerThread tvShowHandlerThread = new HandlerThread("FavoriteTvShowDataObserver"); // Initiate HandlerThread
+		tvShowHandlerThread = new HandlerThread("FavoriteTvShowDataObserver"); // Initiate HandlerThread
 		tvShowHandlerThread.start();
-		Handler tvShowHandler = new Handler(tvShowHandlerThread.getLooper()); // Initiate Handler
-		Log.d("tv show looper", String.valueOf(tvShowHandlerThread.getLooper()));
-		FavoriteTvShowDataObserver myFavoriteTvShowObserver = new FavoriteTvShowDataObserver(tvShowHandler, this); // Initiate ContentObserver
+		tvShowHandler = new Handler(tvShowHandlerThread.getLooper()); // Initiate Handler
+		myFavoriteTvShowObserver = new FavoriteTvShowDataObserver(tvShowHandler, this); // Initiate ContentObserver
 		getContentResolver().registerContentObserver(TV_SHOW_FAVORITE_CONTENT_URI, true, myFavoriteTvShowObserver);
 
 		// Load async task for getting the cursor in Movies and TV Show favorite
@@ -339,14 +344,12 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	
 	// Method dari LoadFavoriteMoviesCallback interface dan kita coba implement dari method tsb
 
-	// todo: preexecute run on ui thread trus initiate array list
-
 	@Override
 	public void favoriteMoviePreExecute() {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				Log.d(MainActivity.class.getSimpleName(), "Movie data loading");
+				Log.d(MainActivity.class.getSimpleName(), "Movie data loading"); // Log message ketika favorite movie data sedang loading
 			}
 		});
 	}
@@ -375,12 +378,13 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	
 	// Method dari LoadFavoriteTvShowCallback interface dan kita coba implement dari method tsb
 
+	// Preexecute ini berguna untuk prepare data
 	@Override
 	public void favoriteTvShowPreExecute() {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				Log.d(MainActivity.class.getSimpleName(), "TV Show data loading");
+				Log.d(MainActivity.class.getSimpleName(), "TV Show data loading"); // Log message ketika favorite tv show data sedang loading
 			}
 		});
 	}

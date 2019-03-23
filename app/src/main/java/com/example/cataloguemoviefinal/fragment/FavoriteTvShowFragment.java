@@ -145,11 +145,6 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 
 		// Cek jika activity exist
 		if(getActivity() != null){
-//			// Set progress bar visibility into visible and recyclerview visibility into visible
-//			// to prepare loading data
-//			progressBar.setVisibility(View.VISIBLE);
-//			recyclerView.setVisibility(View.INVISIBLE);
-//			emptyTextView.setVisibility(View.GONE);
 			// Connectivity manager untuk mengecek state dari network connectivity
 			ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 			// Network Info object untuk melihat ada data network yang aktif
@@ -175,11 +170,6 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 			public void onRefresh() {
 				// Cek jika activity exist
 				if(getActivity() != null){
-//					// Set progress bar visibility into visible and recyclerview visibility into visible
-//					// to prepare loading data
-//					progressBar.setVisibility(View.VISIBLE);
-//					recyclerView.setVisibility(View.INVISIBLE);
-//					emptyTextView.setVisibility(View.GONE);
 					// Connectivity manager untuk mengecek state dari network connectivity
 					ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 					// Network Info object untuk melihat ada data network yang aktif

@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
@@ -824,9 +825,7 @@ public class DetailActivity extends AppCompatActivity {
 
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState) {
-							uri = getContentResolver().insert(MOVIE_FAVORITE_CONTENT_URI, movieColumnValues);
-							Log.d("movie uri", String.valueOf(uri));
-							Log.d("insert movie item", "inserted movie item");
+							uri = getContentResolver().insert(MOVIE_FAVORITE_CONTENT_URI, movieColumnValues); // Call insert method from content resolver, which is then passed into content provider
 							detailedMovieFavoriteStateValueComparison = 1; // Ganti value untuk mengupdate comparison
 							if(uri != null){
 								// Panggil AppWidgetManager class
@@ -850,11 +849,9 @@ public class DetailActivity extends AppCompatActivity {
 						changedState = detailedMovieFavoriteStateValue != detailedMovieFavoriteStateValueComparison;
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState) {
-							Log.d("movie uri", String.valueOf(uri));
 							// Cek jika ada Uri
 							if(uri != null){
-								int deletedIdItem = getContentResolver().delete(uri, null, null);
-								Log.d("delete movie item", "deleted movie item");
+								int deletedIdItem = getContentResolver().delete(uri, null, null); // Call delete method from content resolver, which is then passed into content provider
 								detailedMovieFavoriteStateValueComparison = 0; // Ganti value untuk mengupdate comparison
 								if(deletedIdItem > 0) {
 									// Panggil AppWidgetManager class
@@ -896,9 +893,7 @@ public class DetailActivity extends AppCompatActivity {
 
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState) {
-							uri = getContentResolver().insert(TV_SHOW_FAVORITE_CONTENT_URI, tvShowColumnValues);
-							Log.d("tv show uri", String.valueOf(uri));
-							Log.d("insert tv show item", "inserted tv show item");
+							uri = getContentResolver().insert(TV_SHOW_FAVORITE_CONTENT_URI, tvShowColumnValues); // Call insert method from content resolver, which is then passed into content provider
 							detailedTvShowFavoriteStateValueComparison = 1; // Ganti value untuk mengupdate comparison
 						}
 
@@ -915,12 +910,10 @@ public class DetailActivity extends AppCompatActivity {
 						changedState = detailedTvShowFavoriteStateValue != detailedTvShowFavoriteStateValueComparison;
 						// Cek jika ada pergantian state dari sebuah data
 						if(changedState) {
-							Log.d("tv show uri", String.valueOf(uri));
 							// Cek jika uri tidak null
 							if(uri != null){
 								// Remove from database
-								getContentResolver().delete(uri, null, null);
-								Log.d("delete tv show item", "deleted tv show item");
+								getContentResolver().delete(uri, null, null); // Call delete method from content resolver, which is then passed into content provider
 								detailedTvShowFavoriteStateValueComparison = 0; // Ganti value untuk mengupdate comparison
 							}
 						}
