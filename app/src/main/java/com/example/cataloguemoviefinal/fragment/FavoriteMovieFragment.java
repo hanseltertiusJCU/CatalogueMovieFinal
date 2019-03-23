@@ -150,10 +150,6 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 
 		// Cek jika activity exist, line ini berguna untuk pertama kali activity dijalankan
 		if(getActivity() != null){
-			// Set visiblity of views ketika sedang dalam meretrieve data, kesannya seperti data sedang loading
-			recyclerView.setVisibility(View.INVISIBLE);
-			progressBar.setVisibility(View.VISIBLE);
-			emptyTextView.setVisibility(View.GONE);
 			// Connectivity manager untuk mengecek state dari network connectivity
 			ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 			// Network Info object untuk melihat ada data network yang aktif
@@ -178,10 +174,6 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 			// Line ini berguna ketika fragment sedang di refresh
 			@Override
 			public void onRefresh() {
-				// Set visiblity of views ketika sedang dalam meretrieve data, kesannya seperti data sedang loading
-				recyclerView.setVisibility(View.INVISIBLE);
-				progressBar.setVisibility(View.VISIBLE);
-				emptyTextView.setVisibility(View.GONE);
 				// Cek jika activity exist, line ini berguna untuk ketika data ingin di refresh kembali
 				if(getActivity() != null){
 					// Connectivity manager untuk mengecek state dari network connectivity
@@ -230,9 +222,24 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		// Start activity ke detail activity
 		startActivity(intentWithMovieIdData);
 	}
-	
-	
+
 	// Callback method dari Interface LoadFavoriteMoviesCallback
+
+	@Override
+	public void favoriteMoviePreExecute() {
+		if(getActivity() != null){
+			getActivity().runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					// Set visiblity of views ketika sedang dalam meretrieve data, kesannya seperti data sedang loading
+					recyclerView.setVisibility(View.INVISIBLE);
+					progressBar.setVisibility(View.VISIBLE);
+					emptyTextView.setVisibility(View.GONE);
+				}
+			});
+		}
+	}
+
 	@Override
 	public void favoriteMoviePostExecute(Cursor movieItems) {
 		// cek jika array list favorite ada data

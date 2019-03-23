@@ -26,7 +26,13 @@ public class LoadFavoriteMoviesAsync extends AsyncTask<Void, Void, Cursor> {
 		weakContext = new WeakReference<>(context);
 		weakCallback = new WeakReference<>(callback);
 	}
-	
+
+	@Override
+	protected void onPreExecute() {
+		super.onPreExecute();
+		weakCallback.get().favoriteMoviePreExecute(); // memanggil method preExecute di interface
+	}
+
 	@Override
 	protected Cursor doInBackground(Void... voids) {
 		Context context = weakContext.get();

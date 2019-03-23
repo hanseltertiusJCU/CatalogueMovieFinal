@@ -78,9 +78,9 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	private Drawable[] searchTvShowDrawables;
 	private Drawable searchTvShowDrawable;
 	// ArrayList object untuk MovieItem
-	public static ArrayList<MovieItem> favoriteMovieItemArrayList;
+	public static ArrayList<MovieItem> favoriteMovieItemArrayList = new ArrayList<>();
 	// ArrayList object untuk TvShowItem
-	public static ArrayList<TvShowItem> favoriteTvShowItemArrayList;
+	public static ArrayList<TvShowItem> favoriteTvShowItemArrayList = new ArrayList<>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -114,11 +114,9 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		FavoriteTvShowDataObserver myFavoriteTvShowObserver = new FavoriteTvShowDataObserver(tvShowHandler, this); // Initiate ContentObserver
 		getContentResolver().registerContentObserver(TV_SHOW_FAVORITE_CONTENT_URI, true, myFavoriteTvShowObserver);
 
-		if(savedInstanceState == null){
-			// Load async task for getting the cursor in Movies and TV Show favorite
-			new LoadFavoriteMoviesAsync(this, this).execute();
-			new LoadFavoriteTvShowAsync(this, this).execute();
-		}
+		// Load async task for getting the cursor in Movies and TV Show favorite
+		new LoadFavoriteMoviesAsync(this, this).execute();
+		new LoadFavoriteTvShowAsync(this, this).execute();
 		
 		// Panggil method ini untuk saving Fragment state di ViewPager, kesannya kyk simpen
 		// fragment ketika sebuah fragment sedang tidak di display.
@@ -340,6 +338,19 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	}
 	
 	// Method dari LoadFavoriteMoviesCallback interface dan kita coba implement dari method tsb
+
+	// todo: preexecute run on ui thread trus initiate array list
+
+	@Override
+	public void favoriteMoviePreExecute() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				Log.d(MainActivity.class.getSimpleName(), "Movie data loading");
+			}
+		});
+	}
+
 	@Override
 	public void favoriteMoviePostExecute(Cursor movieItems) {
 		favoriteMovieItemArrayList = mapCursorToFavoriteMovieArrayList(movieItems); // Change cursor to ArrayList that contains MovieItem
@@ -363,6 +374,16 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	}
 	
 	// Method dari LoadFavoriteTvShowCallback interface dan kita coba implement dari method tsb
+
+	@Override
+	public void favoriteTvShowPreExecute() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				Log.d(MainActivity.class.getSimpleName(), "TV Show data loading");
+			}
+		});
+	}
 
 	@Override
 	public void favoriteTvShowPostExecute(Cursor tvShowItems) {

@@ -36,8 +36,6 @@ public class FavoriteItemsProvider extends ContentProvider {
 	private FavoriteItemsHelper favoriteItemsHelper;
 	// Uri global variable for handling values in different cases
 	private Uri favoriteItemUri = null;
-	// Cursor variable for handling different different items
-	Cursor cursor;
 	
 	static {
 		// content://com.example.cataloguemoviefinal/favorite_movies
@@ -64,7 +62,7 @@ public class FavoriteItemsProvider extends ContentProvider {
 	@Override
 	public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
 		favoriteItemsHelper.open();
-		
+		Cursor cursor;
 		switch(sFavoriteItemUriMatcher.match(uri)){
 			case FAVORITE_MOVIE_ITEM:
 				cursor = favoriteItemsHelper.queryFavoriteMovieProvider();
