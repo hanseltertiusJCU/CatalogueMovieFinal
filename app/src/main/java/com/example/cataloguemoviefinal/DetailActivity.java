@@ -1,11 +1,8 @@
 package com.example.cataloguemoviefinal;
 
-import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.ComponentName;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -15,6 +12,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -117,6 +116,10 @@ public class DetailActivity extends AppCompatActivity {
 	@BindView(R.id.empty_detailed_info_text)
 	TextView detailedEmptyTextView;
 
+	// Setup coordinator layout for making snackbar
+	@BindView(R.id.detailed_coordinator_layout)
+	CoordinatorLayout detailedCoordinatorLayout;
+
 	// Setup intent value untuk movie items
 	private int detailedMovieId;
 	private String detailedMovieTitle;
@@ -159,6 +162,9 @@ public class DetailActivity extends AppCompatActivity {
 	// Swipe to refresh layout untuk DetailActivity content
     @BindView(R.id.detailed_content_swipe_refresh_layout)
     SwipeRefreshLayout detailedContentSwipeRefreshLayout;
+
+    // Initiate snackbar
+	Snackbar snackbarMessage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -814,6 +820,9 @@ public class DetailActivity extends AppCompatActivity {
 						if(changedState) {
 							uri = getContentResolver().insert(MOVIE_FAVORITE_CONTENT_URI, movieColumnValues); // Call insert method from content resolver, which is then passed into content provider
 							detailedMovieFavoriteStateValueComparison = 1; // Ganti value untuk mengupdate comparison
+							// Buat sebuah snackbar yang menandakan bahwa movie item inserted ke database
+							snackbarMessage = Snackbar.make(detailedCoordinatorLayout, getString(R.string.insert_movie_favorite_snackbar), Snackbar.LENGTH_SHORT);
+							snackbarMessage.show();
 						}
 
 						// Update option menu
@@ -832,6 +841,9 @@ public class DetailActivity extends AppCompatActivity {
 							if(uri != null){
 								getContentResolver().delete(uri, null, null); // Call delete method from content resolver, which is then passed into content provider
 								detailedMovieFavoriteStateValueComparison = 0; // Ganti value untuk mengupdate comparison
+								// Buat sebuah snackbar yang menandakan bahwa movie item removed dari database
+								snackbarMessage = Snackbar.make(detailedCoordinatorLayout, getString(R.string.remove_movie_favorite_snackbar), Snackbar.LENGTH_SHORT);
+								snackbarMessage.show();
 							}
 						}
 
@@ -866,6 +878,9 @@ public class DetailActivity extends AppCompatActivity {
 						if(changedState) {
 							uri = getContentResolver().insert(TV_SHOW_FAVORITE_CONTENT_URI, tvShowColumnValues); // Call insert method from content resolver, which is then passed into content provider
 							detailedTvShowFavoriteStateValueComparison = 1; // Ganti value untuk mengupdate comparison
+							// Buat sebuah snackbar yang menandakan bahwa tv show item inserted ke database
+							snackbarMessage = Snackbar.make(detailedCoordinatorLayout, getString(R.string.insert_tv_show_favorite_snackbar), Snackbar.LENGTH_SHORT);
+							snackbarMessage.show();
 						}
 
 						// Update option menu
@@ -886,6 +901,9 @@ public class DetailActivity extends AppCompatActivity {
 								// Remove from database
 								getContentResolver().delete(uri, null, null); // Call delete method from content resolver, which is then passed into content provider
 								detailedTvShowFavoriteStateValueComparison = 0; // Ganti value untuk mengupdate comparison
+								// Buat sebuah snackbar yang menandakan bahwa tv show item removed dari database
+								snackbarMessage = Snackbar.make(detailedCoordinatorLayout, getString(R.string.remove_tv_show_favorite_snackbar), Snackbar.LENGTH_SHORT);
+								snackbarMessage.show();
 							}
 						}
 

@@ -142,4 +142,10 @@
     <!-- String untuk label detail activity -->
     <string name="detail_activity">Aktivitas Detil</string>
 
+    <!-- String untuk snackbar message -->
+    <string name="insert_movie_favorite_snackbar">Memasukkan film ke database</string>
+    <string name="remove_movie_favorite_snackbar">Menghapus film dari database</string>
+    <string name="insert_tv_show_favorite_snackbar">Memasukkan acara TV ke database</string>
+    <string name="remove_tv_show_favorite_snackbar">Menghapus acara TV dari database</string>
+
 </resources>
