@@ -51,6 +51,7 @@ import static com.example.cataloguemoviefinal.helper.FavoriteMovieMappingHelper.
 
 public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMoviesCallback {
 
+	// Bind Views
 	@BindView(R.id.rv_movie_item_list)
 	RecyclerView recyclerView;
 	MovieAdapter movieAdapter;
@@ -245,6 +246,9 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 			// yang menandakan bahwa loadingnya sudah selesai
 			progressBar.setVisibility(View.GONE);
 			recyclerView.setVisibility(View.VISIBLE);
+			// Set recycler view scroll position ke 0, alias balik ke awal
+			// (berguna ketika data berubah = load asynctask kembali)
+			recyclerView.smoothScrollToPosition(0);
 			// Set empty view visibility into gone
 			emptyTextView.setVisibility(View.GONE);
 			// Set data into adapter

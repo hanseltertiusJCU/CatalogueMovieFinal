@@ -70,30 +70,37 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 	// Method tsb berguna untuk membuat widget item dan menampilkan semua widget item ke widget
 	@Override
 	public RemoteViews getViewAt(int position) {
-		
-		// Load image jika ada poster path
-		// Gunakan BuildConfig untuk menjaga credential
-		String baseImageUrl = BuildConfig.POSTER_IMAGE_ITEM_URL;
-		
-		MovieItem movieItem = getSpecificMovieItem(position);
-		
-		RemoteViews favoriteMovieItemRemoteViews = new RemoteViews(context.getPackageName(), R.layout.favorite_movie_widget_item);
-		favoriteMovieItemRemoteViews.setTextViewText(R.id.movie_title_widget_item, movieItem.getMovieTitle()); // Set value title ke text view
-		try {
-			Bitmap favoriteMovieItemBitmap = Picasso.get().load(baseImageUrl + movieItem.getMoviePosterPath()).get(); // Get bitmap from Picasso 3rd Party app
-			favoriteMovieItemRemoteViews.setImageViewBitmap(R.id.movie_image_widget_item, favoriteMovieItemBitmap); // Set image bitmap based on Picasso result
-		} catch(Exception e){
-			e.printStackTrace();
+		// cek jika cursor yg di return itu ada data, jika tidak, maka kita akan return views dengan empty text
+		if(getCount() > 0){
+			// Load image jika ada poster path
+			// Gunakan BuildConfig untuk menjaga credential
+			String baseImageUrl = BuildConfig.POSTER_IMAGE_ITEM_URL;
+
+			MovieItem movieItem = getSpecificMovieItem(position);
+
+			RemoteViews favoriteMovieItemRemoteViews = new RemoteViews(context.getPackageName(), R.layout.favorite_movie_widget_item);
+			favoriteMovieItemRemoteViews.setTextViewText(R.id.movie_title_widget_item, movieItem.getMovieTitle()); // Set value title ke text view
+			try {
+				Bitmap favoriteMovieItemBitmap = Picasso.get().load(baseImageUrl + movieItem.getMoviePosterPath()).get(); // Get bitmap from Picasso 3rd Party app
+				favoriteMovieItemRemoteViews.setImageViewBitmap(R.id.movie_image_widget_item, favoriteMovieItemBitmap); // Set image bitmap based on Picasso result
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+
+			Bundle extras = new Bundle();
+			extras.putInt(FavoriteMovieItemWidget.EXTRA_FAVORITE_MOVIE_ITEM, position);
+			Intent fillIntent = new Intent();
+			fillIntent.putExtras(extras);
+
+			favoriteMovieItemRemoteViews.setOnClickFillInIntent(R.id.movie_widget_item, fillIntent);
+
+			return favoriteMovieItemRemoteViews;
+		} else {
+			// return remote views object yang menandakan bahwa datanya itu habis
+			return new RemoteViews(context.getPackageName(), R.layout.favorite_movie_widget_item);
 		}
-		
-		Bundle extras = new Bundle();
-		extras.putInt(FavoriteMovieItemWidget.EXTRA_FAVORITE_MOVIE_ITEM, position);
-		Intent fillIntent = new Intent();
-		fillIntent.putExtras(extras);
-		
-		favoriteMovieItemRemoteViews.setOnClickFillInIntent(R.id.movie_widget_item, fillIntent);
-		
-		return favoriteMovieItemRemoteViews;
+
+
 	}
 	
 	@Override
@@ -118,11 +125,12 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 	}
 	
 	private MovieItem getSpecificMovieItem(int position){
+
 		if(cursor.moveToPosition(position)){
 			return new MovieItem(cursor);
 		} else {
 			throw new IllegalStateException("The position is invalid!");
 		}
-		
+
 	}
 }

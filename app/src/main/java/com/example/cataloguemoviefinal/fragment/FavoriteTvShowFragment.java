@@ -217,6 +217,9 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 			// yang menandakan bahwa loadingnya sudah selesai
 			progressBar.setVisibility(View.GONE);
 			recyclerView.setVisibility(View.VISIBLE);
+			// Set recycler view scroll position ke 0, alias balik ke awal
+			// (berguna ketika data berubah = load asynctask kembali)
+			recyclerView.smoothScrollToPosition(0);
 			// Set empty view visibility into gone
 			emptyTextView.setVisibility(View.GONE);
 			// Set data into adapter

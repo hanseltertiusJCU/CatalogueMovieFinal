@@ -121,11 +121,9 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		myFavoriteTvShowObserver = new FavoriteTvShowDataObserver(tvShowHandler, this); // Initiate ContentObserver
 		getContentResolver().registerContentObserver(TV_SHOW_FAVORITE_CONTENT_URI, true, myFavoriteTvShowObserver);
 
-		if(savedInstanceState == null){
-			// Load async task for getting the cursor in Movies and TV Show favorite
-			new LoadFavoriteMoviesAsync(this, this).execute();
-			new LoadFavoriteTvShowAsync(this, this).execute();
-		}
+		// Load async task for getting the cursor in Movies and TV Show favorite
+		new LoadFavoriteMoviesAsync(this, this).execute();
+		new LoadFavoriteTvShowAsync(this, this).execute();
 		
 		// Panggil method ini untuk saving Fragment state di ViewPager, kesannya kyk simpen
 		// fragment ketika sebuah fragment sedang tidak di display.
@@ -362,7 +360,7 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	public void favoriteMoviePostExecute(Cursor movieItems) {
 		favoriteMovieItemArrayList = mapCursorToFavoriteMovieArrayList(movieItems); // Change cursor to ArrayList that contains MovieItem
 		// Line code tsb bertujuan untuk refresh fragment favorite movie ketika ada perubahan data di database
-		Fragment favoriteMovieFragment = itemSectionsFragmentPagerAdapter.getItem(2); // Panggil Fragment favorite movie item
+		FavoriteMovieFragment favoriteMovieFragment = (FavoriteMovieFragment) itemSectionsFragmentPagerAdapter.getItem(2); // Panggil Fragment favorite movie item
 		// Initiate fragment transaction untuk melakukan fragment operation
 		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 		// Cek jika fragmentnya itu ada
@@ -373,6 +371,7 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 				fragmentTransaction.attach(favoriteMovieFragment);
 				fragmentTransaction.commitAllowingStateLoss();
 			}
+
 		}
 
 		// Line ini berguna untuk update isi widget ketika ada pergantian data dari movie favorite
@@ -405,7 +404,7 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		favoriteTvShowItemArrayList = mapCursorToFavoriteTvShowArrayList(tvShowItems); // Change cursor to ArrayList that contains TvShowItem
 
 		// Line code tsb bertujuan untuk refresh fragment favorite tv show ketika ada perubahan data di database
-		Fragment favoriteTvShowFragment = itemSectionsFragmentPagerAdapter.getItem(3);
+		FavoriteTvShowFragment favoriteTvShowFragment = (FavoriteTvShowFragment) itemSectionsFragmentPagerAdapter.getItem(3);
 		// Initiate fragment transaction untuk melakukan fragment operation
 		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 		// Cek jika fragmentnya itu ada
