@@ -47,7 +47,6 @@ import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_ID_DATA;
 import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_LIST_STATE;
 import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_TITLE_DATA;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
-import static com.example.cataloguemoviefinal.helper.FavoriteMovieMappingHelper.mapCursorToFavoriteMovieArrayList;
 
 public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMoviesCallback {
 

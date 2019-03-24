@@ -28,8 +28,8 @@ android {
         buildConfigField("String", "EXTRA_MOVIE_ITEM", "\"com.example.cataloguemoviefinal.EXTRA_MOVIE_ITEM\"")
         buildConfigField("String", "EXTRA_TV_SHOW_ITEM", "\"com.example.cataloguemoviefinal.EXTRA_TV_SHOW_ITEM\"")
         // build config untuk attribute widget
-        buildConfigField("String", "TOAST_ACTION", "\"com.example.cataloguemoviefinal.TOAST_ACTION\"")
         buildConfigField("String", "EXTRA_FAVORITE_MOVIE_ITEM", "\"com.example.cataloguemoviefinal.EXTRA_FAVORITE_MOVIE_ITEM\"")
+        buildConfigField("String", "DETAIL_ACTIVITY_ACTION", "\"com.example.cataloguemoviefinal.DETAIL_ACTIVITY_ACTION\"")
         // build config field untuk url
         buildConfigField("String", "API_KEY", "\"920c265d2e074ebf06d98bf438bded70\"")
         buildConfigField("String", "BASE_DISCOVER_MOVIE_URL", "\"https://api.themoviedb.org/3/discover/movie?api_key=\"")

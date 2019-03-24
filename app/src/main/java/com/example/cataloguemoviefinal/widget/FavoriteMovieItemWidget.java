@@ -6,19 +6,23 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.example.cataloguemoviefinal.BuildConfig;
+import com.example.cataloguemoviefinal.DetailActivity;
 import com.example.cataloguemoviefinal.R;
+import com.example.cataloguemoviefinal.entity.MovieItem;
+
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
 
 /**
  * Implementation of App Widget functionality.
  */
+
 public class FavoriteMovieItemWidget extends AppWidgetProvider{
-	
-	private static final String TOAST_ACTION = "com.example.cataloguemoviefinal.TOAST_ACTION";
-	public static final String EXTRA_FAVORITE_MOVIE_ITEM = "com.example.cataloguemoviefinal.EXTRA_FAVORITE_MOVIE_ITEM";
-	
+
 	static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
 								int appWidgetId) {
 		
@@ -32,13 +36,13 @@ public class FavoriteMovieItemWidget extends AppWidgetProvider{
 		views.setRemoteAdapter(R.id.favorite_movie_stack_view, intent);
 		views.setEmptyView(R.id.favorite_movie_stack_view, R.id.favorite_movie_item_empty_view);
 		
-		Intent toastIntent = new Intent(context, FavoriteMovieItemWidget.class); // Create intent that goes into self (FavoriteMovieItemWidget)
-		toastIntent.setAction(FavoriteMovieItemWidget.TOAST_ACTION); // Set action in toast intent
-		toastIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId); // Put app widget id into toast intent
+		Intent detailActivityIntent = new Intent(context, FavoriteMovieItemWidget.class); // Create intent that goes into self (FavoriteMovieItemWidget)
+		detailActivityIntent.setAction(BuildConfig.DETAIL_ACTIVITY_ACTION); // Set action in detail activity intent
+		detailActivityIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId); // Put app widget id into detail activity intent
 		intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 		// Create PendingIntent
-		PendingIntent pendingToastIntent = PendingIntent.getBroadcast(context, 0, toastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		views.setPendingIntentTemplate(R.id.favorite_movie_stack_view, pendingToastIntent);
+		PendingIntent detailActivityPendingIntent = PendingIntent.getBroadcast(context, 0, detailActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		views.setPendingIntentTemplate(R.id.favorite_movie_stack_view, detailActivityPendingIntent);
 		
 		// Instruct the widget manager to update the widget
 		appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -69,10 +73,29 @@ public class FavoriteMovieItemWidget extends AppWidgetProvider{
 		// Cek jika action exists
 		if(intent.getAction() != null){
 			// Cek jika action dari intent itu sama dengan TOAST_ACTION (bawaan dari Intent yg di plant ke PendingIntent)
-			if(intent.getAction().equals(TOAST_ACTION)){
-				int viewIndex = intent.getIntExtra(EXTRA_FAVORITE_MOVIE_ITEM, 0);
-				// todo: bikin widget buka activity lain dan bs update data gt
-				Toast.makeText(context, "Touched view : " + viewIndex, Toast.LENGTH_SHORT).show(); // Make Toast message bedasarkan viewindex (item position)
+			if(intent.getAction().equals(BuildConfig.DETAIL_ACTIVITY_ACTION)){
+				// todo: object ga ke pass, mesti dibikin pass karena movieItem = null in this case
+				MovieItem selectedFavoriteMovieItem = intent.getExtras().getParcelable(BuildConfig.EXTRA_FAVORITE_MOVIE_ITEM); // Akses parcelable object dari {@link FavoriteMovieStackRemoteViewsFactory} class dengan akses bundle
+				// Initiate variable
+				int favoriteMovieIdItem = selectedFavoriteMovieItem.getId();
+				String favoriteMovieTitleItem = selectedFavoriteMovieItem.getMovieTitle();
+				int favoriteMovieBooleanStateItem = selectedFavoriteMovieItem.getFavoriteBooleanState();
+				// Tentukan bahwa kita ingin membuka data Movie
+				String modeItem = "open_movie_detail";
+				// Create URI untuk bawa URI ke data di intent dengan row id value
+				// content://com.example.cataloguemoviefinal/favorite_movies/id
+				Uri favoriteMovieUriItem = Uri.parse(MOVIE_FAVORITE_CONTENT_URI + "/" + favoriteMovieIdItem);
+				// Create intent object dengan mengirim ke DetailActivity
+				Intent intentWithFavoriteMovieIdData = new Intent(context, DetailActivity.class);
+				// Bawa data untuk disampaikan ke {@link DetailActivity}
+				intentWithFavoriteMovieIdData.putExtra(BuildConfig.MOVIE_ID_DATA, favoriteMovieIdItem);
+				intentWithFavoriteMovieIdData.putExtra(BuildConfig.MOVIE_TITLE_DATA, favoriteMovieTitleItem);
+				intentWithFavoriteMovieIdData.putExtra(BuildConfig.MOVIE_BOOLEAN_STATE_DATA, favoriteMovieBooleanStateItem);
+				intentWithFavoriteMovieIdData.putExtra(BuildConfig.MODE_INTENT, modeItem);
+				// Bawa URI untuk disampaikan ke {@link DetailActivity}
+				intentWithFavoriteMovieIdData.setData(favoriteMovieUriItem);
+				// Start activity ke {@link DetailActivity}
+				context.startActivity(intentWithFavoriteMovieIdData);
 			}
 		}
 	}

@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Binder;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -15,13 +16,19 @@ import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.entity.MovieItem;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
+import static com.example.cataloguemoviefinal.helper.FavoriteMovieMappingHelper.mapCursorToFavoriteMovieArrayList;
 
 public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 	
 	private final Context context;
 	private Cursor cursor;
 	private int appWidgetId;
+
+	// Initiate ArrayList object that return favorite movie item
+	ArrayList<MovieItem> movieItemsArrayList = new ArrayList<>();
 	
 	public FavoriteMovieStackRemoteViewsFactory(Context context, Intent intent) {
 		this.context = context;
@@ -44,6 +51,8 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 		final long identityToken = Binder.clearCallingIdentity();
 		
 		cursor = context.getContentResolver().query(MOVIE_FAVORITE_CONTENT_URI, null, null, null, null);
+
+//		movieItemsArrayList = mapCursorToFavoriteMovieArrayList(cursor); // Map cursor to array list
 		
 		Binder.restoreCallingIdentity(identityToken);
 		
@@ -88,8 +97,10 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 			}
 
 			Bundle extras = new Bundle();
-			extras.putInt(FavoriteMovieItemWidget.EXTRA_FAVORITE_MOVIE_ITEM, position);
+			// todo: convert into byte
+			extras.putParcelable(BuildConfig.EXTRA_FAVORITE_MOVIE_ITEM, movieItem); // Put movie item object (passing into intent in on receive)
 			Intent fillIntent = new Intent();
+			// Bawa parcelable object (MovieItem object) dengan akses array list position
 			fillIntent.putExtras(extras);
 
 			favoriteMovieItemRemoteViews.setOnClickFillInIntent(R.id.movie_widget_item, fillIntent);
