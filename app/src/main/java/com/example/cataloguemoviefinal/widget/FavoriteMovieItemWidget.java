@@ -6,14 +6,14 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
+import android.os.Parcel;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.example.cataloguemoviefinal.BuildConfig;
 import com.example.cataloguemoviefinal.DetailActivity;
 import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.entity.MovieItem;
+import com.example.cataloguemoviefinal.util.ParcelableUtil;
 
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
 
@@ -72,11 +72,16 @@ public class FavoriteMovieItemWidget extends AppWidgetProvider{
 		super.onReceive(context, intent);
 		// Cek jika action exists
 		if(intent.getAction() != null){
-			// Cek jika action dari intent itu sama dengan TOAST_ACTION (bawaan dari Intent yg di plant ke PendingIntent)
+			// Cek jika action dari intent itu sama dengan DETAIL_ACTIVITY_ACTION(bawaan dari Intent yg di plant ke PendingIntent)
 			if(intent.getAction().equals(BuildConfig.DETAIL_ACTIVITY_ACTION)){
-				// todo: object ga ke pass, mesti dibikin pass karena movieItem = null in this case
-				MovieItem selectedFavoriteMovieItem = intent.getExtras().getParcelable(BuildConfig.EXTRA_FAVORITE_MOVIE_ITEM); // Akses parcelable object dari {@link FavoriteMovieStackRemoteViewsFactory} class dengan akses bundle
-				// Initiate variable
+				// Create byte[] object yang dibawa dari {@link FavoriteMovieStackRemoteViewsFactory}
+				// class dengan akses bundle
+				byte[] selectedFavoriteMovieItemBytes = intent.getByteArrayExtra(BuildConfig.EXTRA_FAVORITE_MOVIE_ITEM);
+				// Bikin byte[] object ke Parcel object tanpa menggunakan creator
+				Parcel favoriteMovieParcel = ParcelableUtil.unmarshall(selectedFavoriteMovieItemBytes);
+				// Bikin MovieItem object / Parcelable object dengan membawa Parcelable object
+				MovieItem selectedFavoriteMovieItem = new MovieItem(favoriteMovieParcel);
+				// Initiate variable dari MovieItem object
 				int favoriteMovieIdItem = selectedFavoriteMovieItem.getId();
 				String favoriteMovieTitleItem = selectedFavoriteMovieItem.getMovieTitle();
 				int favoriteMovieBooleanStateItem = selectedFavoriteMovieItem.getFavoriteBooleanState();

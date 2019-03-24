@@ -186,7 +186,8 @@ public class MovieItem implements Parcelable {
 		this.favoriteBooleanState = getColumnInt(cursor, FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_COLUMN);
 	}
 	
-	protected MovieItem(Parcel in) {
+	// Public access dari method untuk dapat access ke class lain
+	public MovieItem(Parcel in) {
 		id = in.readInt();
 		movieTitle = in.readString();
 		movieTagline = in.readString();

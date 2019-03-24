@@ -188,7 +188,7 @@ public class TvShowItem implements Parcelable {
 		this.favoriteBooleanState = getColumnInt(cursor, FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FAVORITE_COLUMN);
 	}
 	
-	protected TvShowItem(Parcel in) {
+	public TvShowItem(Parcel in) {
 		id = in.readInt();
 		tvShowName = in.readString();
 		tvShowSeasons = in.readString();

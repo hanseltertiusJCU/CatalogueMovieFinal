@@ -14,6 +14,7 @@ import android.widget.RemoteViewsService;
 import com.example.cataloguemoviefinal.BuildConfig;
 import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.entity.MovieItem;
+import com.example.cataloguemoviefinal.util.ParcelableUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -96,9 +97,12 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 				e.printStackTrace();
 			}
 
-			Bundle extras = new Bundle();
 			// todo: convert into byte
-			extras.putParcelable(BuildConfig.EXTRA_FAVORITE_MOVIE_ITEM, movieItem); // Put movie item object (passing into intent in on receive)
+			byte[] parcelableByte = ParcelableUtil.marshall(movieItem);
+
+			Bundle extras = new Bundle();
+			extras.putByteArray(BuildConfig.EXTRA_FAVORITE_MOVIE_ITEM, parcelableByte);
+			// todo: convert into byte
 			Intent fillIntent = new Intent();
 			// Bawa parcelable object (MovieItem object) dengan akses array list position
 			fillIntent.putExtras(extras);
