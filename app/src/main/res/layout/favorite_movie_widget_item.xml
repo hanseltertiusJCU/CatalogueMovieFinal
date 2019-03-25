@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- todo: add ripple effect, error is the ripple effect thing cannot trigger action -->
-<!-- Wrap LinearLayout ke dalam LinearLayout sebagai container dari LinearLayout child view -->
+<!-- Make container for linear layout -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,9 +8,11 @@
     android:orientation="vertical"
     android:layout_height="88dp">
 
+    <!-- Make linear layout that shows ripple effect when clicked -->
+
     <LinearLayout
         android:id="@+id/movie_widget_item"
-        android:background="@android:drawable/list_selector_background"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
