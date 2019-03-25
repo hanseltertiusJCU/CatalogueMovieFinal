@@ -32,7 +32,6 @@ import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.adapter.MovieAdapter;
 import com.example.cataloguemoviefinal.async.LoadFavoriteMoviesAsync;
 import com.example.cataloguemoviefinal.entity.MovieItem;
-import com.example.cataloguemoviefinal.observer.FavoriteMovieDataObserver;
 import com.example.cataloguemoviefinal.support.ItemClickSupport;
 
 import java.util.ArrayList;
@@ -121,6 +120,8 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 					// Hilangkan progress bar agar tidak ada progress bar lagi setelah d rotate
 					progressBar.setVisibility(View.GONE);
 					recyclerView.setVisibility(View.VISIBLE);
+					// Set empty view visibility into gone
+					emptyTextView.setVisibility(View.GONE);
 					// Set data ke adapter
 					movieAdapter.setData(movieItemList);
 					// Set item click listener di dalam recycler view agar item tsb dapat di click

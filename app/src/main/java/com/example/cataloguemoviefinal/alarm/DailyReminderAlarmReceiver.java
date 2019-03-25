@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -29,7 +30,6 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		showDailyReminderNotification(context); // Call notification method untuk DailyReminder
-		
 	}
 	
 	// Set daily reminder alarm that goes into application Catalogue Movie (trigger every 7AM)
@@ -53,8 +53,6 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
 		if(dailyReminderAlarmManager != null){
 			dailyReminderAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, dailyReminderCalendarClock.getTimeInMillis(), AlarmManager.INTERVAL_DAY, dailyReminderPendingIntent); // Set alarm dengan interval per hari dan set alarm persis sesuai dengan waktu yang ada
 		}
-		
-		Toast.makeText(context, "Add daily reminder alarm", Toast.LENGTH_SHORT).show(); // Toast message untuk notify bahwa daily reminder alarm ditambahkan
 	}
 	
 	// Method ini berguna untuk cancel alarm yg ada di AlarmManager
@@ -68,8 +66,6 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
 		if(alarmManager != null){
 			alarmManager.cancel(pendingIntent); // Cancel alarm manager
 		}
-		
-		Toast.makeText(context, "Cancel daily reminder alarm", Toast.LENGTH_SHORT).show(); // Toast message untuk notify bahwa daily reminder alarm cancel
 	}
 	
 	// Method ini berguna untuk notification di Daily Reminder
@@ -112,6 +108,8 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
 				CHANNEL_NAME,
 				NotificationManager.IMPORTANCE_DEFAULT);
 			
+			dailyReminderChannel.enableLights(true); // Enable notif lights
+			dailyReminderChannel.setLightColor(Color.GREEN); // Set light color into green
 			dailyReminderChannel.enableVibration(true); // Enable vibration on notification channel
 			dailyReminderChannel.setVibrationPattern(new long[]{1000, 1000, 1000, 1000, 1000}); // Set vibration on notification channel
 			

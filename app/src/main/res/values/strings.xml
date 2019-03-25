@@ -149,4 +149,10 @@
     <string name="insert_tv_show_favorite_snackbar">Insert TV show item into database</string>
     <string name="remove_tv_show_favorite_snackbar">Remove TV show item from database</string>
 
+    <!-- String untuk toast message bahwa alarm diaktifkan/cancel -->
+    <string name="add_daily_reminder">Add daily reminder alarm</string>
+    <string name="cancel_daily_reminder">Cancel daily reminder alarm</string>
+    <string name="add_release_today_reminder">Set release date today reminder alarm</string>
+    <string name="cancel_release_today_reminder">Cancel release date today reminder alarm</string>
+
 </resources>

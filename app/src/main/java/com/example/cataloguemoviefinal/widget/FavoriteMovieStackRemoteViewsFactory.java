@@ -27,9 +27,6 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 	private final Context context;
 	private Cursor cursor;
 	private int appWidgetId;
-
-	// Initiate ArrayList object that return favorite movie item
-	ArrayList<MovieItem> movieItemsArrayList = new ArrayList<>();
 	
 	public FavoriteMovieStackRemoteViewsFactory(Context context, Intent intent) {
 		this.context = context;
@@ -52,8 +49,6 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 		final long identityToken = Binder.clearCallingIdentity();
 		
 		cursor = context.getContentResolver().query(MOVIE_FAVORITE_CONTENT_URI, null, null, null, null);
-
-//		movieItemsArrayList = mapCursorToFavoriteMovieArrayList(cursor); // Map cursor to array list
 		
 		Binder.restoreCallingIdentity(identityToken);
 		
@@ -97,12 +92,14 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 				e.printStackTrace();
 			}
 
-			// todo: convert into byte
+			// Convert movie item object into byte[]
 			byte[] parcelableByte = ParcelableUtil.marshall(movieItem);
 
+			// Initiate Bundle object
 			Bundle extras = new Bundle();
+			// Put byte[] array into buncle
 			extras.putByteArray(BuildConfig.EXTRA_FAVORITE_MOVIE_ITEM, parcelableByte);
-			// todo: convert into byte
+			// Create new intent object
 			Intent fillIntent = new Intent();
 			// Bawa parcelable object (MovieItem object) dengan akses array list position
 			fillIntent.putExtras(extras);

@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -83,9 +84,6 @@ public class ReleaseTodayReminderAlarmReceiver extends BroadcastReceiver {
 		if(releaseTodayAlarmReminder != null){
 			releaseTodayAlarmReminder.setRepeating(AlarmManager.RTC_WAKEUP, releaseTodayReminderClock.getTimeInMillis(), AlarmManager.INTERVAL_DAY, releaseTodayPendingIntent); // Set alarm dengan interval per hari dan set alarm persis sesuai dengan waktu yang ada
 		}
-		
-		Toast.makeText(context, "Set release date today reminder alarm", Toast.LENGTH_SHORT).show();
-		
 	}
 	
 	// Method ini berguna untuk cancel alarm yg ada di AlarmManager
@@ -98,8 +96,6 @@ public class ReleaseTodayReminderAlarmReceiver extends BroadcastReceiver {
 		if(alarmManager != null){
 			alarmManager.cancel(pendingIntent);
 		}
-		
-		Toast.makeText(context, "Cancel release date today reminder alarm", Toast.LENGTH_SHORT).show(); // Toast message untuk notify bahwa daily reminder alarm cancel
 	}
 	
 	
@@ -128,6 +124,8 @@ public class ReleaseTodayReminderAlarmReceiver extends BroadcastReceiver {
 				CHANNEL_NAME,
 				NotificationManager.IMPORTANCE_DEFAULT);
 			
+			releaseTodayNotificationChannel.enableLights(true);
+			releaseTodayNotificationChannel.setLightColor(Color.CYAN);
 			releaseTodayNotificationChannel.enableVibration(true);
 			releaseTodayNotificationChannel.setVibrationPattern(new long[]{1000, 1000, 1000, 1000, 1000});
 			

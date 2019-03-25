@@ -148,4 +148,10 @@
     <string name="insert_tv_show_favorite_snackbar">Memasukkan acara TV ke database</string>
     <string name="remove_tv_show_favorite_snackbar">Menghapus acara TV dari database</string>
 
+    <!-- String untuk toast message bahwa alarm diaktifkan/cancel -->
+    <string name="add_daily_reminder">Tambahkan alarm peringatan per harian</string>
+    <string name="cancel_daily_reminder">Batalkan alarm peringatan per harian</string>
+    <string name="add_release_today_reminder">Tambahkan alarm peringatan tanggal rilis hari ini</string>
+    <string name="cancel_release_today_reminder">Batalkan alarm peringatan tanggal rilis hari ini</string>
+
 </resources>

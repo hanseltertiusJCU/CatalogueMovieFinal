@@ -117,6 +117,8 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 					// Hilangkan progress bar agar tidak ada progress bar lagi setelah d rotate
 					progressBar.setVisibility(View.GONE);
 					recyclerView.setVisibility(View.VISIBLE);
+					// Set empty view visibility into gone
+					emptyTextView.setVisibility(View.GONE);
 					// Set data ke adapter
 					tvShowAdapter.setTvShowData(tvShowItemsList);
 					// Set item click listener di dalam recycler view agar item tsb dapat di click
