@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- todo: add ripple effect, error is the ripple effect thing cannot trigger action -->
+<!-- Wrap LinearLayout ke dalam LinearLayout sebagai container dari LinearLayout child view -->
 <LinearLayout
-    android:id="@+id/movie_widget_item"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/colorWhite"
+    android:background="@android:color/white"
     android:layout_width="match_parent"
-    android:layout_height="88dp"
-    android:orientation="horizontal">
+    android:orientation="vertical"
+    android:layout_height="88dp">
 
-    <ImageView
-        android:id="@+id/movie_image_widget_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/no_image_available"/>
+    <LinearLayout
+        android:id="@+id/movie_widget_item"
+        android:background="@android:drawable/list_selector_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/movie_title_widget_item"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textAlignment="center"
-        android:textColor="@color/colorBlack"
-        android:textSize="@dimen/item_section_title"
-        tools:text="test" />
+        <ImageView
+            android:id="@+id/movie_image_widget_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/no_image_available"/>
+
+        <TextView
+            android:id="@+id/movie_title_widget_item"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/item_section_title"
+            tools:text="test" />
+
+    </LinearLayout>
 
 </LinearLayout>
