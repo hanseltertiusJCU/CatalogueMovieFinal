@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/list_item_height"
-    android:background="@drawable/border"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:background="@drawable/ripple_border">
 
     <ImageView
         android:id="@+id/poster_image"
