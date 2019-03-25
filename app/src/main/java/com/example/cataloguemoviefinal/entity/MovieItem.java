@@ -15,6 +15,7 @@ import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.
 
 public class MovieItem implements Parcelable {
 	
+	// Parcelable creator object
 	public static final Creator<MovieItem> CREATOR = new Creator<MovieItem>() {
 		@Override
 		public MovieItem createFromParcel(Parcel in) {

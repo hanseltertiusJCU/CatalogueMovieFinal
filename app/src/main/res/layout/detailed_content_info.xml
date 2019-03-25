@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/detailed_content_info"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DetailActivity">
@@ -9,6 +10,7 @@
     <ImageView
         android:id="@+id/detailed_poster_image"
         style="@style/PosterImage"
+        android:contentDescription="@string/poster_image_description"
         android:layout_margin="@dimen/inner_view_margin"
         app:layout_constraintBottom_toBottomOf="@id/detailed_fifth_info_text"
         app:layout_constraintStart_toStartOf="parent"

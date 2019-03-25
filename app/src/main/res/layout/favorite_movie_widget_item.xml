@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:layout_height="88dp">
 
-    <!-- Make linear layout that shows ripple effect when clicked -->
+    <!-- Make linear layout (content from container) that shows ripple effect when clicked -->
 
     <LinearLayout
         android:id="@+id/movie_widget_item"
@@ -19,6 +19,7 @@
 
         <ImageView
             android:id="@+id/movie_image_widget_item"
+            android:contentDescription="@string/poster_image_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/no_image_available"/>
@@ -30,8 +31,7 @@
             android:layout_gravity="center"
             android:textAlignment="center"
             android:textColor="@color/colorBlack"
-            android:textSize="@dimen/item_section_title"
-            tools:text="test" />
+            tools:text="Movie" />
 
     </LinearLayout>
 

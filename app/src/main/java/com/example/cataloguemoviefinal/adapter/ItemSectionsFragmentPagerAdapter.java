@@ -45,6 +45,4 @@ public class ItemSectionsFragmentPagerAdapter extends FragmentPagerAdapter {
 	public CharSequence getPageTitle(int position) {
 		return mFragmentTitleList.get(position);
 	}
-
-	//todo: mungkin pake tag (lihat cara pasang tag)
 }

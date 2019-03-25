@@ -14,7 +14,8 @@ import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.getColumnString;
 
 public class TvShowItem implements Parcelable {
-	
+
+	// Parcelable creator object
 	public static final Creator<TvShowItem> CREATOR = new Creator<TvShowItem>() {
 		@Override
 		public TvShowItem createFromParcel(Parcel in) {

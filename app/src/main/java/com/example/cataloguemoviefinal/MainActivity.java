@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	TabLayout tabLayout;
 	@BindView(R.id.main_toolbar)
 	Toolbar mainToolbar;
+	// Initiate fragment adapter object
 	private ItemSectionsFragmentPagerAdapter itemSectionsFragmentPagerAdapter;
 	// Set textview untuk isi dari TabLayout
 	private TextView tabMovie;
@@ -80,22 +81,15 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	private Drawable[] searchTvShowDrawables;
 	private Drawable searchTvShowDrawable;
 	// ArrayList object untuk MovieItem
-	public static ArrayList<MovieItem> favoriteMovieItemArrayList = new ArrayList<>();
+	public static ArrayList<MovieItem> favoriteMovieItemArrayList;
 	// ArrayList object untuk TvShowItem
-	public static ArrayList<TvShowItem> favoriteTvShowItemArrayList = new ArrayList<>();
-	// Handler thread beserta observer untuk movie dan tv show (mungkin coba ke local lagi)
-	static HandlerThread movieHandlerThread;
-	Handler movieHandler;
-	FavoriteMovieDataObserver myFavoriteMovieObserver;
-	static HandlerThread tvShowHandlerThread;
-	Handler tvShowHandler;
-	FavoriteTvShowDataObserver myFavoriteTvShowObserver;
+	public static ArrayList<TvShowItem> favoriteTvShowItemArrayList;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// Set content activity to use layout xml file activity_main.xml
-		setContentView(R.layout.activity_main); // penyebab errornya
+		setContentView(R.layout.activity_main);
 		
 		ButterKnife.bind(this);
 		
@@ -108,17 +102,17 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		}
 		
 		// Initiate handler thread operation in Movie
-		movieHandlerThread = new HandlerThread("FavoriteMovieDataObserver"); // Initiate HandlerThread
+		HandlerThread movieHandlerThread = new HandlerThread("FavoriteMovieDataObserver"); // Initiate HandlerThread
 		movieHandlerThread.start();
-		movieHandler = new Handler(movieHandlerThread.getLooper()); // Initiate Handler
-		myFavoriteMovieObserver = new FavoriteMovieDataObserver(movieHandler, this); // Initiate ContentObserver
+		Handler movieHandler = new Handler(movieHandlerThread.getLooper()); // Initiate Handler
+		FavoriteMovieDataObserver myFavoriteMovieObserver = new FavoriteMovieDataObserver(movieHandler, this); // Initiate ContentObserver
 		getContentResolver().registerContentObserver(MOVIE_FAVORITE_CONTENT_URI, true, myFavoriteMovieObserver);
 		
 		// Initiate handler thread operation in TV Show
-		tvShowHandlerThread = new HandlerThread("FavoriteTvShowDataObserver"); // Initiate HandlerThread
+		HandlerThread tvShowHandlerThread = new HandlerThread("FavoriteTvShowDataObserver"); // Initiate HandlerThread
 		tvShowHandlerThread.start();
-		tvShowHandler = new Handler(tvShowHandlerThread.getLooper()); // Initiate Handler
-		myFavoriteTvShowObserver = new FavoriteTvShowDataObserver(tvShowHandler, this); // Initiate ContentObserver
+		Handler tvShowHandler = new Handler(tvShowHandlerThread.getLooper()); // Initiate Handler
+		FavoriteTvShowDataObserver myFavoriteTvShowObserver = new FavoriteTvShowDataObserver(tvShowHandler, this); // Initiate ContentObserver
 		getContentResolver().registerContentObserver(TV_SHOW_FAVORITE_CONTENT_URI, true, myFavoriteTvShowObserver);
 
 		// Load async task for getting the cursor in Movies and TV Show favorite
@@ -351,7 +345,7 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				Log.d(MainActivity.class.getSimpleName(), "Movie data loading"); // Log message ketika favorite movie data sedang loading
+				favoriteMovieItemArrayList = new ArrayList<>(); // create object while preparing
 			}
 		});
 	}
@@ -394,7 +388,7 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				Log.d(MainActivity.class.getSimpleName(), "TV Show data loading"); // Log message ketika favorite tv show data sedang loading
+				favoriteTvShowItemArrayList = new ArrayList<>(); // create object while preparing
 			}
 		});
 	}

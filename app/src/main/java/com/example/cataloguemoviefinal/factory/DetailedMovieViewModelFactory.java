@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 
 import com.example.cataloguemoviefinal.model.DetailedMovieViewModel;
 
-
 // Class ini berguna untuk membuat ViewModel yang menampung lebih dari 1 parameter
 public class DetailedMovieViewModelFactory implements ViewModelProvider.Factory {
 	

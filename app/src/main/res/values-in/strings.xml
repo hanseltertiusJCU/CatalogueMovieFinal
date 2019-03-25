@@ -154,4 +154,7 @@
     <string name="add_release_today_reminder">Tambahkan alarm peringatan tanggal rilis hari ini</string>
     <string name="cancel_release_today_reminder">Batalkan alarm peringatan tanggal rilis hari ini</string>
 
+    <!-- String untuk content description -->
+    <string name="poster_image_description">Gambar poster</string>
+
 </resources>

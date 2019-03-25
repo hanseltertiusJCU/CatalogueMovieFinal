@@ -155,4 +155,6 @@
     <string name="add_release_today_reminder">Set release date today reminder alarm</string>
     <string name="cancel_release_today_reminder">Cancel release date today reminder alarm</string>
 
+    <!-- String untuk content description -->
+    <string name="poster_image_description">Poster Image</string>
 </resources>

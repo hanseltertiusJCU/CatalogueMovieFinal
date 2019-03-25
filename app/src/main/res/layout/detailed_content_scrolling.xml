@@ -3,18 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scrollbars="vertical"
     tools:context=".DetailActivity"
     tools:showIn="@layout/activity_detail">
 
-    <LinearLayout
-        android:id="@+id/detailed_content_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <include
-            layout="@layout/detailed_info" />
-
-    </LinearLayout>
+    <include
+        layout="@layout/detailed_content_info" />
 
 </android.support.v4.widget.NestedScrollView>
