@@ -1,18 +1,23 @@
 package com.example.cataloguemoviefinal;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ContentValues;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -49,6 +54,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cz.msebera.android.httpclient.client.cache.Resource;
 
 import static android.provider.BaseColumns._ID;
 import static com.example.cataloguemoviefinal.BuildConfig.EXTRA_CHANGED_STATE;
@@ -128,6 +134,10 @@ public class DetailActivity extends AppCompatActivity {
 	@BindView(R.id.detailed_content_swipe_refresh_layout)
 	SwipeRefreshLayout detailedContentSwipeRefreshLayout;
 
+	// Layout for collapsing toolbar layout
+	@BindView(R.id.detailed_toolbar_layout)
+	CollapsingToolbarLayout detailedToolbarLayout;
+
 	// Setup intent value untuk movie items
 	private int detailedMovieId;
 	private String detailedMovieTitle;
@@ -170,6 +180,7 @@ public class DetailActivity extends AppCompatActivity {
     // Initiate snackbar
 	Snackbar snackbarMessage;
 
+	@SuppressLint("ResourceType")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -369,6 +380,13 @@ public class DetailActivity extends AppCompatActivity {
                         detailedEmptyTextView.setVisibility(View.VISIBLE);
                         // Empty text view yang menunjukkan bahwa tidak ada internet yang sedang terhubung
                         detailedEmptyTextView.setText(getString(R.string.no_internet_connection));
+
+                        // Line ini berguna untuk membuat clickable icon menjadi false,
+						// alias ketika tidak ada internet
+                        // Set clickable into false
+                        menuClickable = false;
+                        // Invalidate option menu for call on prepare option menu
+                        invalidateOptionsMenu();
                     }
                 } else if(accessItemMode.equals("open_tv_show_detail")) {
 					// Set visiblity of views ketika sedang dalam meretrieve data
@@ -403,6 +421,13 @@ public class DetailActivity extends AppCompatActivity {
                         detailedEmptyTextView.setVisibility(View.VISIBLE);
                         // Empty text view yang menunjukkan bahwa tidak ada internet yang sedang terhubung
                         detailedEmptyTextView.setText(getString(R.string.no_internet_connection));
+
+						// Line ini berguna untuk membuat clickable icon menjadi false,
+						// alias ketika tidak ada internet
+                        // Set clickable into false
+						menuClickable = false;
+						// Invalidate option menu for call on prepare option menu
+						invalidateOptionsMenu();
                     }
                 }
                 // Set refresh into false, meaning that datanya sudah tidak di load lagi

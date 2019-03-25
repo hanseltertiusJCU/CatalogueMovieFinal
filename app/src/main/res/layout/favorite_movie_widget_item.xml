@@ -30,7 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textAlignment="center"
-            android:textColor="@color/colorBlack"
+            android:fontFamily="@font/arimo_regular"
+            android:textColor="@android:color/black"
             tools:text="Movie" />
 
     </LinearLayout>
