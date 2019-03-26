@@ -26,12 +26,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.cataloguemoviefinal.DetailActivity;
-import com.example.cataloguemoviefinal.LoadFavoriteTvShowCallback;
 import com.example.cataloguemoviefinal.MainActivity;
 import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.adapter.TvShowAdapter;
-import com.example.cataloguemoviefinal.async.LoadFavoriteTvShowAsync;
-import com.example.cataloguemoviefinal.database.FavoriteItemsHelper;
 import com.example.cataloguemoviefinal.entity.TvShowItem;
 import com.example.cataloguemoviefinal.model.TvShowViewModel;
 import com.example.cataloguemoviefinal.support.ItemClickSupport;

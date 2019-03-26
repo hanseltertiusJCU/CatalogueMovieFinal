@@ -8,7 +8,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-
 import com.example.cataloguemoviefinal.BuildConfig;
 import com.example.cataloguemoviefinal.entity.MovieItem;
 import com.loopj.android.http.AsyncHttpResponseHandler;

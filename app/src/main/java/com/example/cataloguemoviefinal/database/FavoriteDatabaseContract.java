@@ -1,10 +1,18 @@
 package com.example.cataloguemoviefinal.database;
 
+import android.content.ContentProvider;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
 // Kelas ini berguna untuk membangun struktur tabel dari database
+
+/**
+ * Kelas ini berguna untuk:
+ * - Membangun struktur tabel untuk TV Show dan Movie
+ * - Mendapatkan value dari column melalui method getColumnString() dan getColumnInt()
+ * - Membuat URI sebagai komponen penting untuk {@link ContentProvider} yang representasikan data
+ */
 public class FavoriteDatabaseContract {
 	
 	// Create variables for URI components

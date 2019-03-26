@@ -11,6 +11,11 @@ import com.example.cataloguemoviefinal.alarm.DailyReminderAlarmReceiver;
 import com.example.cataloguemoviefinal.alarm.ReleaseTodayReminderAlarmReceiver;
 
 
+/**
+ * Class ini berguna untuk:
+ * - Mengatur daily alarm reminder apakah itu aktif atau tidak
+ * - Mengatur release date today movie alarm reminder alarm apakah itu aktif atau tidak
+ */
 public class AlarmPreferenceFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener {
 	
 	// Key
@@ -18,7 +23,11 @@ public class AlarmPreferenceFragment extends PreferenceFragmentCompat implements
 	private String TODAY_RELEASE_DATE_MOVIE_REMINDER;
 	// Toast message variable
 	private Toast toastMessage;
-	
+
+	/**
+	 * Method ini di trigger ketika AlarmPreferenceFragment dibuat
+	 * @param savedInstanceState
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,28 +45,40 @@ public class AlarmPreferenceFragment extends PreferenceFragmentCompat implements
 		movieReleaseTodayReminderPreference.setOnPreferenceChangeListener(this);
 		
 	}
-	
-	
+
+
+	/**
+	 * Method tsb berguna untuk membuat xml yang berisi PreferenceScreen ke Preference
+	 * @param bundle
+	 * @param s
+	 */
 	@Override
 	public void onCreatePreferences(Bundle bundle, String s) {
 		addPreferencesFromResource(R.xml.setting_reminder_preferences); // Add xml ke class AlarmPreferenceFragment
 	}
-	
-	
-	// Method tsb berguna ketika value dari Preference itu diganti
+
+	/**
+	 * Method tsb berguna ketika value dari Preference itu diganti, secara bersamaan
+	 * method tsb berguna untuk:
+	 * - Set daily alarm
+	 * - Set release date today alarm
+	 * @param preference
+	 * @param object
+	 * @return boolean untuk update state value dari preference object
+	 */
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object object) {
 		
 		// Dapatin key value dari preference object
 		String preferenceKey = preference.getKey();
 		
-		// Dapatin state dari object
+		// Dapatin state dari object dengan cast Object ke boolean
 		boolean objectState = (boolean) object;
 		
-		// Buat daily alarm receiver
+		// Buat daily alarm receiver object
 		DailyReminderAlarmReceiver dailyReminderAlarmReceiver = new DailyReminderAlarmReceiver();
-		
-		// Buat release today alarm receiver
+
+		// Buat release today alarm receiver object
 		ReleaseTodayReminderAlarmReceiver releaseTodayReminderAlarmReceiver = new ReleaseTodayReminderAlarmReceiver();
 		
 		// Cek jika preference key itu sama dengan reminder

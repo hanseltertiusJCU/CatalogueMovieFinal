@@ -2,10 +2,9 @@ package com.example.cataloguemoviefinal;
 
 import android.database.Cursor;
 
-import com.example.cataloguemoviefinal.entity.MovieItem;
-
-import java.util.ArrayList;
-
+/**
+ * Interface ini berguna untuk Load Favorite Movie dan dipanggil di asynctask pre execute dan post
+ */
 public interface LoadFavoriteMoviesCallback{
 	// Preexecute untuk prepare array list data
 	void favoriteMoviePreExecute();

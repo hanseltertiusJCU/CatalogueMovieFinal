@@ -15,10 +15,13 @@ import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_ORIGINAL_LANGUAGE_COLUMN;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_RATINGS_COLUMN;
 
-// Kelas ini berguna untuk convert Cursor ke ArrayList since
-// query method utk ContentProvider return Cursor instead of ArrayList
+/**
+ * Kelas ini berguna untuk convert Cursor ke ArrayList untuk bisa diolah datanya.
+ * Hal ini terjadi karena query method untuk ContentProvider return Cursor, bukan ArrayList
+ */
 public class FavoriteTvShowMappingHelper {
 	public static ArrayList<TvShowItem> mapCursorToFavoriteTvShowArrayList(Cursor tvShowItemCursor){
+		// Initiate arraylist that contain TvShowItem object
 		ArrayList<TvShowItem> tvShowItemsList = new ArrayList<>();
 
 		if(tvShowItemCursor != null){

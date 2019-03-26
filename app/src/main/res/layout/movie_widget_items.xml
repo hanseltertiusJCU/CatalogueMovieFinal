@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!-- Make container for linear layout -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="88dp"
@@ -18,12 +19,15 @@
         <ImageView
             android:id="@+id/movie_image_widget_item"
             style="@style/PosterImage"
+            android:layout_marginStart="@dimen/inner_view_margin"
+            android:layout_gravity="center"
             android:contentDescription="@string/poster_image_description"
             android:src="@drawable/no_image_available" />
 
         <TextView
             android:id="@+id/movie_title_widget_item"
             style="@style/WidgetItemTitleText"
+            app:fontFamily="@font/raleway_regular"
             tools:text="Movie" />
 
     </LinearLayout>

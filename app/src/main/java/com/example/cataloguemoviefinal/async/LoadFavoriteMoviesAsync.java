@@ -4,13 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 
-
 import com.example.cataloguemoviefinal.LoadFavoriteMoviesCallback;
-import com.example.cataloguemoviefinal.database.FavoriteItemsHelper;
-import com.example.cataloguemoviefinal.entity.MovieItem;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
 

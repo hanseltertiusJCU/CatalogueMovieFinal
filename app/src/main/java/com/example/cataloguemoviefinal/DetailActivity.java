@@ -1,10 +1,8 @@
 package com.example.cataloguemoviefinal;
 
-import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ContentValues;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -12,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -20,6 +17,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -34,10 +32,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 
 import com.example.cataloguemoviefinal.entity.MovieItem;
 import com.example.cataloguemoviefinal.entity.TvShowItem;
@@ -55,7 +51,6 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cz.msebera.android.httpclient.client.cache.Resource;
 
 import static android.provider.BaseColumns._ID;
 import static com.example.cataloguemoviefinal.BuildConfig.EXTRA_CHANGED_STATE;
@@ -65,21 +60,37 @@ import static com.example.cataloguemoviefinal.BuildConfig.EXTRA_URI;
 import static com.example.cataloguemoviefinal.BuildConfig.KEY_DRAWABLE_MARKED_AS_FAVORITE_STATE;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_DATE_ADDED_FAVORITE_COLUMN;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_COLUMN;
-import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FILE_PATH_COLUMN;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FILE_PATH_COLUMN;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_ORIGINAL_LANGUAGE_COLUMN;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_RATINGS_COLUMN;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_RELEASE_DATE_COLUMN;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_TITLE_COLUMN;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_DATE_ADDED_COLUMN;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FAVORITE_COLUMN;
+import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FAVORITE_CONTENT_URI;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FILE_PATH_COLUMN;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FIRST_AIR_DATE_COLUMN;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_NAME_COLUMN;
-import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FAVORITE_CONTENT_URI;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_ORIGINAL_LANGUAGE_COLUMN;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_RATINGS_COLUMN;
 
+/**
+ * Kelas ini berguna untuk:
+ * - Menampilkan informasi scr detail berupa selected movie item dari:
+ * *){@link com.example.cataloguemoviefinal.fragment.MovieFragment}
+ * *){@link com.example.cataloguemoviefinal.fragment.FavoriteMovieFragment}
+ * *){@link com.example.cataloguemoviefinal.fragment.SearchMovieFragment}
+ * maupun tv show item dari:
+ * *){@link com.example.cataloguemoviefinal.fragment.TvShowFragment}
+ * *){@link com.example.cataloguemoviefinal.fragment.FavoriteTvShowFragment}
+ * *){@link com.example.cataloguemoviefinal.fragment.SearchTvShowFragment}
+ * - Merubah data state ke favorite atau tidak melalui detailed boolean state value dari:
+ * *){@link MovieItem}
+ * *){@link TvShowItem}
+ * Hal tersebut berlaku hanya ketika connected ke internet
+ * - Memasukkan data {@link MovieItem} atau {@link TvShowItem} ke ContentProvider
+ */
 public class DetailActivity extends AppCompatActivity {
 	// Setup views for informations in detailed movie/detailed tv show
 	@BindView(R.id.detailed_poster_image)
@@ -142,14 +153,14 @@ public class DetailActivity extends AppCompatActivity {
 	// Setup intent value untuk movie items
 	private int detailedMovieId;
 	private String detailedMovieTitle;
-	private int detailedMovieFavoriteStateValue;
-	private int detailedMovieFavoriteStateValueComparison;
+	private int detailedMovieFavoriteStateValue = 0;
+	private int detailedMovieFavoriteStateValueComparison = 0;
 
 	// Setup intent value untuk tv show items
 	private int detailedTvShowId;
 	private String detailedTvShowName;
-	private int detailedTvShowFavoriteStateValue;
-	private int detailedTvShowFavoriteStateValueComparison;
+	private int detailedTvShowFavoriteStateValue = 0;
+	private int detailedTvShowFavoriteStateValueComparison = 0;
 
 	// Setup boolean menu clickable state
 	private boolean menuClickable = false;
@@ -181,6 +192,10 @@ public class DetailActivity extends AppCompatActivity {
     // Initiate snackbar
 	Snackbar snackbarMessage;
 
+    /**
+     * Method ini di trigger ketika app membuat detail activity
+     * @param savedInstanceState
+     */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -193,7 +208,7 @@ public class DetailActivity extends AppCompatActivity {
 		setSupportActionBar(detailedToolbar);
 
 		// Buat typeface untuk sebagai font untuk CollapsingToolbarLayout
-		Typeface typeface = ResourcesCompat.getFont(this, R.font.arimo_regular);
+		Typeface typeface = ResourcesCompat.getFont(this, R.font.raleway_bold);
 
 		// Set expanded and collapsed mode font in CollapsingToolbarLayout
 		detailedToolbarLayout.setExpandedTitleTypeface(typeface);
@@ -214,8 +229,11 @@ public class DetailActivity extends AppCompatActivity {
 			detailedTvShowFavoriteStateValueComparison = getIntent().getIntExtra(BuildConfig.TV_SHOW_BOOLEAN_STATE_DATA, 0);
 		}
 
+		// Get data dari intent di URI
 		uri = getIntent().getData();
 
+		// Jika ada URI yang dibawa, query bedasarkan URI dan buat MovieItem/TvShowItem object
+		// yang membawa Cursor object
 		if(uri != null){
 			Cursor cursor = getContentResolver().query(uri, null, null, null, null);
 
@@ -224,10 +242,10 @@ public class DetailActivity extends AppCompatActivity {
 					// If condition to accomodate which custom class object to create
 					if(accessItemMode.equals("open_movie_detail")){
 						detailedMovieItem = new MovieItem(cursor);
-						cursor.close();
+						cursor.close(); // Close connection ke Cursor untuk mencegah leak
 					} else if(accessItemMode.equals("open_tv_show_detail")){
 						detailedTvShowItem = new TvShowItem(cursor);
-						cursor.close();
+						cursor.close(); // Close connection ke Cursor untuk mencegah leak
 					}
 				}
 			}
@@ -471,6 +489,10 @@ public class DetailActivity extends AppCompatActivity {
 		});
 	}
 
+	/**
+	 * Method ini berguna untuk menampilkan data yang berisi detailed Movie observer
+	 * @return Observer yang membawa ArrayList<MovieItem>
+	 */
 	private Observer<ArrayList<MovieItem>> createDetailedMovieObserver() {
 		return new Observer<ArrayList<MovieItem>>() {
 			@Override
@@ -485,8 +507,9 @@ public class DetailActivity extends AppCompatActivity {
 				if(detailedMovieItems != null) {
 					// Cek jika ArrayList<MovieItem> ada datanya
 					if(detailedMovieItems.size() > 0){
-						// Set semua data ke dalam detail activity
-						// Load image jika ada poster path
+						// Line ini berguna untuk set semua data ke dalam detail activity
+
+                        // Load image jika ada poster path
 						Picasso.get().load(baseImageUrl + detailedMovieItems.get(0).getMoviePosterPath()).into(imageViewDetailedPosterImage);
 
 						// Cek jika ada value dari variable
@@ -639,6 +662,10 @@ public class DetailActivity extends AppCompatActivity {
 		};
 	}
 
+	/**
+	 * Method ini berguna untuk menampilkan data yang berisi detailed TV Show observer
+	 * @return Observer yang membawa ArrayList<TvShowItem>
+	 */
 	private Observer<ArrayList<TvShowItem>> createDetailedTvShowObserver() {
 
 		return new Observer<ArrayList<TvShowItem>>() {
@@ -655,7 +682,8 @@ public class DetailActivity extends AppCompatActivity {
 
 					// Cek jika ada data di ArrayList<TvShowItem>
 					if(detailedTvShowItems.size() > 0){
-						// Set semua data ke dalam detail activity
+                        // Line ini berguna untuk set semua data ke dalam detail activity
+
 						// Load image jika ada poster path
 						Picasso.get().load(baseImageUrl + detailedTvShowItems.get(0).getTvShowPosterPath()).into(imageViewDetailedPosterImage);
 
@@ -805,6 +833,13 @@ public class DetailActivity extends AppCompatActivity {
 		};
 	}
 
+    /**
+     * Method ini berguna untuk menyiapkan option menu,
+     * specifically untuk mengetahui bahwa itemnya itu di click dan di triggered melalui
+     * invalidateOptionMenu() method
+     * @param menu
+     * @return menu option prepared
+     */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if(menuClickable) {
@@ -816,6 +851,11 @@ public class DetailActivity extends AppCompatActivity {
 		return super.onPrepareOptionsMenu(menu);
 	}
 
+	/**
+	 * Method ini berguna untuk membuat menu icon bedasarkan value dari boolean state value favorite
+	 * @param menu
+	 * @return boolean value yg represent bahwa option menu itu dibuat
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate menu
@@ -849,6 +889,12 @@ public class DetailActivity extends AppCompatActivity {
 		return true;
 	}
 
+	/**
+	 * Method tersebut triggered ketika menu item selected, sehingga
+	 * merubah data ke favorite/unfavorite
+	 * @param item MenuItem dari layout XML
+	 * @return boolean value apakah item itu di select atau tidak
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Boolean untuk mengetahui apakah state dari movie item itu berganti atau tidak
@@ -976,12 +1022,27 @@ public class DetailActivity extends AppCompatActivity {
 					}
 				}
 				break;
+			case android.R.id.home:
+				NavUtils.navigateUpFromSameTask(this);
+				break;
 			default:
 				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		finish();
+	}
+
+	/**
+	 * Method tsb berguna untuk membawa data ketika orientation change.
+	 * Hal tersebut berguna untuk memaintain boolean state (berpengaruh kpd drawable) serta
+	 * {@link Uri} dan {@link MovieItem} atau {@link TvShowItem} tergantung mode intentnya apa
+	 * @param outState
+	 */
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		if(accessItemMode.equals("open_movie_detail")) {
@@ -1001,6 +1062,11 @@ public class DetailActivity extends AppCompatActivity {
 	}
 
 	// Method tsb berguna untuk mendapatkan waktu dimana sebuah item di tambahkan
+
+	/**
+	 * Method tsb berguna untuk mendapatkan waktu dimana sebuah item di tambahkan
+	 * @return String object yg represent waktu dimana item di tambahkan
+	 */
 	private String getCurrentDate() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
 		Date date = new Date();

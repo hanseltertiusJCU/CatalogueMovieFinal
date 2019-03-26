@@ -4,13 +4,10 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,7 +17,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,15 +25,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.cataloguemoviefinal.DetailActivity;
-import com.example.cataloguemoviefinal.LoadFavoriteMoviesCallback;
 import com.example.cataloguemoviefinal.MainActivity;
 import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.adapter.MovieAdapter;
-import com.example.cataloguemoviefinal.async.LoadFavoriteMoviesAsync;
-import com.example.cataloguemoviefinal.database.FavoriteItemsHelper;
 import com.example.cataloguemoviefinal.entity.MovieItem;
 import com.example.cataloguemoviefinal.model.MovieViewModel;
-import com.example.cataloguemoviefinal.observer.FavoriteMovieDataObserver;
 import com.example.cataloguemoviefinal.support.ItemClickSupport;
 
 import java.util.ArrayList;
@@ -52,7 +44,6 @@ import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_ID_DATA;
 import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_LIST_STATE;
 import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_TITLE_DATA;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
-import static com.example.cataloguemoviefinal.helper.FavoriteMovieMappingHelper.mapCursorToFavoriteMovieArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -299,7 +290,7 @@ public class MovieFragment extends Fragment{
 								// Set empty view visibility into gone : doesnt take space and no content displayed
 								emptyTextView.setVisibility(View.GONE);
 								// Set data ke adapter
-								movieAdapter.setData(movieItems);
+								movieAdapter.setMovieData(movieItems);
 								// Set item click listener di dalam recycler view
 								ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 									// Implement interface method
@@ -311,7 +302,7 @@ public class MovieFragment extends Fragment{
 								});
 							} else { // kondisi jika tidak ada data
 								// Set data into adapter
-								movieAdapter.setData(movieItems);
+								movieAdapter.setMovieData(movieItems);
 								// Set progress bar visibility into gone, indicating that data finished on loading
 								progressBar.setVisibility(View.GONE);
 								// Set recycler view visibility into invisible: take space but doesnt display anything

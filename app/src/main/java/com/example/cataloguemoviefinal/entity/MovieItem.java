@@ -13,6 +13,9 @@ import static android.provider.BaseColumns._ID;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.getColumnInt;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.getColumnString;
 
+/**
+ * Class ini berguna untuk membuat MovieItem object
+ */
 public class MovieItem implements Parcelable {
 	
 	// Parcelable creator object
@@ -46,6 +49,8 @@ public class MovieItem implements Parcelable {
 	// Nilai untuk tahu bahwa movie item itu termasuk dalam kategori favorit ato tidak
 	private int favoriteBooleanState;
 	
+	// Constructor untuk membuat MovieItem object melalui JSON dan
+	// menentukan keadaan bedasarkan data dari detail activity atau tidak
 	public MovieItem(JSONObject object, boolean isMovieDetailed) {
 		// Cek jika app berada di section DetailActivity agar dapat mengakses URL Movie Details
 		if(isMovieDetailed) {
@@ -206,6 +211,7 @@ public class MovieItem implements Parcelable {
 		favoriteBooleanState = in.readInt();
 	}
 	
+	// Getter dan setter attribute
 	public int getId() {
 		return id;
 	}

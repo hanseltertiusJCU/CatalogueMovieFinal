@@ -8,7 +8,7 @@ import com.example.cataloguemoviefinal.LoadFavoriteMoviesCallback;
 import com.example.cataloguemoviefinal.async.LoadFavoriteMoviesAsync;
 
 public class FavoriteMovieDataObserver extends ContentObserver {
-	final Context context;
+	private final Context context;
 	public FavoriteMovieDataObserver(Handler handler, Context context){
 		super(handler);
 		this.context = context;

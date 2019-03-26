@@ -28,7 +28,6 @@ import com.example.cataloguemoviefinal.MainActivity;
 import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.adapter.TvShowAdapter;
 import com.example.cataloguemoviefinal.async.LoadFavoriteTvShowAsync;
-import com.example.cataloguemoviefinal.database.FavoriteItemsHelper;
 import com.example.cataloguemoviefinal.entity.TvShowItem;
 import com.example.cataloguemoviefinal.support.ItemClickSupport;
 
@@ -45,6 +44,11 @@ import static com.example.cataloguemoviefinal.BuildConfig.TV_SHOW_LIST_STATE;
 import static com.example.cataloguemoviefinal.BuildConfig.TV_SHOW_NAME_DATA;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FAVORITE_CONTENT_URI;
 
+/**
+ * Class tersebut berguna untuk:
+ * - menampilkan data berisi favorite tv show ketika connected ke internet
+ * - membuat intent ke {@link DetailActivity} ketika view object dari {@link RecyclerView} di click
+ */
 public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvShowCallback {
 
 	// Bind views
@@ -62,7 +66,14 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 	// Initiate Swipe to refresh layout
 	@BindView(R.id.fragment_tv_show_swipe_refresh_layout)
 	SwipeRefreshLayout fragmentTvShowSwipeRefreshLayout;
-	
+
+	/**
+	 * Method ini
+	 * @param inflater
+	 * @param container
+	 * @param savedInstanceState
+	 * @return view dari layout xml
+	 */
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,7 +83,12 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 		ButterKnife.bind(this, view);
 		return view;
 	}
-	
+
+	/**
+	 * Method ini di triggered ketika view dibuat
+	 * @param view
+	 * @param savedInstanceState
+	 */
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
@@ -104,7 +120,11 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 			recyclerView.addItemDecoration(itemDecorator);
 		}
 	}
-	
+
+	/**
+	 * Method ini di trigger ketika activity dibuat
+	 * @param savedInstanceState
+	 */
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -196,6 +216,9 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 	
 	// Callback method dari Interface LoadFavoriteTvShowCallback
 
+	/**
+	 * Method ini berguna untuk menyiapkan data Favorite tv show array list
+	 */
 	@Override
 	public void favoriteTvShowPreExecute() {
 		if(getActivity() != null){
@@ -212,6 +235,9 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 		}
 	}
 
+	/**
+	 * Method ini berguna untuk menampilkan data Favorite TV Show array list
+	 */
 	@Override
 	public void favoriteTvShowPostExecute(Cursor tvShowItems) {
 		// Cek jika array list favorite ada data
@@ -246,8 +272,12 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 			emptyTextView.setText(getString(R.string.no_favorite_tv_show_data_shown));
 		}
 	}
-	
-	// Method tsb berguna untuk membawa value dari Intent ke Activity tujuan serta memanggil Activity tujuan
+
+	/**
+	 * Method tsb berguna untuk membawa value dari Intent ke Activity tujuan
+	 * serta memanggil Activity tujuan untuk merubah data favorite state
+	 * @param tvShowItem tv show item yang akan dibawa ke {@link DetailActivity}
+	 */
 	private void showSelectedTvShowItems(TvShowItem tvShowItem) {
 		// Dapatkan id dan title bedasarkan item di ArrayList
 		int tvShowIdItem = tvShowItem.getId();

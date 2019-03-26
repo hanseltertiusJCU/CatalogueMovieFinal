@@ -4,12 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -47,6 +44,11 @@ import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_LIST_STATE;
 import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_TITLE_DATA;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
 
+/**
+ * Class tersebut berguna untuk:
+ * - menampilkan data berisi favorite movie ketika connected ke internet
+ * - membuat intent ke {@link DetailActivity} ketika view object dari {@link RecyclerView} di click
+ */
 public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMoviesCallback {
 
 	// Bind Views
@@ -123,7 +125,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 					// Set empty view visibility into gone
 					emptyTextView.setVisibility(View.GONE);
 					// Set data ke adapter
-					movieAdapter.setData(movieItemList);
+					movieAdapter.setMovieData(movieItemList);
 					// Set item click listener di dalam recycler view agar item tsb dapat di click
 					ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 						@Override
@@ -135,7 +137,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 				} else {
 					// Ketika tidak ada data untuk display, set RecyclerView ke
 					// invisible dan progress bar menjadi tidak ada
-					movieAdapter.setData(movieItemList);
+					movieAdapter.setMovieData(movieItemList);
 					progressBar.setVisibility(View.GONE);
 					recyclerView.setVisibility(View.INVISIBLE);
 					// Set empty view visibility into visible
@@ -252,7 +254,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 			// Set empty view visibility into gone
 			emptyTextView.setVisibility(View.GONE);
 			// Set data into adapter
-			movieAdapter.setData(MainActivity.favoriteMovieItemArrayList);
+			movieAdapter.setMovieData(MainActivity.favoriteMovieItemArrayList);
 			// Set item click listener di dalam recycler view
 			ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 				@Override
@@ -263,7 +265,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		} else {
 			// Ketika tidak ada data untuk display, set RecyclerView ke
 			// invisible dan progress bar menjadi tidak ada
-			movieAdapter.setData(MainActivity.favoriteMovieItemArrayList);
+			movieAdapter.setMovieData(MainActivity.favoriteMovieItemArrayList);
 			progressBar.setVisibility(View.GONE);
 			recyclerView.setVisibility(View.INVISIBLE);
 			// Set empty view visibility into visible
@@ -278,7 +280,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		// Put ArrayList into Bundle for handling orientation change
-		outState.putParcelableArrayList(MOVIE_LIST_STATE, movieAdapter.getmMovieData());
+		outState.putParcelableArrayList(MOVIE_LIST_STATE, movieAdapter.getMovieData());
 	}
 
 }

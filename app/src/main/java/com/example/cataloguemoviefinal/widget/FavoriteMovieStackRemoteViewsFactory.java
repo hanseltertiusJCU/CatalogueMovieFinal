@@ -18,13 +18,24 @@ import com.squareup.picasso.Picasso;
 
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
 
+/**
+ * Class ini berguna untuk:
+ * - Mengatur isi dari stackview yang ada di widget
+ * - Merefresh widget ketika terjadi perubahan data
+ * - Membuat widget item dari stackview
+ */
 public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 	
 	private final Context context;
 	private Cursor cursor;
 	private int appWidgetId;
-	
-	public FavoriteMovieStackRemoteViewsFactory(Context context, Intent intent) {
+
+	/**
+	 * Constructor dari class FavoriteMovieStackRemoteViewsFactory
+	 * @param context
+	 * @param intent
+	 */
+	FavoriteMovieStackRemoteViewsFactory(Context context, Intent intent) {
 		this.context = context;
 		this.appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
 	}
@@ -34,17 +45,20 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 	public void onCreate() {
 	
 	}
-	
-	// Method tsb berguna untuk melakukan refresh saat terjadi perubahan data
+
+	/**
+	 * Method tsb berguna untuk melakukan refresh saat terjadi perubahan data
+	 */
 	@Override
 	public void onDataSetChanged() {
+		// Close existing cursor
 		if(cursor != null){
 			cursor.close();
 		}
 		
 		final long identityToken = Binder.clearCallingIdentity();
 		
-		cursor = context.getContentResolver().query(MOVIE_FAVORITE_CONTENT_URI, null, null, null, null);
+		cursor = context.getContentResolver().query(MOVIE_FAVORITE_CONTENT_URI, null, null, null, null); // Query dari ContentResolver (read data from ContentProvider)
 		
 		Binder.restoreCallingIdentity(identityToken);
 		
@@ -56,8 +70,13 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 			cursor.close();
 		}
 	}
-	
-	// Method ini berguna untuk return jumlah isi dari data dan jika return 0, maka tampilkan empty view
+
+
+	/**
+	 * Method ini berguna untuk return jumlah isi dari data dan jika return 0,
+	 * maka tampilkan empty view
+	 * @return seberapa banyak data yang ada di cursor
+	 */
 	@Override
 	public int getCount() {
 		if(cursor != null){
@@ -67,8 +86,13 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 		}
 		
 	}
-	
-	// Method tsb berguna untuk membuat widget item dan menampilkan semua widget item ke widget
+
+	/**
+	 * Method tsb berguna untuk membuat widget item dari stackview
+	 * lalu menampilkan semua widget item ke widget layout
+	 * @param position dari stack view widget
+	 * @return layout widget item
+	 */
 	@Override
 	public RemoteViews getViewAt(int position) {
 		// cek jika cursor yg di return itu ada data, jika tidak, maka kita akan return views dengan empty text
@@ -115,8 +139,11 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 	public RemoteViews getLoadingView() {
 		return null;
 	}
-	
-	// Method ini berguna utk return brapa layout yg ada
+
+	/**
+	 * Method ini berguna untuk mereturn layout dari widget
+	 * @return layout untuk di return
+	 */
 	@Override
 	public int getViewTypeCount() {
 		return 1;
@@ -131,7 +158,12 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 	public boolean hasStableIds() {
 		return true;
 	}
-	
+
+	/**
+	 * Return MovieItem object bedasarkan widget item position
+	 * @param position
+	 * @return MovieItem object bedasarkan cursor position item
+	 */
 	private MovieItem getSpecificMovieItem(int position){
 
 		if(cursor.moveToPosition(position)){

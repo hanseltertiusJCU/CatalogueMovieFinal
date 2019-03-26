@@ -18,11 +18,21 @@ import com.example.cataloguemoviefinal.util.ParcelableUtil;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
 
 /**
- * Implementation of App Widget functionality.
+ * Class ini berguna untuk:
+ * - Membuat layout widget yang menampung stack view
+ * - Mengupdate isi dari stackview
+ * - Memasang pending intent ke stackview yang berguna untuk item dr stackview tsb
+ * - Melakukan action ke item dari stackview yang berguna untuk membuka DetailActivity
  */
-
 public class FavoriteMovieItemWidget extends AppWidgetProvider{
 
+	/**
+	 * Method ini berguna untuk craete xml favorite movie item widget
+	 * (container untuk data2 yang ada di Widget)
+	 * @param context
+	 * @param appWidgetManager
+	 * @param appWidgetId
+	 */
 	static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
 								int appWidgetId) {
 		
@@ -33,8 +43,8 @@ public class FavoriteMovieItemWidget extends AppWidgetProvider{
 		intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 		
 		RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.favorite_movie_item_widget);
-		views.setRemoteAdapter(R.id.favorite_movie_stack_view, intent);
-		views.setEmptyView(R.id.favorite_movie_stack_view, R.id.favorite_movie_item_empty_view);
+		views.setRemoteAdapter(R.id.favorite_movie_stack_view, intent); // Set remote adapter untuk merespon terhadap perubahan data yang ada di {@link StackView}
+		views.setEmptyView(R.id.favorite_movie_stack_view, R.id.favorite_movie_item_empty_view); // Set empty view ketika tidak ada data
 		
 		Intent detailActivityIntent = new Intent(context, FavoriteMovieItemWidget.class); // Create intent that goes into self (FavoriteMovieItemWidget)
 		detailActivityIntent.setAction(BuildConfig.DETAIL_ACTIVITY_ACTION); // Set action in detail activity intent
@@ -47,7 +57,13 @@ public class FavoriteMovieItemWidget extends AppWidgetProvider{
 		// Instruct the widget manager to update the widget
 		appWidgetManager.updateAppWidget(appWidgetId, views);
 	}
-	
+
+	/**
+	 * Method ini berguna ketika widget pertama kali dibuat
+	 * @param context isi dari widget
+	 * @param appWidgetManager app widget manager object untuk mengatur widget app
+	 * @param appWidgetIds app widget id yg akan diupdate
+	 */
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 		
@@ -66,13 +82,19 @@ public class FavoriteMovieItemWidget extends AppWidgetProvider{
 	public void onDisabled(Context context) {
 		// Enter relevant functionality for when the last widget is disabled
 	}
-	
+
+	/**
+	 * Method ini di triggered ketika stack view item di click
+	 * @param context context dari widget
+	 * @param intent
+	 */
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		super.onReceive(context, intent);
 		// Cek jika action exists
 		if(intent.getAction() != null){
-			// Cek jika action dari intent itu sama dengan DETAIL_ACTIVITY_ACTION(bawaan dari Intent yg di plant ke PendingIntent)
+			// Cek jika action dari intent itu sama dengan DETAIL_ACTIVITY_ACTION
+			// (bawaan dari Intent yg di plant ke PendingIntent)
 			if(intent.getAction().equals(BuildConfig.DETAIL_ACTIVITY_ACTION)){
 				// Create byte[] object yang dibawa dari {@link FavoriteMovieStackRemoteViewsFactory}
 				// class dengan akses bundle

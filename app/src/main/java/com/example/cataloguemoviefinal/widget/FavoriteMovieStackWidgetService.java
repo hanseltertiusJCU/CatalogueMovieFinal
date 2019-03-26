@@ -1,9 +1,12 @@
 package com.example.cataloguemoviefinal.widget;
 
-import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViewsService;
 
+/**
+ * Class ini berguna untuk mengatur remote views serta
+ * memanggil FavoriteMovieStackRemoteViewsFactory class yang berguna untuk membuat stack widget item
+ */
 public class FavoriteMovieStackWidgetService extends RemoteViewsService {
 	
 	@Override

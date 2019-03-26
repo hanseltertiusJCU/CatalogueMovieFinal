@@ -10,17 +10,14 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.provider.Settings;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-
 
 import com.example.cataloguemoviefinal.adapter.ItemSectionsFragmentPagerAdapter;
 import com.example.cataloguemoviefinal.async.LoadFavoriteMoviesAsync;
@@ -48,8 +45,18 @@ import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.
 import static com.example.cataloguemoviefinal.helper.FavoriteMovieMappingHelper.mapCursorToFavoriteMovieArrayList;
 import static com.example.cataloguemoviefinal.helper.FavoriteTvShowMappingHelper.mapCursorToFavoriteTvShowArrayList;
 
+/**
+ * Class ini berguna untuk:
+ * - Menampilkan layout activity_main.xml
+ * - Load async task data untuk distribusikan ke fragment favorite movie dan favorite TV show
+ * - Register data observer jika ada pergantian dari data favorite
+ * - Memanggil fragment Favorite movie/TV Show dan memanggil ulang widget favorite movie jika ada
+ * perubahan data
+ * - Mengatur layout dari tab item di TabLayout
+ * - Memberi akses untuk mengganti bahasa maupun setting alarm dengan memberi menu tsb.
+ */
 public class MainActivity extends AppCompatActivity implements LoadFavoriteMoviesCallback, LoadFavoriteTvShowCallback{
-	
+
 	// Create ViewPager untuk swipe Fragments
 	@BindView(R.id.item_viewPager)
 	ViewPager viewPager;
@@ -84,30 +91,36 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	public static ArrayList<MovieItem> favoriteMovieItemArrayList;
 	// ArrayList object untuk TvShowItem
 	public static ArrayList<TvShowItem> favoriteTvShowItemArrayList;
-	
+
+	/**
+	 * Method ini trigger ketika activity created
+	 * @param savedInstanceState
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// Set content activity to use layout xml file activity_main.xml
 		setContentView(R.layout.activity_main);
-		
+
+		// Bind views
 		ButterKnife.bind(this);
-		
+
+		// Set action bar into the activity
 		setSupportActionBar(mainToolbar);
-		
+
 		// Cek kalo ada action bar
 		if(getSupportActionBar() != null) {
 			// Set default action bar title, yaitu "Movie", alias item yg ada di posisi 0
 			getSupportActionBar().setTitle(getString(R.string.movie));
 		}
-		
+
 		// Initiate handler thread operation in Movie
 		HandlerThread movieHandlerThread = new HandlerThread("FavoriteMovieDataObserver"); // Initiate HandlerThread
 		movieHandlerThread.start();
 		Handler movieHandler = new Handler(movieHandlerThread.getLooper()); // Initiate Handler
 		FavoriteMovieDataObserver myFavoriteMovieObserver = new FavoriteMovieDataObserver(movieHandler, this); // Initiate ContentObserver
 		getContentResolver().registerContentObserver(MOVIE_FAVORITE_CONTENT_URI, true, myFavoriteMovieObserver);
-		
+
 		// Initiate handler thread operation in TV Show
 		HandlerThread tvShowHandlerThread = new HandlerThread("FavoriteTvShowDataObserver"); // Initiate HandlerThread
 		tvShowHandlerThread.start();
@@ -118,25 +131,31 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		// Load async task for getting the cursor in Movies and TV Show favorite
 		new LoadFavoriteMoviesAsync(this, this).execute();
 		new LoadFavoriteTvShowAsync(this, this).execute();
-		
+
 		// Panggil method ini untuk saving Fragment state di ViewPager, kesannya kyk simpen
 		// fragment ketika sebuah fragment sedang tidak di display.
 		// Kita menggunakan value 5 sebagai parameter karena kita punya 6 fragments, dan kita
 		// hanya butuh simpan 5 fragments (1 lg untuk display).
 		viewPager.setOffscreenPageLimit(5);
-		
-		// Panggil method tsb untuk membuat fragment yang akan disimpan ke ViewPager
+
+		// Panggil method tsb untuk membuat fragment list yang akan disimpan ke ViewPager
 		createViewPagerContent(viewPager);
-		
+
 		// Beri ViewPager ke TabLayout
 		tabLayout.setupWithViewPager(viewPager);
-		
+
 		// Panggil method tsb untuk membuat isi dari setiap tab
 		createTabIcons();
-		
-		// Set listener untuk tab layout
+
+		// Set listener untuk tab layout, hal ini berguna untuk merespon terhadap perubahan selected
+		// tab item
 		tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-			// Set action bar title ketika sebuah tab dipilih
+
+			/**
+			 * Method tsb berguna untuk set action bar title dan juga merubah warna dari tab item
+			 * ketika selected
+			 * @param tab Tab dari Tablayout
+			 */
 			@Override
 			public void onTabSelected(TabLayout.Tab tab) {
 				int position = tab.getPosition();
@@ -184,9 +203,13 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 					default:
 						break;
 				}
-				
+
 			}
-			
+
+			/**
+			 * Method tsb berguna untuk merubah warna dari tab item ketika unselected
+			 * @param tab Tab dari Tablayout
+			 */
 			@Override
 			public void onTabUnselected(TabLayout.Tab tab) {
 				int position = tab.getPosition();
@@ -231,19 +254,23 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 					default:
 						break;
 				}
-				
+
 			}
-			
+
 			@Override
 			public void onTabReselected(TabLayout.Tab tab) {
-			
+				// Method ini tidak melakukan apa2
 			}
 		});
-		
+
 	}
-	
-	// Method tsb berguna untuk membuat icons beserta isinya di Tab
+
+	/**
+	 * Method tsb berguna untuk membuat isi dari tab, terdiri dari icons dan text.
+	 * Selain itu, method tsb juga menentukan warna dari icons dan text
+	 */
 	private void createTabIcons() {
+		// Inflate TextView object untuk tablayout item
 		tabMovie = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
 		// Set isi dari text di sebuah tab
 		tabMovie.setText(getString(R.string.movie));
@@ -258,10 +285,10 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		movieDrawable.setTint(getResources().getColor(android.R.color.white));
 		// Set default text color yang menandakan bahwa tabnya itu sedang d select
 		tabMovie.setTextColor(getResources().getColor(android.R.color.white));
-		
+
 		// Inflate custom_tab.xml ke dalam TabLayout
 		Objects.requireNonNull(tabLayout.getTabAt(0)).setCustomView(tabMovie);
-		
+
 		tabTvShow = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
 		tabTvShow.setText(getString(R.string.tv_show));
 		tabTvShow.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_tv_show, 0, 0);
@@ -275,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		// Set default text color untuk text view ketika viewnya itu dibuat
 		tabTvShow.setTextColor(getResources().getColor(R.color.colorAccentLight));
 		Objects.requireNonNull(tabLayout.getTabAt(1)).setCustomView(tabTvShow);
-		
+
 		tabFavoriteMovie = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
 		tabFavoriteMovie.setText(getString(R.string.favorite_movie));
 		tabFavoriteMovie.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_movie_favorite, 0, 0);
@@ -284,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		favoriteMovieDrawable.setTint(getResources().getColor(R.color.colorAccentLight));
 		tabFavoriteMovie.setTextColor(getResources().getColor(R.color.colorAccentLight));
 		Objects.requireNonNull(tabLayout.getTabAt(2)).setCustomView(tabFavoriteMovie);
-		
+
 		tabFavoriteTvShow = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
 		tabFavoriteTvShow.setText(getString(R.string.favorite_tv_show));
 		tabFavoriteTvShow.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_tv_show_favorite, 0, 0);
@@ -293,7 +320,7 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		favoriteTvShowDrawable.setTint(getResources().getColor(R.color.colorAccentLight));
 		tabFavoriteTvShow.setTextColor(getResources().getColor(R.color.colorAccentLight));
 		Objects.requireNonNull(tabLayout.getTabAt(3)).setCustomView(tabFavoriteTvShow);
-		
+
 		tabSearchMovie = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
 		tabSearchMovie.setText(getString(R.string.search_movie));
 		tabSearchMovie.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_search_movie, 0,0);
@@ -302,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		searchMovieDrawable.setTint(getResources().getColor(R.color.colorAccentLight));
 		tabSearchMovie.setTextColor(getResources().getColor(R.color.colorAccentLight));
 		Objects.requireNonNull(tabLayout.getTabAt(4)).setCustomView(tabSearchMovie);
-		
+
 		tabSearchTvShow = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
 		tabSearchTvShow.setText(getString(R.string.search_tv_show));
 		tabSearchTvShow.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_search_tv_show, 0, 0);
@@ -312,13 +339,17 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		tabSearchTvShow.setTextColor(getResources().getColor(R.color.colorAccentLight));
 		Objects.requireNonNull(tabLayout.getTabAt(5)).setCustomView(tabSearchTvShow);
 	}
-	
+
+	/**
+	 * Method tsb berguna untuk membuat isi dari ViewPager
+	 * @param viewPager viewpager object
+	 */
 	// Method tsb berguna untuk membuat isi dari ViewPager
 	private void createViewPagerContent(ViewPager viewPager) {
-		
+
 		// Create FragmentPagerAdapter untuk mengetahui fragment mana yg di show
 		itemSectionsFragmentPagerAdapter = new ItemSectionsFragmentPagerAdapter(this, getSupportFragmentManager());
-		
+
 		// Tambahkan fragment beserta title ke FragmentPagerAdapter
 		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new MovieFragment(), getString(R.string.movie));
 		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new TvShowFragment(), getString(R.string.tv_show));
@@ -326,17 +357,27 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new FavoriteTvShowFragment(), getString(R.string.favorite_tv_show));
 		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new SearchMovieFragment(), getString(R.string.search_movie));
 		itemSectionsFragmentPagerAdapter.addMovieSectionFragment(new SearchTvShowFragment(), getString(R.string.search_tv_show));
-		
+
 		// Set FragmentPagerAdapter ke ViewPager
 		viewPager.setAdapter(itemSectionsFragmentPagerAdapter);
 	}
-	
+
+	/**
+	 * Method ini berguna untuk menginflate menu layout xml ke layar
+	 * @param menu Menu object
+	 * @return boolean variable yg menandakan bahwa option menu telah dibuat
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_language_settings, menu);
+		getMenuInflater().inflate(R.menu.menu_settings, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+
+	/**
+	 * Method ini berguna untuk melakukan sesuatu ketika menu item dipilih
+	 * @param item menu item
+	 * @return boolean value bahwa menu item selected
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId() == R.id.action_change_language_settings) { // Open language settings
@@ -346,25 +387,26 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 			Intent mIntent = new Intent(this, SettingsActivity.class);
 			startActivity(mIntent);
 		}
-		
+
 		return super.onOptionsItemSelected(item);
 	}
-	
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		
-	}
-	
+
+	/**
+	 * Method ini berguna untuk set action bar title
+	 * @param title
+	 */
 	public void setActionBarTitle(String title) {
 		if(getSupportActionBar() != null) {
 			// Gunakan getSupportActionBar untuk backward compatibility
 			getSupportActionBar().setTitle(title);
 		}
 	}
-	
+
 	// Method dari LoadFavoriteMoviesCallback interface dan kita coba implement dari method tsb
 
+	/**
+	 * Method ini berguna untuk menyiapkan data Favorite movie array list
+	 */
 	@Override
 	public void favoriteMoviePreExecute() {
 		runOnUiThread(new Runnable() {
@@ -375,9 +417,14 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		});
 	}
 
+	/**
+	 * Method ini berguna untuk menampilkan data Favorite movie array list
+	 * beserta detatch reattatch existing fragment (fav movie) yang ada di ViewPager
+	 */
 	@Override
 	public void favoriteMoviePostExecute(Cursor movieItems) {
-		favoriteMovieItemArrayList = mapCursorToFavoriteMovieArrayList(movieItems); // Change cursor to ArrayList that contains MovieItem
+		// Change cursor to ArrayList that contains MovieItem
+		favoriteMovieItemArrayList = mapCursorToFavoriteMovieArrayList(movieItems);
 		// Line code tsb bertujuan untuk refresh fragment favorite movie ketika ada perubahan data di database
 		FavoriteMovieFragment favoriteMovieFragment = (FavoriteMovieFragment) itemSectionsFragmentPagerAdapter.getItem(2); // Panggil Fragment favorite movie item
 		// Initiate fragment transaction untuk melakukan fragment operation
@@ -404,10 +451,12 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.favorite_movie_stack_view);
 
 	}
-	
+
 	// Method dari LoadFavoriteTvShowCallback interface dan kita coba implement dari method tsb
 
-	// Preexecute ini berguna untuk prepare data
+	/**
+	 * Method ini berguna untuk menyiapkan data Favorite tv show array list
+	 */
 	@Override
 	public void favoriteTvShowPreExecute() {
 		runOnUiThread(new Runnable() {
@@ -418,9 +467,14 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		});
 	}
 
+	/**
+	 * Method ini berguna untuk menampilkan data Favorite TV Show array list
+	 * beserta detatch reattatch existing fragment (fav TV Show) yang ada di ViewPager
+	 */
 	@Override
 	public void favoriteTvShowPostExecute(Cursor tvShowItems) {
-		favoriteTvShowItemArrayList = mapCursorToFavoriteTvShowArrayList(tvShowItems); // Change cursor to ArrayList that contains TvShowItem
+		// Change cursor to ArrayList that contains TvShowItem
+		favoriteTvShowItemArrayList = mapCursorToFavoriteTvShowArrayList(tvShowItems);
 
 		// Line code tsb bertujuan untuk refresh fragment favorite tv show ketika ada perubahan data di database
 		FavoriteTvShowFragment favoriteTvShowFragment = (FavoriteTvShowFragment) itemSectionsFragmentPagerAdapter.getItem(3);

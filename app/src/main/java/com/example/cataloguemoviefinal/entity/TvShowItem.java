@@ -13,6 +13,9 @@ import static android.provider.BaseColumns._ID;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.getColumnInt;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.getColumnString;
 
+/**
+ * Class ini berguna untuk membuat TvShowItem object
+ */
 public class TvShowItem implements Parcelable {
 
 	// Parcelable creator object
@@ -45,7 +48,9 @@ public class TvShowItem implements Parcelable {
 	private String dateAddedFavorite;
 	// Nilai untuk tahu bahwa tv show item itu termasuk dalam kategori favorit ato tidak
 	private int favoriteBooleanState;
-	
+
+	// Constructor untuk membuat TvShowItem object melalui JSON dan
+	// menentukan keadaan bedasarkan data dari detail activity atau tidak
 	public TvShowItem(JSONObject object, boolean isTvShowDetailed) {
 		// Cek jika app berada di section DetailActivity agar dapat mengakses URL TV Show Details
 		if(isTvShowDetailed) {

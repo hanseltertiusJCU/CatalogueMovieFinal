@@ -8,7 +8,7 @@ import com.example.cataloguemoviefinal.LoadFavoriteTvShowCallback;
 import com.example.cataloguemoviefinal.async.LoadFavoriteTvShowAsync;
 
 public class FavoriteTvShowDataObserver extends ContentObserver {
-	final Context context;
+	private final Context context;
 	public FavoriteTvShowDataObserver(Handler handler, Context context){
 		super(handler);
 		this.context = context;

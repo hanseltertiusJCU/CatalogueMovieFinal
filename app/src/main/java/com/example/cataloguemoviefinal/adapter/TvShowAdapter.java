@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.example.cataloguemoviefinal.BuildConfig;
 import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.entity.TvShowItem;

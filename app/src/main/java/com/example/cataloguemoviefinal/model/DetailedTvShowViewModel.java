@@ -7,7 +7,6 @@ import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.os.AsyncTask;
 
-
 import com.example.cataloguemoviefinal.BuildConfig;
 import com.example.cataloguemoviefinal.entity.TvShowItem;
 import com.loopj.android.http.AsyncHttpResponseHandler;

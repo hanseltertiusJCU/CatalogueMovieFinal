@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.example.cataloguemoviefinal.BuildConfig;
 import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.entity.MovieItem;
@@ -25,40 +24,54 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * Class ini berguna untuk membuat RecyclerView item view yang menampung data2 penting di
+ * {@link MovieItem}
+ */
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 	
-	private ArrayList<MovieItem> mMovieData = new ArrayList<>();
+	// Initiate variable ArrayList<MovieItem> utk data dan Context utk dapatin resources
+    // (guna untuk mengatur {@link Spannable} object)
+    private ArrayList<MovieItem> mMovieData = new ArrayList<>();
 	private Context context;
 	
+	// Constructor yg membawa Fragment Movie class
 	public MovieAdapter(Context context) {
 		this.context = context;
 	}
 	
-	public ArrayList<MovieItem> getmMovieData() {
+	// Getter untuk variable
+	public ArrayList<MovieItem> getMovieData() {
 		return mMovieData;
 	}
 	
 	public Context getContext() {
 		return context;
 	}
-	
-	public void setData(ArrayList<MovieItem> mData) {
-		
-		// Jika ada data di parameter, maka clear isi data di ArrayList global variable
-		if(mData.size() > 0) {
-			this.mMovieData.clear();
-			// Add semua isi data ke global variable ArrayList
-			this.mMovieData.addAll(mData);
-		} else {
-			this.mMovieData.clear();
-		}
+
+    /**
+     * Method tsb berguna untuk set movie data ke adapter dan notify bahwa data yang ada itu berubah
+     * @param mData ArrayList yang menampung MovieItem object
+     */
+	public void setMovieData(ArrayList<MovieItem> mData) {
+
+	    // Clear existing array list content
+        this.mMovieData.clear();
+        // Add semua isi data ke global variable ArrayList
+        this.mMovieData.addAll(mData);
 		
 		
 		// Method tersebut berguna untuk memanggil adapter bahwa ada data yg bru, sehingga data tsb
 		// dpt ditampilkan pada RecyclerView yg berisi adapter yg berkaitan dengan RecyclerView
 		notifyDataSetChanged();
 	}
-	
+
+    /**
+     * Method tsb berguna untuk inflate xml layout lalu membuat {@link MovieViewHolder} object
+     * @param viewGroup
+     * @param i
+     * @return MovieViewHolder object
+     */
 	@NonNull
 	@Override
 	public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -68,7 +81,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 		// parameter
 		return new MovieViewHolder(movieItem);
 	}
-	
+
+	/**
+	 * Method ini berguna untuk bind view yang ada di ViewHolder lalu assign values bedasarkan
+     * {@link MovieItem} object to view
+	 * @param movieViewHolder {@link MovieViewHolder} object bawaan dari onCreateViewHolder() method
+	 * @param position position dari ArrayList
+	 */
 	@Override
 	public void onBindViewHolder(@NonNull MovieViewHolder movieViewHolder, int position) {
 		// Load image jika ada poster path
@@ -111,10 +130,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 	
 	@Override
 	public int getItemCount() {
-		return getmMovieData().size();
+		return getMovieData().size();
 	}
-	
-	// Kelas ini berguna untuk menampung view yang ada tanpa mendeclare view di sebuah Adapter
+
+	/**
+	 * Kelas ini berguna untuk menampung view yang ada tanpa mendeclare view di sebuah Adapter.
+	 * Selain itu, kelas tsb berguna untuk assign view ke movie_items.xml dan sbg parameter dari
+     * onBindView() method
+	 */
 	class MovieViewHolder extends RecyclerView.ViewHolder {
 		@BindView(R.id.poster_image)
 		ImageView imageViewMoviePoster;

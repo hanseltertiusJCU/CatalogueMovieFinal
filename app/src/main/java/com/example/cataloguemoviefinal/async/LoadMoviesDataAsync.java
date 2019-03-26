@@ -1,7 +1,6 @@
 package com.example.cataloguemoviefinal.async;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.example.cataloguemoviefinal.BuildConfig;
 import com.example.cataloguemoviefinal.entity.MovieItem;
@@ -18,23 +17,24 @@ import cz.msebera.android.httpclient.Header;
 // Kelas ini berguna untuk load data dari URL
 public class LoadMoviesDataAsync extends AsyncTask<Void, Void, ArrayList<MovieItem>> {
 	
-	// akses informasi penting dari BuildConfig untuk menjaga credential
+	// Initiate URL component dan juga
 	private String apiKey = BuildConfig.API_KEY;
 	private String discoverMovieUrlBase = BuildConfig.BASE_DISCOVER_MOVIE_URL;
 	private String languageUs = BuildConfig.LANGUAGE_US;
 	
+	// Empty constructor
 	public LoadMoviesDataAsync() {
-	}
-	
-	@Override
-	protected void onPreExecute() {
-		super.onPreExecute();
 	}
 	
 	@Override
 	protected ArrayList<MovieItem> doInBackground(Void... voids) {
 		
 		SyncHttpClient syncHttpClient = new SyncHttpClient();
+		// Set time out in milliseconds (set to 1 minute mark), yang berguna untuk
+		// mengaccomodate device ketika kualitas koneksi sedang buruk
+		syncHttpClient.setTimeout(60000);
+		syncHttpClient.setConnectTimeout(60000);
+		syncHttpClient.setResponseTimeout(60000);
 		
 		final ArrayList<MovieItem> movieItemArrayList = new ArrayList<>();
 		

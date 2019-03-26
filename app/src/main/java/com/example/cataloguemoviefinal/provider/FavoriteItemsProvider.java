@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.example.cataloguemoviefinal.database.FavoriteItemsHelper;
 import com.example.cataloguemoviefinal.observer.FavoriteMovieDataObserver;

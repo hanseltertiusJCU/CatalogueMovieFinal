@@ -3,10 +3,9 @@ package com.example.cataloguemoviefinal;
 
 import android.database.Cursor;
 
-import com.example.cataloguemoviefinal.entity.TvShowItem;
-
-import java.util.ArrayList;
-
+/**
+ * Interface ini berguna untuk Load Favorite TV Show dan dipanggil di asynctask pre execute dan post
+ */
 public interface LoadFavoriteTvShowCallback{
 	// Preexecute untuk prepare array list data
 	void favoriteTvShowPreExecute();

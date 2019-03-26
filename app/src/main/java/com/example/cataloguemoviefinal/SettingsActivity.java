@@ -1,20 +1,29 @@
 package com.example.cataloguemoviefinal;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 
 import com.example.cataloguemoviefinal.fragment.AlarmPreferenceFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * Class ini berguna untuk:
+ * - Menampilkan settings activity
+ * - Menampilkan alarm preference fragment
+ */
 public class SettingsActivity extends AppCompatActivity {
 	
+	// Bind toolbar to settings activity
 	@BindView(R.id.settings_toolbar)
 	Toolbar settingsToolbar;
-	
+
+	/**
+	 * Method ini trigger ketika activity created
+	 * @param savedInstanceState
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

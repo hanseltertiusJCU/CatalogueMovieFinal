@@ -4,12 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 
-
 import com.example.cataloguemoviefinal.LoadFavoriteTvShowCallback;
-import com.example.cataloguemoviefinal.entity.TvShowItem;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FAVORITE_CONTENT_URI;
 
