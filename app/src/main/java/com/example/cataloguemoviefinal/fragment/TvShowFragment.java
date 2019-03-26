@@ -111,7 +111,7 @@ public class TvShowFragment extends Fragment{
 		recyclerView.setAdapter(tvShowAdapter);
 		
 		// Set background color untuk RecyclerView
-		recyclerView.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+		recyclerView.setBackgroundColor(getResources().getColor(android.R.color.white));
 		
 		if(getContext() != null) {
 			// Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration

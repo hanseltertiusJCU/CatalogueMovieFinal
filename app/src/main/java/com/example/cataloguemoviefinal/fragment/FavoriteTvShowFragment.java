@@ -33,6 +33,7 @@ import com.example.cataloguemoviefinal.entity.TvShowItem;
 import com.example.cataloguemoviefinal.support.ItemClickSupport;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -92,13 +93,13 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 		recyclerView.setAdapter(tvShowAdapter);
 		
 		// Set background color untuk RecyclerView
-		recyclerView.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+		recyclerView.setBackgroundColor(getResources().getColor(android.R.color.white));
 		
 		// Cek jika context itu ada
 		if(getContext() != null) {
 			// Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration
 			DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-			itemDecorator.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.item_divider));
+			itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(getContext(), R.drawable.item_divider)));
 			// Set divider untuk RecyclerView items
 			recyclerView.addItemDecoration(itemDecorator);
 		}

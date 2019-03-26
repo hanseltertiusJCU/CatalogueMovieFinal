@@ -81,7 +81,7 @@ import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_RATINGS_COLUMN;
 
 public class DetailActivity extends AppCompatActivity {
-	// Setup views bedasarkan id yang ada di layout xml
+	// Setup views for informations in detailed movie/detailed tv show
 	@BindView(R.id.detailed_poster_image)
 	ImageView imageViewDetailedPosterImage;
 	@BindView(R.id.detailed_first_info_text)
@@ -844,7 +844,7 @@ public class DetailActivity extends AppCompatActivity {
 		Drawable menuDrawable = menu.findItem(R.id.action_marked_as_favorite).getIcon();
 		menuDrawable = DrawableCompat.wrap(menuDrawable);
 		// Set color of menu icon to white, because the default was black
-		DrawableCompat.setTint(menuDrawable, ContextCompat.getColor(this, R.color.colorWhite));
+		DrawableCompat.setTint(menuDrawable, ContextCompat.getColor(this, android.R.color.white));
 		menu.findItem(R.id.action_marked_as_favorite).setIcon(menuDrawable);
 		return true;
 	}

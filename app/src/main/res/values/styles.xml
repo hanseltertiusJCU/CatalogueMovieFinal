@@ -6,7 +6,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:fontFamily">@font/arimo_regular</item>
-        <item name="fontFamily">@font/arimo_regular</item> <!-- target android sdk versions < 26 and > 14 if theme other than AppCompat -->
+        <item name="fontFamily">@font/arimo_regular
+        </item> <!-- target android sdk versions < 26 and > 14 if theme other than AppCompat -->
     </style>
 
     <style name="ProgressBar">
@@ -30,20 +31,27 @@
     <style name="KeywordText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingLeft">@dimen/inner_view_margin</item>
     </style>
 
     <style name="TextTab">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="NoDataText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerInParent">true</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="WidgetItemTitleText">
+        <item name="android:layout_width">170dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:fontFamily">@font/arimo_regular</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
 
@@ -71,14 +79,14 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
 
+    <!-- App theme no action bar (untuk dapat menggunakan custom toolbar tanpa makan space extra)-->
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
     <!-- Style untuk toolbar -->
-    <style name="AppToolbar"
-        parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+    <style name="AppToolbar" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
         <item name="android:fontFamily">@font/arimo_regular</item>
@@ -86,5 +94,5 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 </resources>

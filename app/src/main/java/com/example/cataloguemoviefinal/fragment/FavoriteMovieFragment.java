@@ -94,7 +94,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		recyclerView.setAdapter(movieAdapter);
 		
 		// Set background color untuk RecyclerView
-		recyclerView.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+		recyclerView.setBackgroundColor(getResources().getColor(android.R.color.white));
 		
 		// Cek jika context itu ada
 		if(getContext() != null) {

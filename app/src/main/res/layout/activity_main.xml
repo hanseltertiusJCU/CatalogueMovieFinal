@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!-- Layout ini berguna untuk menampung activity main -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -20,20 +20,36 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <!-- ViewPager untuk menampung fragment yang berisi data recyclerview -->
     <android.support.v4.view.ViewPager
         android:id="@+id/item_viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/menu_tabs"
+    <!-- Buat app bar layout untuk menampung toolbar dan tablayout -->
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:layout_gravity="center"
-        android:background="@color/colorPrimary"
-        app:tabIndicatorColor="@color/colorWhite"
-        app:tabMode="scrollable" />
+        android:layout_height="wrap_content">
+
+        <!-- Toolbar sebagai container untuk TabLayout, height 0dp supaya ga makan extra space -->
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/menu_tabs"
+            android:layout_width="wrap_content"
+            android:layout_height="72dp"
+            android:layout_gravity="center"
+            android:background="@color/colorPrimary"
+            app:tabIndicatorColor="@android:color/white"
+            app:tabMode="scrollable" />
+
+    </android.support.design.widget.AppBarLayout>
 
 
 </LinearLayout>

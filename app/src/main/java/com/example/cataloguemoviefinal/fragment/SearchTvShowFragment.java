@@ -119,7 +119,7 @@ public class SearchTvShowFragment extends Fragment{
 		recyclerView.setAdapter(tvShowAdapter);
 		
 		// Set background color untuk RecyclerView
-		recyclerView.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+		recyclerView.setBackgroundColor(getResources().getColor(android.R.color.white));
 		
 		if(getContext() != null){
 			// Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration
@@ -225,7 +225,7 @@ public class SearchTvShowFragment extends Fragment{
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		
+		// Inflate menu search tv show
 		inflater.inflate(R.menu.menu_search, menu);
 		
 		if(getActivity() != null){

@@ -123,7 +123,7 @@ public class SearchMovieFragment extends Fragment{
 		recyclerView.setAdapter(movieAdapter);
 		
 		// Set background color untuk RecyclerView
-		recyclerView.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+		recyclerView.setBackgroundColor(getResources().getColor(android.R.color.white));
 		
 		if(getContext() != null){
 			// Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration
@@ -225,6 +225,7 @@ public class SearchMovieFragment extends Fragment{
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		// Inflate menu search movie
 		inflater.inflate(R.menu.menu_search, menu);
 		// Check if activity exists
 		if(getActivity() != null){

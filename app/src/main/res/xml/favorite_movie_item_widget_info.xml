@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!-- XML untuk widget container -->
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialKeyguardLayout="@layout/favorite_movie_item_widget"
     android:initialLayout="@layout/favorite_movie_item_widget"
@@ -6,4 +6,4 @@
     android:minHeight="110dp"
     android:previewImage="@drawable/favorite_movies_image_preview"
     android:updatePeriodMillis="0"
-    android:widgetCategory="home_screen"/>
+    android:widgetCategory="home_screen" />

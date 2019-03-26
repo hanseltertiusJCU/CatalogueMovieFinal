@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Binder;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -17,10 +16,7 @@ import com.example.cataloguemoviefinal.entity.MovieItem;
 import com.example.cataloguemoviefinal.util.ParcelableUtil;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
-import static com.example.cataloguemoviefinal.helper.FavoriteMovieMappingHelper.mapCursorToFavoriteMovieArrayList;
 
 public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 	
@@ -83,7 +79,7 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 
 			MovieItem movieItem = getSpecificMovieItem(position);
 
-			RemoteViews favoriteMovieItemRemoteViews = new RemoteViews(context.getPackageName(), R.layout.favorite_movie_widget_item);
+			RemoteViews favoriteMovieItemRemoteViews = new RemoteViews(context.getPackageName(), R.layout.movie_widget_items);
 			favoriteMovieItemRemoteViews.setTextViewText(R.id.movie_title_widget_item, movieItem.getMovieTitle()); // Set value title ke text view
 			try {
 				Bitmap favoriteMovieItemBitmap = Picasso.get().load(baseImageUrl + movieItem.getMoviePosterPath()).get(); // Get bitmap from Picasso 3rd Party app
@@ -109,7 +105,7 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 			return favoriteMovieItemRemoteViews;
 		} else {
 			// return remote views object yang menandakan bahwa datanya itu habis
-			return new RemoteViews(context.getPackageName(), R.layout.favorite_movie_widget_item);
+			return new RemoteViews(context.getPackageName(), R.layout.movie_widget_items);
 		}
 
 

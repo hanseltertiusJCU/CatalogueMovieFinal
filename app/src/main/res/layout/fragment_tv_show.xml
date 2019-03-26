@@ -14,6 +14,7 @@
         android:orientation="vertical"
         tools:context=".TvShowFragment">
 
+        <!-- LinearLayout untuk search keyword tv show tracker -->
         <LinearLayout
             android:id="@+id/tv_show_search_keyword_result"
             android:layout_width="match_parent"
@@ -27,17 +28,20 @@
                 style="@style/KeywordText"
                 android:layout_weight="1"
                 android:background="@color/colorPrimary"
+                android:paddingStart="@dimen/inner_view_margin"
+                android:paddingEnd="@dimen/inner_view_margin"
                 android:text="@string/keyword_title"
-                android:textColor="@color/colorWhite"
+                android:textColor="@android:color/white"
                 android:textSize="@dimen/item_section_title" />
 
             <TextView
                 android:id="@+id/tv_show_search_keyword_content"
                 style="@style/KeywordText"
                 android:layout_gravity="center"
+                android:layout_marginStart="@dimen/text_margin"
+                android:layout_marginEnd="@dimen/text_margin"
                 android:layout_weight="2"
-                android:paddingRight="@dimen/inner_view_margin"
-                android:textColor="@color/colorBlack" />
+                android:textColor="@android:color/black" />
 
         </LinearLayout>
 

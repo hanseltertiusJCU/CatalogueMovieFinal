@@ -7,8 +7,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Code ini berguna untuk uses permission untuk alarm -->
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- Declare permission for read and write database data -->
     <permission
@@ -20,9 +20,10 @@
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_catalogue_movie"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_catalogue_movie"
+        android:roundIcon="@mipmap/ic_catalogue_movie_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
@@ -41,8 +42,8 @@
         <!-- Menggunakan config changes orientation di main activity and settings activity agar tidak perlu load activity pas orientation changes -->
         <activity
             android:name=".MainActivity"
-            android:label="@string/catalogue_movie_final"
             android:configChanges="orientation"
+            android:label="@string/app_name"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,28 +54,29 @@
         <!-- Menggunakan config changes orientation di main activity and settings activity agar tidak perlu load activity pas orientation changes -->
         <activity
             android:name=".DetailActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/detail_activity"
             android:configChanges="orientation"
+            android:label="@string/app_name"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
 
-        <activity android:name=".SettingsActivity"
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/app_name"
             android:parentActivityName=".MainActivity"
-            android:label="@string/settings"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".MainActivity" />
         </activity>
 
         <!-- Content provider agar app/modul lain dapat di akses -->
         <provider
-            android:authorities="com.example.cataloguemoviefinal"
             android:name=".provider.FavoriteItemsProvider"
+            android:authorities="com.example.cataloguemoviefinal"
             android:exported="true"
             android:readPermission="com.example.cataloguemoviefinal.READ_DATABASE"
             android:writePermission="com.example.cataloguemoviefinal.WRITE_DATABASE" />
@@ -88,12 +90,12 @@
         <receiver
             android:name=".alarm.DailyReminderAlarmReceiver"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
         <receiver
             android:name=".alarm.ReleaseTodayReminderAlarmReceiver"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
     </application>
 

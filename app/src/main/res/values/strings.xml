@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CatalogueMovieFinal</string>
+    <string name="app_name">Catalogue Movie</string>
 
     <!-- Set values for search as well as hints -->
     <string name="search">Search</string>

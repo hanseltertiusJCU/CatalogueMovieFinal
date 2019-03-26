@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!-- Layout unutk menampung informasi di detail activity -->
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,8 +10,8 @@
     <ImageView
         android:id="@+id/detailed_poster_image"
         style="@style/PosterImage"
-        android:contentDescription="@string/poster_image_description"
         android:layout_margin="@dimen/inner_view_margin"
+        android:contentDescription="@string/poster_image_description"
         app:layout_constraintBottom_toBottomOf="@id/detailed_fifth_info_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/detailed_first_info_text"
@@ -74,7 +74,7 @@
         app:layout_constraintStart_toEndOf="@+id/detailed_poster_image"
         app:layout_constraintTop_toBottomOf="@+id/detailed_third_info_text"
         app:layout_constraintVertical_weight="1"
-        tools:text="@string/detailed_movie_status_text"/>
+        tools:text="@string/detailed_movie_status_text" />
 
     <TextView
         android:id="@+id/detailed_fifth_info_text"

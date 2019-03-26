@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?><!-- Make container for linear layout -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="88dp"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <!-- Make linear layout (content from container) that shows ripple effect when clicked -->
+
+    <LinearLayout
+        android:id="@+id/movie_widget_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/movie_image_widget_item"
+            style="@style/PosterImage"
+            android:contentDescription="@string/poster_image_description"
+            android:src="@drawable/no_image_available" />
+
+        <TextView
+            android:id="@+id/movie_title_widget_item"
+            style="@style/WidgetItemTitleText"
+            tools:text="Movie" />
+
+    </LinearLayout>
+
+</LinearLayout>

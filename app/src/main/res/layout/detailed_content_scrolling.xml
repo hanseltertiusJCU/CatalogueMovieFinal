@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!-- Create nested scrollview karena kita sudah menggunakan CollapsingToolbarLayout -->
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,7 +7,7 @@
     tools:context=".DetailActivity"
     tools:showIn="@layout/activity_detail">
 
-    <include
-        layout="@layout/detailed_content_info" />
+    <!-- Include detailed content info yang berisi information dari detail activity -->
+    <include layout="@layout/detailed_content_info" />
 
 </android.support.v4.widget.NestedScrollView>
