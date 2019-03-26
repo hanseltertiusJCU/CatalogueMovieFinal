@@ -148,38 +148,38 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 					case 0:
 						movieDrawables = tabMovie.getCompoundDrawables();
 						movieDrawable = movieDrawables[1];
-						movieDrawable.setTint(getResources().getColor(R.color.colorAccent));
-						tabMovie.setTextColor(getResources().getColor(R.color.colorAccent));
+						movieDrawable.setTint(getResources().getColor(android.R.color.white));
+						tabMovie.setTextColor(getResources().getColor(android.R.color.white));
 						break;
 					case 1:
 						tvShowDrawables = tabTvShow.getCompoundDrawables();
 						tvShowDrawable = tvShowDrawables[1];
-						tvShowDrawable.setTint(getResources().getColor(R.color.colorAccent));
-						tabTvShow.setTextColor(getResources().getColor(R.color.colorAccent));
+						tvShowDrawable.setTint(getResources().getColor(android.R.color.white));
+						tabTvShow.setTextColor(getResources().getColor(android.R.color.white));
 						break;
 					case 2:
 						favoriteMovieDrawables = tabFavoriteMovie.getCompoundDrawables();
 						favoriteMovieDrawable = favoriteMovieDrawables[1];
-						favoriteMovieDrawable.setTint(getResources().getColor(R.color.colorAccent));
-						tabFavoriteMovie.setTextColor(getResources().getColor(R.color.colorAccent));
+						favoriteMovieDrawable.setTint(getResources().getColor(android.R.color.white));
+						tabFavoriteMovie.setTextColor(getResources().getColor(android.R.color.white));
 						break;
 					case 3:
 						favoriteTvShowDrawables = tabFavoriteTvShow.getCompoundDrawables();
 						favoriteTvShowDrawable = favoriteTvShowDrawables[1];
-						favoriteTvShowDrawable.setTint(getResources().getColor(R.color.colorAccent));
-						tabFavoriteTvShow.setTextColor(getResources().getColor(R.color.colorAccent));
+						favoriteTvShowDrawable.setTint(getResources().getColor(android.R.color.white));
+						tabFavoriteTvShow.setTextColor(getResources().getColor(android.R.color.white));
 						break;
 					case 4:
 						searchMovieDrawables = tabSearchMovie.getCompoundDrawables();
 						searchMovieDrawable = searchMovieDrawables[1];
-						searchMovieDrawable.setTint(getResources().getColor(R.color.colorAccent));
-						tabSearchMovie.setTextColor(getResources().getColor(R.color.colorAccent));
+						searchMovieDrawable.setTint(getResources().getColor(android.R.color.white));
+						tabSearchMovie.setTextColor(getResources().getColor(android.R.color.white));
 						break;
 					case 5:
 						searchTvShowDrawables = tabSearchTvShow.getCompoundDrawables();
 						searchTvShowDrawable = searchTvShowDrawables[1];
-						searchTvShowDrawable.setTint(getResources().getColor(R.color.colorAccent));
-						tabSearchTvShow.setTextColor(getResources().getColor(R.color.colorAccent));
+						searchTvShowDrawable.setTint(getResources().getColor(android.R.color.white));
+						tabSearchTvShow.setTextColor(getResources().getColor(android.R.color.white));
 						break;
 					default:
 						break;
@@ -196,37 +196,37 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 					case 0:
 						movieDrawables = tabMovie.getCompoundDrawables();
 						movieDrawable = movieDrawables[1];
-						movieDrawable.setTint(getResources().getColor(R.color.colorBlack));
-						tabMovie.setTextColor(getResources().getColor(R.color.colorBlack));
+						movieDrawable.setTint(getResources().getColor(R.color.colorAccentLight));
+						tabMovie.setTextColor(getResources().getColor(R.color.colorAccentLight));
 						break;
 					case 1:
 						tvShowDrawables = tabTvShow.getCompoundDrawables();
 						tvShowDrawable = tvShowDrawables[1];
-						tvShowDrawable.setTint(getResources().getColor(R.color.colorBlack));
-						tabTvShow.setTextColor(getResources().getColor(R.color.colorBlack));
+						tvShowDrawable.setTint(getResources().getColor(R.color.colorAccentLight));
+						tabTvShow.setTextColor(getResources().getColor(R.color.colorAccentLight));
 						break;
 					case 2:
 						favoriteMovieDrawables = tabFavoriteMovie.getCompoundDrawables();
 						favoriteMovieDrawable = favoriteMovieDrawables[1];
-						favoriteMovieDrawable.setTint(getResources().getColor(R.color.colorBlack));
-						tabFavoriteMovie.setTextColor(getResources().getColor(R.color.colorBlack));
+						favoriteMovieDrawable.setTint(getResources().getColor(R.color.colorAccentLight));
+						tabFavoriteMovie.setTextColor(getResources().getColor(R.color.colorAccentLight));
 					case 3:
 						favoriteTvShowDrawables = tabFavoriteTvShow.getCompoundDrawables();
 						favoriteTvShowDrawable = favoriteTvShowDrawables[1];
-						favoriteTvShowDrawable.setTint(getResources().getColor(R.color.colorBlack));
-						tabFavoriteTvShow.setTextColor(getResources().getColor(R.color.colorBlack));
+						favoriteTvShowDrawable.setTint(getResources().getColor(R.color.colorAccentLight));
+						tabFavoriteTvShow.setTextColor(getResources().getColor(R.color.colorAccentLight));
 						break;
 					case 4:
 						searchMovieDrawables = tabSearchMovie.getCompoundDrawables();
 						searchMovieDrawable = searchMovieDrawables[1];
-						searchMovieDrawable.setTint(getResources().getColor(R.color.colorBlack));
-						tabSearchMovie.setTextColor(getResources().getColor(R.color.colorBlack));
+						searchMovieDrawable.setTint(getResources().getColor(R.color.colorAccentLight));
+						tabSearchMovie.setTextColor(getResources().getColor(R.color.colorAccentLight));
 						break;
 					case 5:
 						searchTvShowDrawables = tabSearchTvShow.getCompoundDrawables();
 						searchTvShowDrawable = searchTvShowDrawables[1];
-						searchTvShowDrawable.setTint(getResources().getColor(R.color.colorBlack));
-						tabSearchTvShow.setTextColor(getResources().getColor(R.color.colorBlack));
+						searchTvShowDrawable.setTint(getResources().getColor(R.color.colorAccentLight));
+						tabSearchTvShow.setTextColor(getResources().getColor(R.color.colorAccentLight));
 						break;
 					default:
 						break;
@@ -255,9 +255,9 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		// dari Drawable[]
 		movieDrawable = movieDrawables[1];
 		// Set default tint untuk drawable yang menandakan bahwa tabnya itu sedang d select
-		movieDrawable.setTint(getResources().getColor(R.color.colorAccent));
+		movieDrawable.setTint(getResources().getColor(android.R.color.white));
 		// Set default text color yang menandakan bahwa tabnya itu sedang d select
-		tabMovie.setTextColor(getResources().getColor(R.color.colorAccent));
+		tabMovie.setTextColor(getResources().getColor(android.R.color.white));
 		
 		// Inflate custom_tab.xml ke dalam TabLayout
 		Objects.requireNonNull(tabLayout.getTabAt(0)).setCustomView(tabMovie);
@@ -265,26 +265,51 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 		tabTvShow = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
 		tabTvShow.setText(getString(R.string.tv_show));
 		tabTvShow.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_tv_show, 0, 0);
+		// Dapatkan getCompoundDrawable dari setCompoundDrawablesWithIntrinsicBounds
+		tvShowDrawables = tabTvShow.getCompoundDrawables();
+		// Akses drawableTop, which is in this case kita mengakses element ke 2 (index value: 1)
+		// dari Drawable[]
+		tvShowDrawable = tvShowDrawables[1];
+		// Set default tint untuk drawable ketika viewnya itu di buat
+		tvShowDrawable.setTint(getResources().getColor(R.color.colorAccentLight));
+		// Set default text color untuk text view ketika viewnya itu dibuat
+		tabTvShow.setTextColor(getResources().getColor(R.color.colorAccentLight));
 		Objects.requireNonNull(tabLayout.getTabAt(1)).setCustomView(tabTvShow);
 		
 		tabFavoriteMovie = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
 		tabFavoriteMovie.setText(getString(R.string.favorite_movie));
 		tabFavoriteMovie.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_movie_favorite, 0, 0);
+		favoriteMovieDrawables = tabFavoriteMovie.getCompoundDrawables();
+		favoriteMovieDrawable = favoriteMovieDrawables[1];
+		favoriteMovieDrawable.setTint(getResources().getColor(R.color.colorAccentLight));
+		tabFavoriteMovie.setTextColor(getResources().getColor(R.color.colorAccentLight));
 		Objects.requireNonNull(tabLayout.getTabAt(2)).setCustomView(tabFavoriteMovie);
 		
 		tabFavoriteTvShow = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
 		tabFavoriteTvShow.setText(getString(R.string.favorite_tv_show));
 		tabFavoriteTvShow.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_tv_show_favorite, 0, 0);
+		favoriteTvShowDrawables = tabFavoriteTvShow.getCompoundDrawables();
+		favoriteTvShowDrawable = favoriteTvShowDrawables[1];
+		favoriteTvShowDrawable.setTint(getResources().getColor(R.color.colorAccentLight));
+		tabFavoriteTvShow.setTextColor(getResources().getColor(R.color.colorAccentLight));
 		Objects.requireNonNull(tabLayout.getTabAt(3)).setCustomView(tabFavoriteTvShow);
 		
 		tabSearchMovie = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
 		tabSearchMovie.setText(getString(R.string.search_movie));
 		tabSearchMovie.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_search_movie, 0,0);
+		searchMovieDrawables = tabSearchMovie.getCompoundDrawables();
+		searchMovieDrawable = searchMovieDrawables[1];
+		searchMovieDrawable.setTint(getResources().getColor(R.color.colorAccentLight));
+		tabSearchMovie.setTextColor(getResources().getColor(R.color.colorAccentLight));
 		Objects.requireNonNull(tabLayout.getTabAt(4)).setCustomView(tabSearchMovie);
 		
 		tabSearchTvShow = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
 		tabSearchTvShow.setText(getString(R.string.search_tv_show));
 		tabSearchTvShow.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_search_tv_show, 0, 0);
+		searchTvShowDrawables = tabSearchTvShow.getCompoundDrawables();
+		searchTvShowDrawable = searchTvShowDrawables[1];
+		searchTvShowDrawable.setTint(getResources().getColor(R.color.colorAccentLight));
+		tabSearchTvShow.setTextColor(getResources().getColor(R.color.colorAccentLight));
 		Objects.requireNonNull(tabLayout.getTabAt(5)).setCustomView(tabSearchTvShow);
 	}
 	

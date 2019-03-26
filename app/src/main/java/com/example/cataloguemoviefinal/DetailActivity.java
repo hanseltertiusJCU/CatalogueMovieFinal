@@ -21,6 +21,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -180,15 +181,23 @@ public class DetailActivity extends AppCompatActivity {
     // Initiate snackbar
 	Snackbar snackbarMessage;
 
-	@SuppressLint("ResourceType")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail);
 
+		// Bind View
 		ButterKnife.bind(this);
 
+		// Set action bar bedasarkan toolbar
 		setSupportActionBar(detailedToolbar);
+
+		// Buat typeface untuk sebagai font untuk CollapsingToolbarLayout
+		Typeface typeface = ResourcesCompat.getFont(this, R.font.arimo_regular);
+
+		// Set expanded and collapsed mode font in CollapsingToolbarLayout
+		detailedToolbarLayout.setExpandedTitleTypeface(typeface);
+		detailedToolbarLayout.setCollapsedTitleTypeface(typeface);
 
 		accessItemMode = getIntent().getStringExtra(BuildConfig.MODE_INTENT);
 
