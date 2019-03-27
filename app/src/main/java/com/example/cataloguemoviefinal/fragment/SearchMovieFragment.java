@@ -48,6 +48,7 @@ import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_BOOLEAN_STATE_DA
 import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_ID_DATA;
 import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_LIST_STATE;
 import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_TITLE_DATA;
+import static com.example.cataloguemoviefinal.BuildConfig.OPEN_FROM_WIDGET;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
 
 /**
@@ -315,6 +316,8 @@ public class SearchMovieFragment extends Fragment{
 		}
 		// Tentukan bahwa kita ingin membuka data Movie
 		String modeItem = "open_movie_detail";
+		// Boolean variable untuk mengetahui apakah kita membuka data dari widget
+		boolean openFromWidget = false;
 		// Create intent object agar ke DetailActivity yg merupakan activity tujuan
 		Intent intentWithMovieIdData = new Intent(getContext(), DetailActivity.class);
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
@@ -322,6 +325,7 @@ public class SearchMovieFragment extends Fragment{
 		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA, movieTitleItem);
 		intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA, movieBooleanStateItem);
 		intentWithMovieIdData.putExtra(MODE_INTENT, modeItem);
+		intentWithMovieIdData.putExtra(OPEN_FROM_WIDGET, openFromWidget);
 		// Bawa Uri ke Intent
 		intentWithMovieIdData.setData(movieUriItem);
 		// Start activity ke DetailActivity

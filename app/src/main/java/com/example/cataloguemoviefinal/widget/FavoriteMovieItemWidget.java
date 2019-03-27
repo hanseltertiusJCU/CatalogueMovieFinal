@@ -109,6 +109,8 @@ public class FavoriteMovieItemWidget extends AppWidgetProvider{
 				int favoriteMovieBooleanStateItem = selectedFavoriteMovieItem.getFavoriteBooleanState();
 				// Tentukan bahwa kita ingin membuka data Movie
 				String modeItem = "open_movie_detail";
+				// Variable ini mengetahui bahwa kita akan open data {@link DetailActivity} dari widget
+				boolean openFromWidget = true;
 				// Create URI untuk bawa URI ke data di intent dengan row id value
 				// content://com.example.cataloguemoviefinal/favorite_movies/id
 				Uri favoriteMovieUriItem = Uri.parse(MOVIE_FAVORITE_CONTENT_URI + "/" + favoriteMovieIdItem);
@@ -119,6 +121,7 @@ public class FavoriteMovieItemWidget extends AppWidgetProvider{
 				intentWithFavoriteMovieIdData.putExtra(BuildConfig.MOVIE_TITLE_DATA, favoriteMovieTitleItem);
 				intentWithFavoriteMovieIdData.putExtra(BuildConfig.MOVIE_BOOLEAN_STATE_DATA, favoriteMovieBooleanStateItem);
 				intentWithFavoriteMovieIdData.putExtra(BuildConfig.MODE_INTENT, modeItem);
+				intentWithFavoriteMovieIdData.putExtra(BuildConfig.OPEN_FROM_WIDGET, openFromWidget);
 				// Bawa URI untuk disampaikan ke {@link DetailActivity}
 				intentWithFavoriteMovieIdData.setData(favoriteMovieUriItem);
 				// Start activity ke {@link DetailActivity}

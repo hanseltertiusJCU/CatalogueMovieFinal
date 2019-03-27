@@ -3,6 +3,7 @@ package com.example.cataloguemoviefinal;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -181,6 +182,9 @@ public class DetailActivity extends AppCompatActivity {
 	// Uri value untuk membaca data (jika data ada di favorite) ataupun insert data
 	private Uri uri;
 
+	// Boolean untuk mengetahui apakah kita membuka activity ini melalui Widget
+	private boolean openDataFromWidget;
+
 	// Viewmodel dan Observer untuk detailed movie
     DetailedMovieViewModel detailedMovieViewModel;
     Observer<ArrayList<MovieItem>> detailedMovieObserver;
@@ -215,6 +219,7 @@ public class DetailActivity extends AppCompatActivity {
 		detailedToolbarLayout.setCollapsedTitleTypeface(typeface);
 
 		accessItemMode = getIntent().getStringExtra(BuildConfig.MODE_INTENT);
+		openDataFromWidget = getIntent().getBooleanExtra(BuildConfig.OPEN_FROM_WIDGET, false);
 
 		// Cek untuk mode yg tepat
 		if(accessItemMode.equals("open_movie_detail")) {
@@ -837,16 +842,30 @@ public class DetailActivity extends AppCompatActivity {
      * Method ini berguna untuk menyiapkan option menu,
      * specifically untuk mengetahui bahwa itemnya itu di click dan di triggered melalui
      * invalidateOptionMenu() method
-     * @param menu
+     * @param menu Menu object
      * @return menu option prepared
      */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if(menuClickable) {
-			menu.findItem(R.id.action_marked_as_favorite).setEnabled(true);
+		// Create menu item object dengan id action_marked_as_favorite
+		MenuItem menuItem = menu.findItem(R.id.action_marked_as_favorite);
+		// Check jika MovieItem ataupun TvShowItem object itu exists
+		if(detailedMovieItem != null || detailedTvShowItem != null){
+			menuItem.setVisible(true); // Set menu item into visible
 		} else {
-			menu.findItem(R.id.action_marked_as_favorite).setEnabled(false);
+			menuItem.setVisible(false); // Set menu item into invisible
 		}
+
+		// Cek jika menu item itu visible, alias ada
+		if(menuItem.isVisible()){
+			// Cek jika menu item itu clickable alias value tsb adalah true
+			if(menuClickable) {
+				menuItem.setEnabled(true); // Make menu item clickable
+			} else {
+				menuItem.setEnabled(false); // Make menu item unclickable
+			}
+		}
+
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -960,7 +979,9 @@ public class DetailActivity extends AppCompatActivity {
 						// Update option menu
 						invalidateOptionsMenu();
 					}
+
 				} else if(accessItemMode.equals("open_tv_show_detail")) { // Cek jika mode yg dibuka itu berada di TV Show
+					// Cek jika boolean value masih di dalam state unmarked as favorite
 					if(detailedTvShowFavoriteStateValue != 1) {
 						// Change icon into marked as favourite
 						drawableMenuMarkedAsFavouriteResourceId = R.drawable.ic_favourite_on;
@@ -1023,8 +1044,20 @@ public class DetailActivity extends AppCompatActivity {
 				}
 				break;
 			case android.R.id.home:
-				NavUtils.navigateUpFromSameTask(this);
-				break;
+				// Cek bahwa kita membuka data dari Widget
+				if(openDataFromWidget){
+					// Buka MainActivity class ketika kita membuka data dari widget, agar bisa memiliki
+					// feeling yang lebih konsisten karena MainActivity itu bertugas untuk
+					// mengupdate isi widget juga + memiliki kesan balik ke Parent Activity
+					Intent intent = new Intent(this, MainActivity.class);
+					startActivity(intent);
+					break;
+				} else {
+					// Finish the activity, memanggil kembali Parent Activity
+					NavUtils.navigateUpFromSameTask(this);
+					return true;
+				}
+
 			default:
 				break;
 		}
@@ -1034,7 +1067,18 @@ public class DetailActivity extends AppCompatActivity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		finish();
+		// Cek bahwa kita membuka data dari Widget
+		if(openDataFromWidget){
+			// Buka {@link MainActivity} class ketika kita membuka data dari widget,
+			// agar bisa memiliki feeling yang lebih konsisten karena MainActivity
+			// itu bertugas untuk mengupdate isi widget juga + memiliki kesan MainActivity merupakan
+			// bagian dari back stack
+			Intent intent = new Intent(this, MainActivity.class);
+			startActivity(intent);
+		} else {
+			// Finish the activity, memanggil kembali Parent Activity
+			finish();
+		}
 	}
 
 	/**
@@ -1060,8 +1104,6 @@ public class DetailActivity extends AppCompatActivity {
 		}
 		super.onSaveInstanceState(outState);
 	}
-
-	// Method tsb berguna untuk mendapatkan waktu dimana sebuah item di tambahkan
 
 	/**
 	 * Method tsb berguna untuk mendapatkan waktu dimana sebuah item di tambahkan

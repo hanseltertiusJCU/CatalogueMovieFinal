@@ -63,15 +63,19 @@ public class FavoriteItemsProvider extends ContentProvider {
 		switch(sFavoriteItemUriMatcher.match(uri)){
 			case FAVORITE_MOVIE_ITEM:
 				cursor = favoriteItemsHelper.queryFavoriteMovieProvider();
+				cursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri); // Set notification URI agar force load data ketika ada perubahan
 				break;
 			case FAVORITE_MOVIE_ITEM_ID:
 				cursor = favoriteItemsHelper.queryFavoriteMovieProviderById(uri.getLastPathSegment()); // String value parameter merepresentasikan last path dari URI
+				cursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri); // Set notification URI agar force load data ketika ada perubahan
 				break;
 			case FAVORITE_TV_SHOW_ITEM:
 				cursor = favoriteItemsHelper.queryFavoriteTvShowProvider();
+				cursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri); // Set notification URI agar force load data ketika ada perubahan
 				break;
 			case FAVORITE_TV_SHOW_ITEM_ID:
 				cursor = favoriteItemsHelper.queryFavoriteTvShowProviderById(uri.getLastPathSegment()); // String value parameter merepresentasikan last path dari URI
+				cursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri); // Set notification URI agar force load data ketika ada perubahan
 				break;
 			default:
 				cursor = null;

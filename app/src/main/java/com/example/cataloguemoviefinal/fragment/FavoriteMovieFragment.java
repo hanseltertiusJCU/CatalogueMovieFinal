@@ -42,6 +42,7 @@ import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_BOOLEAN_STATE_DA
 import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_ID_DATA;
 import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_LIST_STATE;
 import static com.example.cataloguemoviefinal.BuildConfig.MOVIE_TITLE_DATA;
+import static com.example.cataloguemoviefinal.BuildConfig.OPEN_FROM_WIDGET;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
 
 /**
@@ -208,6 +209,8 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		int movieBooleanStateItem = movieItem.getFavoriteBooleanState();
 		// Tentukan bahwa kita ingin membuka data Movie
 		String modeItem = "open_movie_detail";
+		// Boolean variable untuk mengetahui apakah kita membuka data dari widget
+		boolean openFromWidget = false;
 		// Create URI untuk bawa URI ke data di intent dengan row id value
 		// content://com.example.cataloguemoviefinal/favorite_movies/id
 		Uri movieUriItem = Uri.parse(MOVIE_FAVORITE_CONTENT_URI + "/" + movieIdItem);
@@ -218,6 +221,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA, movieTitleItem);
 		intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA, movieBooleanStateItem);
 		intentWithMovieIdData.putExtra(MODE_INTENT, modeItem);
+		intentWithMovieIdData.putExtra(OPEN_FROM_WIDGET, openFromWidget);
 		intentWithMovieIdData.setData(movieUriItem);
 		// Start activity ke detail activity
 		startActivity(intentWithMovieIdData);

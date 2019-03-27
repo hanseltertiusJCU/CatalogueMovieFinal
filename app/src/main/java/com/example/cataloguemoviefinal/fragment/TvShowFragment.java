@@ -40,6 +40,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.example.cataloguemoviefinal.BuildConfig.MODE_INTENT;
+import static com.example.cataloguemoviefinal.BuildConfig.OPEN_FROM_WIDGET;
 import static com.example.cataloguemoviefinal.BuildConfig.TV_SHOW_BOOLEAN_STATE_DATA;
 import static com.example.cataloguemoviefinal.BuildConfig.TV_SHOW_ID_DATA;
 import static com.example.cataloguemoviefinal.BuildConfig.TV_SHOW_LIST_STATE;
@@ -220,6 +221,8 @@ public class TvShowFragment extends Fragment{
 		}
 		// Tentukan bahwa kita ingin membuka data TV Show
 		String modeItem = "open_tv_show_detail";
+		// Boolean variable untuk mengetahui apakah kita membuka data dari widget
+		boolean openFromWidget = false;
 		// Create intent object agar ke DetailActivity yg merupakan activity tujuan
 		Intent intentWithTvShowIdData = new Intent(getActivity(), DetailActivity.class);
 		// Bawa data untuk disampaikan ke {@link DetailActivity}
@@ -227,6 +230,7 @@ public class TvShowFragment extends Fragment{
 		intentWithTvShowIdData.putExtra(TV_SHOW_NAME_DATA, tvShowNameItem);
 		intentWithTvShowIdData.putExtra(TV_SHOW_BOOLEAN_STATE_DATA, tvShowBooleanStateItem);
 		intentWithTvShowIdData.putExtra(MODE_INTENT, modeItem);
+		intentWithTvShowIdData.putExtra(OPEN_FROM_WIDGET, openFromWidget);
 		// Set Uri ke Intent
 		intentWithTvShowIdData.setData(tvShowUriItem);
 		// Start activity ke DetailActivity

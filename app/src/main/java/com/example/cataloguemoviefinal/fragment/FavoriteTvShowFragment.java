@@ -38,6 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.example.cataloguemoviefinal.BuildConfig.MODE_INTENT;
+import static com.example.cataloguemoviefinal.BuildConfig.OPEN_FROM_WIDGET;
 import static com.example.cataloguemoviefinal.BuildConfig.TV_SHOW_BOOLEAN_STATE_DATA;
 import static com.example.cataloguemoviefinal.BuildConfig.TV_SHOW_ID_DATA;
 import static com.example.cataloguemoviefinal.BuildConfig.TV_SHOW_LIST_STATE;
@@ -285,6 +286,8 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 		int tvBooleanStateItem = tvShowItem.getFavoriteBooleanState();
 		// Tentukan bahwa kita ingin membuka data TV Show
 		String modeItem = "open_tv_show_detail";
+		// Boolean variable untuk mengetahui apakah kita membuka data dari widget
+		boolean openFromWidget = false;
 		// Create URI untuk bawa URI ke data di intent dengan row id value
 		// content://com.example.cataloguemoviefinal/favorite_tv_shows/id
 		Uri tvShowUriItem = Uri.parse(TV_SHOW_FAVORITE_CONTENT_URI + "/" + tvShowIdItem);
@@ -295,6 +298,7 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 		intentWithTvShowIdData.putExtra(TV_SHOW_NAME_DATA, tvShowNameItem);
 		intentWithTvShowIdData.putExtra(TV_SHOW_BOOLEAN_STATE_DATA, tvBooleanStateItem);
 		intentWithTvShowIdData.putExtra(MODE_INTENT, modeItem);
+		intentWithTvShowIdData.putExtra(OPEN_FROM_WIDGET, openFromWidget);
 		// Bawa Uri ke Intent
 		intentWithTvShowIdData.setData(tvShowUriItem);
 		// Start activity ke activity tujuan
