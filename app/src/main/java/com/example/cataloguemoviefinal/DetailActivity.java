@@ -1,7 +1,9 @@
 package com.example.cataloguemoviefinal;
 
+import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -42,6 +44,7 @@ import com.example.cataloguemoviefinal.factory.DetailedMovieViewModelFactory;
 import com.example.cataloguemoviefinal.factory.DetailedTvShowViewModelFactory;
 import com.example.cataloguemoviefinal.model.DetailedMovieViewModel;
 import com.example.cataloguemoviefinal.model.DetailedTvShowViewModel;
+import com.example.cataloguemoviefinal.widget.FavoriteMovieItemWidget;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -952,6 +955,16 @@ public class DetailActivity extends AppCompatActivity {
 							// Buat sebuah snackbar yang menandakan bahwa movie item inserted ke database
 							snackbarMessage = Snackbar.make(detailedCoordinatorLayout, getString(R.string.insert_movie_favorite_snackbar), Snackbar.LENGTH_SHORT);
 							snackbarMessage.show();
+							// Buat kondisi ketika data di buka dari widget
+							if(openDataFromWidget){
+								// Panggil AppWidgetManager class dengan memanggil application
+								// context (1 applikasi yaitu CatalogueMovieFinal)
+								AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+								// Get App widget ids dari FavoriteMovieItemWidget class
+								int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(getApplicationContext(), FavoriteMovieItemWidget.class));
+								// Notify R.id.favorite_movie_stack_view {@link StackView di favorite_movie_item_widget.xml} agar dpt memanggil onDataSetChanged method
+								appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.favorite_movie_stack_view);
+							}
 						}
 
 						// Update option menu
@@ -973,6 +986,16 @@ public class DetailActivity extends AppCompatActivity {
 								// Buat sebuah snackbar yang menandakan bahwa movie item removed dari database
 								snackbarMessage = Snackbar.make(detailedCoordinatorLayout, getString(R.string.remove_movie_favorite_snackbar), Snackbar.LENGTH_SHORT);
 								snackbarMessage.show();
+								// Buat kondisi ketika data di buka dari widget
+								if(openDataFromWidget){
+									// Panggil AppWidgetManager class dengan memanggil application
+									// context (1 applikasi yaitu CatalogueMovieFinal)
+									AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+									// Get App widget ids dari FavoriteMovieItemWidget class
+									int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(getApplicationContext(), FavoriteMovieItemWidget.class));
+									// Notify R.id.favorite_movie_stack_view {@link StackView di favorite_movie_item_widget.xml} agar dpt memanggil onDataSetChanged method
+									appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.favorite_movie_stack_view);
+								}
 							}
 						}
 
