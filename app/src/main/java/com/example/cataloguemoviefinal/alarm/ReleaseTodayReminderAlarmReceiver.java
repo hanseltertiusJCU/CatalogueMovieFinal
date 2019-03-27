@@ -81,7 +81,14 @@ public class ReleaseTodayReminderAlarmReceiver extends BroadcastReceiver {
 
         // Cek jika alarm manager object exist
         if (releaseTodayAlarmReminder != null) {
-            releaseTodayAlarmReminder.setRepeating(AlarmManager.RTC_WAKEUP, releaseTodayReminderClock.getTimeInMillis(), AlarmManager.INTERVAL_DAY, releaseTodayPendingIntent); // Set alarm dengan interval per hari dan set alarm persis sesuai dengan waktu yang ada
+            // Line ini berguna untuk set alarm sesuai dengan versi device Android
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                releaseTodayAlarmReminder.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, releaseTodayReminderClock.getTimeInMillis(), releaseTodayPendingIntent);
+            } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                releaseTodayAlarmReminder.setRepeating(AlarmManager.RTC_WAKEUP, releaseTodayReminderClock.getTimeInMillis(), AlarmManager.INTERVAL_DAY, releaseTodayPendingIntent);
+            } else {
+                releaseTodayAlarmReminder.set(AlarmManager.RTC_WAKEUP, releaseTodayReminderClock.getTimeInMillis(), releaseTodayPendingIntent);
+            }
         }
     }
 
@@ -113,8 +120,8 @@ public class ReleaseTodayReminderAlarmReceiver extends BroadcastReceiver {
                 .setContentTitle(title) // Set content title yg wajib untuk ada
                 .setContentText(title + " " + context.getString(R.string.release_today_reminder_notif_text_placeholder)) // Set content text yg wajib untuk ada
                 .setColor(ContextCompat.getColor(context, android.R.color.transparent))
-                .setLights(Color.CYAN, 1000, 1000)
-                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                .setLights(Color.CYAN, 1000, 1000) // Set light color as well as time taken to turn on light and turn off light
+                .setVibrate(new long[]{500, 500, 500, 500, 500}) // Set vibration pattern untuk notification
                 .setSound(releaseTodayAlarmSound);
 
         // Code ini hanya berguna untuk Android OS Oreo+
@@ -126,7 +133,7 @@ public class ReleaseTodayReminderAlarmReceiver extends BroadcastReceiver {
             releaseTodayNotificationChannel.enableLights(true);
             releaseTodayNotificationChannel.setLightColor(Color.CYAN);
             releaseTodayNotificationChannel.enableVibration(true);
-            releaseTodayNotificationChannel.setVibrationPattern(new long[]{1000, 1000, 1000, 1000, 1000});
+            releaseTodayNotificationChannel.setVibrationPattern(new long[]{500, 500, 500, 500, 500});
 
             releaseTodayReminderNotificationBuilder.setChannelId(CHANNEL_ID);
 

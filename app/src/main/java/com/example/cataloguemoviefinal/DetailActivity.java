@@ -5,7 +5,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ComponentName;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -20,7 +19,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -94,6 +92,8 @@ import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.
  * *){@link TvShowItem}
  * Hal tersebut berlaku hanya ketika connected ke internet
  * - Memasukkan data {@link MovieItem} atau {@link TvShowItem} ke ContentProvider
+ * - Mengetahui bahwa datanya itu dibuka dari {@link FavoriteMovieItemWidget} ataupun
+ * {@link android.support.v4.app.Fragment} yang ada di {@link MainActivity}
  */
 public class DetailActivity extends AppCompatActivity {
 	// Setup views for informations in detailed movie/detailed tv show
@@ -1066,42 +1066,10 @@ public class DetailActivity extends AppCompatActivity {
 					}
 				}
 				break;
-			case android.R.id.home:
-				// Cek bahwa kita membuka data dari Widget
-				if(openDataFromWidget){
-					// Buka MainActivity class ketika kita membuka data dari widget, agar bisa memiliki
-					// feeling yang lebih konsisten karena MainActivity itu bertugas untuk
-					// mengupdate isi widget juga + memiliki kesan balik ke Parent Activity
-					Intent intent = new Intent(this, MainActivity.class);
-					startActivity(intent);
-					break;
-				} else {
-					// Finish the activity, memanggil kembali Parent Activity
-					NavUtils.navigateUpFromSameTask(this);
-					return true;
-				}
-
 			default:
 				break;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		// Cek bahwa kita membuka data dari Widget
-		if(openDataFromWidget){
-			// Buka {@link MainActivity} class ketika kita membuka data dari widget,
-			// agar bisa memiliki feeling yang lebih konsisten karena MainActivity
-			// itu bertugas untuk mengupdate isi widget juga + memiliki kesan MainActivity merupakan
-			// bagian dari back stack
-			Intent intent = new Intent(this, MainActivity.class);
-			startActivity(intent);
-		} else {
-			// Finish the activity, memanggil kembali Parent Activity
-			finish();
-		}
 	}
 
 	/**

@@ -50,7 +50,21 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
 
         // Cek jika alarm manager exist
         if (dailyReminderAlarmManager != null) {
-            dailyReminderAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, dailyReminderCalendarClock.getTimeInMillis(), AlarmManager.INTERVAL_DAY, dailyReminderPendingIntent); // Set alarm dengan interval per hari dan set alarm persis sesuai dengan waktu yang ada
+            // Line ini berguna untuk set alarm sesuai dengan versi device Android
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){ // Cek jika varsion codes dari device lebih dari/ sama dengan SDK 23
+                // Alarm tersebut di triggered pas device sedang dalam kondisi idle
+                // dan tetap melakukan nya pada saat batre low
+                dailyReminderAlarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, dailyReminderCalendarClock.getTimeInMillis(), dailyReminderPendingIntent);
+            } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){ // Cek jika version codes dari device lebih dari/ sama dengan SDK 19 namun kurang dari SDK 23
+                // Set alarm dengan interval per hari dan alarm tsb walaupun
+                // tidak precise namun battery efficient, cara kerjanya adalah
+                // pertama kali alarm diaktifkan, langsung d triggered,
+                // lalu pas repeat = aktifin setiap 24h
+                dailyReminderAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, dailyReminderCalendarClock.getTimeInMillis(), AlarmManager.INTERVAL_DAY, dailyReminderPendingIntent);
+            } else { // Code jika version codes dari device kurang dari SDK 19
+                // Set alarm sesuai dengan schedule yang ditentukan
+                dailyReminderAlarmManager.set(AlarmManager.RTC_WAKEUP, dailyReminderCalendarClock.getTimeInMillis(), dailyReminderPendingIntent);
+            }
         }
     }
 
@@ -95,7 +109,7 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
                 .setContentText(context.getString(R.string.daily_reminder_notif_text)) // Set content text yg wajib untuk ada
                 .setContentIntent(mainActivityPendingIntent) // Set pending intent
                 .setColor(ContextCompat.getColor(context, android.R.color.transparent))
-                .setLights(Color.GREEN, 1000, 1000)
+                .setLights(Color.GREEN, 500, 500)
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                 .setSound(dailyReminderAlarmSound)
                 .setAutoCancel(true) // Hilangkan notification begitu di click
