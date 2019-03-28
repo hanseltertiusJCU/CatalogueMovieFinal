@@ -34,6 +34,7 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
     /**
      * Method ini di triggered ketika time di device matched dengan
      * time di setDailyReminderAlarm() method, lalu memanggil {@link Notification} ke device
+     *
      * @param context
      * @param intent
      */
@@ -46,8 +47,9 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
      * Method ini di triggered ketika user mengaktifkan daily reminder alarm dari
      * {@link com.example.cataloguemoviefinal.fragment.AlarmPreferenceFragment} dan
      * set alarm setiap jam 7 pagi dan launch MainActivity kembali jika di click
+     *
      * @param context activity yang ada di AlarmPreferenceFragment, yaitu
-     * {@link com.example.cataloguemoviefinal.SettingsActivity}
+     *                {@link com.example.cataloguemoviefinal.SettingsActivity}
      */
     @SuppressLint("ObsoleteSdkInt")
     public void setDailyReminderAlarm(Context context) {
@@ -69,11 +71,11 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
         // Cek jika alarm manager exist
         if (dailyReminderAlarmManager != null) {
             // Line ini berguna untuk set alarm sesuai dengan versi device Android
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){ // Cek jika varsion codes dari device lebih dari/ sama dengan SDK 23
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // Cek jika varsion codes dari device lebih dari/ sama dengan SDK 23
                 // Alarm tersebut di triggered pas device sedang dalam kondisi idle
                 // dan tetap melakukan nya pada saat batre low
                 dailyReminderAlarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, dailyReminderCalendarClock.getTimeInMillis(), dailyReminderPendingIntent);
-            } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){ // Cek jika version codes dari device lebih dari/ sama dengan SDK 19 namun kurang dari SDK 23
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // Cek jika version codes dari device lebih dari/ sama dengan SDK 19 namun kurang dari SDK 23
                 // Set alarm dengan interval per hari dan alarm tsb walaupun
                 // tidak precise namun battery efficient, cara kerjanya adalah
                 // pertama kali alarm diaktifkan, langsung d triggered,
@@ -90,8 +92,9 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
      * Method ini di triggered ketika user menonaktifkan daily reminder alarm dari
      * {@link com.example.cataloguemoviefinal.fragment.AlarmPreferenceFragment} dan
      * batalkan existing alarm manager
+     *
      * @param context activity yang ada di AlarmPreferenceFragment, yaitu
-     * {@link com.example.cataloguemoviefinal.SettingsActivity}
+     *                {@link com.example.cataloguemoviefinal.SettingsActivity}
      */
     public void cancelAlarm(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE); // Initiate alarm manager
@@ -108,6 +111,7 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
     /**
      * Method ini merupakan hasil panggilan dari onReceive dan launch {@link MainActivity}
      * ketika {@link Notification} item di click
+     *
      * @param context
      */
     private void showDailyReminderNotification(Context context) {

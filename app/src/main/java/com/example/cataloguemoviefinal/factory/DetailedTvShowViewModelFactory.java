@@ -13,21 +13,21 @@ import com.example.cataloguemoviefinal.model.DetailedTvShowViewModel;
  */
 public class DetailedTvShowViewModelFactory implements ViewModelProvider.Factory {
 
-	// Initiate variable untuk dibawa
-	private Application mApplication;
-	private int mTvShowId;
+    // Initiate variable untuk dibawa
+    private Application mApplication;
+    private int mTvShowId;
 
-	// Constructor untuk membawa value dari variable bedasarkan parameter lalu di bawa ke
-	// {@link create()} method
-	public DetailedTvShowViewModelFactory(Application application, int tvShowId) {
-		mApplication = application;
-		mTvShowId = tvShowId;
-	}
+    // Constructor untuk membawa value dari variable bedasarkan parameter lalu di bawa ke
+    // {@link create()} method
+    public DetailedTvShowViewModelFactory(Application application, int tvShowId) {
+        mApplication = application;
+        mTvShowId = tvShowId;
+    }
 
-	// Buat ViewModel bedasarkan variables yang ada di ViewModelFactory
-	@NonNull
-	@Override
-	public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-		return (T) new DetailedTvShowViewModel(mApplication, mTvShowId);
-	}
+    // Buat ViewModel bedasarkan variables yang ada di ViewModelFactory
+    @NonNull
+    @Override
+    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+        return (T) new DetailedTvShowViewModel(mApplication, mTvShowId);
+    }
 }

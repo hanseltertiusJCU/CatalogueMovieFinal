@@ -13,21 +13,21 @@ import com.example.cataloguemoviefinal.model.SearchTvShowViewModel;
  */
 public class SearchTvShowViewModelFactory implements ViewModelProvider.Factory {
 
-	// Initiate variable untuk dibawa
-	private Application mApplication;
-	private String mTvShowSearchKeyword;
+    // Initiate variable untuk dibawa
+    private Application mApplication;
+    private String mTvShowSearchKeyword;
 
-	// Constructor untuk membawa value dari variable bedasarkan parameter lalu di bawa ke
-	// {@link create()} method
-	public SearchTvShowViewModelFactory(Application application, String tvShowSearchKeyword){
-		mApplication = application;
-		mTvShowSearchKeyword = tvShowSearchKeyword;
-	}
+    // Constructor untuk membawa value dari variable bedasarkan parameter lalu di bawa ke
+    // {@link create()} method
+    public SearchTvShowViewModelFactory(Application application, String tvShowSearchKeyword) {
+        mApplication = application;
+        mTvShowSearchKeyword = tvShowSearchKeyword;
+    }
 
-	// Buat ViewModel bedasarkan variables yang ada di ViewModelFactory
-	@NonNull
-	@Override
-	public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-		return (T) new SearchTvShowViewModel(mApplication, mTvShowSearchKeyword);
-	}
+    // Buat ViewModel bedasarkan variables yang ada di ViewModelFactory
+    @NonNull
+    @Override
+    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+        return (T) new SearchTvShowViewModel(mApplication, mTvShowSearchKeyword);
+    }
 }

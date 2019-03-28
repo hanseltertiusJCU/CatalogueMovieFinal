@@ -13,21 +13,21 @@ import com.example.cataloguemoviefinal.model.SearchMovieViewModel;
  */
 public class SearchMovieViewModelFactory implements ViewModelProvider.Factory {
 
-	// Initiate variable untuk dibawa
-	private Application mApplication;
-	private String mMovieSearchKeyword;
+    // Initiate variable untuk dibawa
+    private Application mApplication;
+    private String mMovieSearchKeyword;
 
-	// Constructor untuk membawa value dari variable bedasarkan parameter lalu di bawa ke
-	// {@link create()} method
-	public SearchMovieViewModelFactory(Application application, String movieSearchKeyword){
-		mApplication = application;
-		mMovieSearchKeyword = movieSearchKeyword;
-	}
+    // Constructor untuk membawa value dari variable bedasarkan parameter lalu di bawa ke
+    // {@link create()} method
+    public SearchMovieViewModelFactory(Application application, String movieSearchKeyword) {
+        mApplication = application;
+        mMovieSearchKeyword = movieSearchKeyword;
+    }
 
-	// Buat ViewModel bedasarkan variables yang ada di ViewModelFactory
-	@NonNull
-	@Override
-	public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-		return (T) new SearchMovieViewModel(mApplication, mMovieSearchKeyword);
-	}
+    // Buat ViewModel bedasarkan variables yang ada di ViewModelFactory
+    @NonNull
+    @Override
+    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+        return (T) new SearchMovieViewModel(mApplication, mMovieSearchKeyword);
+    }
 }

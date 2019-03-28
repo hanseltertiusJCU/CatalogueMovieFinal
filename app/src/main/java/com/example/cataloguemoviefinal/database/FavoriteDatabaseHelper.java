@@ -25,15 +25,15 @@ public class FavoriteDatabaseHelper extends SQLiteOpenHelper {
      * Create table statement untuk Favorite Movie
      */
     private static final String SQL_CREATE_FAVORITE_MOVIE_STATEMENT = String.format("CREATE TABLE %s"
-            + " (%s INTEGER PRIMARY KEY,"
-            + " %s TEXT NOT NULL,"
-            + " %s TEXT NOT NULL,"
-            + " %s TEXT NOT NULL,"
-            + " %s TEXT NOT NULL,"
-            + " %s TEXT NOT NULL,"
-            + " %s TEXT NOT NULL,"
-            + " %s INTEGER NOT NULL DEFAULT 0)",
-            FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_TABLE_NAME ,
+                    + " (%s INTEGER PRIMARY KEY,"
+                    + " %s TEXT NOT NULL,"
+                    + " %s TEXT NOT NULL,"
+                    + " %s TEXT NOT NULL,"
+                    + " %s TEXT NOT NULL,"
+                    + " %s TEXT NOT NULL,"
+                    + " %s TEXT NOT NULL,"
+                    + " %s INTEGER NOT NULL DEFAULT 0)",
+            FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_TABLE_NAME,
             FavoriteDatabaseContract.FavoriteMovieItemColumns._ID,
             FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_TITLE_COLUMN,
             FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_RATINGS_COLUMN,
@@ -48,15 +48,15 @@ public class FavoriteDatabaseHelper extends SQLiteOpenHelper {
      * Create table statement untuk Favorite TV Show
      */
     private static final String SQL_CREATE_FAVORITE_TV_SHOW_STATEMENT = String.format("CREATE TABLE %s"
-            + " (%s INTEGER PRIMARY KEY,"
-            + " %s TEXT NOT NULL,"
-            + " %s TEXT NOT NULL,"
-            + " %s TEXT NOT NULL,"
-            + " %s TEXT NOT NULL,"
-            + " %s TEXT NOT NULL,"
-            + " %s TEXT NOT NULL,"
-            + " %s INTEGER NOT NULL DEFAULT 0)",
-            FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_TABLE_NAME ,
+                    + " (%s INTEGER PRIMARY KEY,"
+                    + " %s TEXT NOT NULL,"
+                    + " %s TEXT NOT NULL,"
+                    + " %s TEXT NOT NULL,"
+                    + " %s TEXT NOT NULL,"
+                    + " %s TEXT NOT NULL,"
+                    + " %s TEXT NOT NULL,"
+                    + " %s INTEGER NOT NULL DEFAULT 0)",
+            FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_TABLE_NAME,
             FavoriteDatabaseContract.FavoriteTvShowItemColumns._ID,
             FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_NAME_COLUMN,
             FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_RATINGS_COLUMN,
@@ -71,6 +71,7 @@ public class FavoriteDatabaseHelper extends SQLiteOpenHelper {
     /**
      * Method ini ditriggered ketika class ini dibuat dan berguna untuk create tables melalui
      * {@link SQLiteDatabase} statement
+     *
      * @param db SQLiteDatabase object
      */
     @Override
@@ -84,7 +85,8 @@ public class FavoriteDatabaseHelper extends SQLiteOpenHelper {
      * Method ini berguna untuk update table structure dengan execute {@link SQLiteDatabase}
      * DROP TABLE statement lalu recreate dengan memanggil kembali onCreate() method
      * dan d triggered ketika ada perubahan data table structure
-     * @param db SQLiteDatabase object
+     *
+     * @param db         SQLiteDatabase object
      * @param oldVersion old version database
      * @param newVersion new version database
      */

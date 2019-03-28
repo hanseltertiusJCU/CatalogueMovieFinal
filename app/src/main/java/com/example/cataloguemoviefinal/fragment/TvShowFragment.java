@@ -50,300 +50,306 @@ import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TvShowFragment extends Fragment{
-	
-	// Bind views
-	@BindView(R.id.rv_tv_shows_item_list)
-	RecyclerView recyclerView;
-	@BindView(R.id.progress_bar)
-	ProgressBar progressBar;
-	// TextView buat empty state text
-	@BindView(R.id.tv_show_empty_state_text)
-	TextView emptyTextView;
-	// LinearLayout untuk atur visibility dari Search keyword
-	@BindView(R.id.tv_show_search_keyword_result)
-	LinearLayout tvShowSearchKeywordResult;
-	private TvShowAdapter tvShowAdapter;
-	// Bikin parcelable yang berguna untuk menyimpan lalu merestore position
-	private Parcelable mTvShowListState = null;
-	// Bikin linearlayout manager untuk dapat call onsaveinstancestate dan onrestoreinstancestate method
-	private LinearLayoutManager tvShowLinearLayoutManager;
-	// Bikin Viewmodel beserta Observer
-	TvShowViewModel tvShowViewModel;
-	Observer<ArrayList<TvShowItem>> tvShowObserver;
-	// Initiate Swipe to refresh layout
-	@BindView(R.id.fragment_tv_show_swipe_refresh_layout)
-	SwipeRefreshLayout fragmentTvShowSwipeRefreshLayout;
-	
-	public TvShowFragment() {
-		// Required empty public constructor
-	}
+public class TvShowFragment extends Fragment {
 
-	/**
-	 * Method ini di triggered pada saat {@link Fragment} pertama kali dibuat
-	 * Method ini berguna untuk membuat View bedasarkan layout xml fragment_tv_show
-	 * @param inflater LayoutInflater untuk inflate layout dari xml
-	 * @param container ViewGroup yang menampung fragment (root view dari xml possibly)
-	 * @param savedInstanceState Bundle object untuk dapat handle orientation changes
-	 * @return View object untuk onViewCreated()
-	 */
-	@Override
-	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
-		View view = inflater.inflate(R.layout.fragment_tv_show, container, false);
-		ButterKnife.bind(this, view);
-		return view;
-	}
+    // Bind views
+    @BindView(R.id.rv_tv_shows_item_list)
+    RecyclerView recyclerView;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    // TextView buat empty state text
+    @BindView(R.id.tv_show_empty_state_text)
+    TextView emptyTextView;
+    // LinearLayout untuk atur visibility dari Search keyword
+    @BindView(R.id.tv_show_search_keyword_result)
+    LinearLayout tvShowSearchKeywordResult;
+    private TvShowAdapter tvShowAdapter;
+    // Bikin parcelable yang berguna untuk menyimpan lalu merestore position
+    private Parcelable mTvShowListState = null;
+    // Bikin linearlayout manager untuk dapat call onsaveinstancestate dan onrestoreinstancestate method
+    private LinearLayoutManager tvShowLinearLayoutManager;
+    // Bikin Viewmodel beserta Observer
+    TvShowViewModel tvShowViewModel;
+    Observer<ArrayList<TvShowItem>> tvShowObserver;
+    // Initiate Swipe to refresh layout
+    @BindView(R.id.fragment_tv_show_swipe_refresh_layout)
+    SwipeRefreshLayout fragmentTvShowSwipeRefreshLayout;
 
-	/**
-	 * Method ini di triggered pada saat view dari {@link Fragment} dibuat
-	 * Method ini berguna untuk:
-	 * - Set recyclerView layout manager
-	 * - Set adapter ke recyclerView
-	 * - Set border ke setiap recyclerView item
-	 * @param view View hasil dari onCreateView
-	 * @param savedInstanceState bundle object untuk menghandle orientation change
-	 */
-	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		
-		tvShowAdapter = new TvShowAdapter(getContext());
-		tvShowAdapter.notifyDataSetChanged();
-		
-		// Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
-		tvShowLinearLayoutManager = new LinearLayoutManager(getContext());
-		// Ukuran data recycler view sama
-		recyclerView.setHasFixedSize(true);
-		// Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
-		recyclerView.setLayoutManager(tvShowLinearLayoutManager);
-		
-		// Set visibility dari LinearLayout jadi GONE supaya tidak memakan tempat + tidak ada keyword result
-		tvShowSearchKeywordResult.setVisibility(View.GONE);
-		
-		// Set empty adapter agar dapat di rotate
-		recyclerView.setAdapter(tvShowAdapter);
-		
-		// Set background color untuk RecyclerView
-		recyclerView.setBackgroundColor(getResources().getColor(android.R.color.white));
-		
-		if(getContext() != null) {
-			// Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration
-			DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-			itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(getContext(), R.drawable.item_divider)));
-			
-			// Set divider untuk RecyclerView items
-			recyclerView.addItemDecoration(itemDecorator);
-		}
-	}
+    public TvShowFragment() {
+        // Required empty public constructor
+    }
 
-	/**
-	 * Method ini di triggered ketika activity dibuat, method ini berguna untuk:
-	 * - Save scroll position dari items dari object {@link Bundle}
-	 * - load data for first time while checking for Internet Connectivity
-	 * - Swipe to refresh for reload data or make it connected
-	 * @param savedInstanceState bundle object untuk menghandle orientation change
-	 */
-	@Override
-	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		// Set visiblity of views ketika sedang dalam meretrieve data
-		recyclerView.setVisibility(View.INVISIBLE);
-		progressBar.setVisibility(View.VISIBLE);
-		emptyTextView.setVisibility(View.GONE);
-		// Cek jika Bundle exist, jika iya maka kita metretrieve list state as well as
-		// list/item positions (scroll position)
-		if(savedInstanceState != null) {
-			mTvShowListState = savedInstanceState.getParcelable(TV_SHOW_LIST_STATE);
-		}
+    /**
+     * Method ini di triggered pada saat {@link Fragment} pertama kali dibuat
+     * Method ini berguna untuk membuat View bedasarkan layout xml fragment_tv_show
+     *
+     * @param inflater           LayoutInflater untuk inflate layout dari xml
+     * @param container          ViewGroup yang menampung fragment (root view dari xml possibly)
+     * @param savedInstanceState Bundle object untuk dapat handle orientation changes
+     * @return View object untuk onViewCreated()
+     */
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_tv_show, container, false);
+        ButterKnife.bind(this, view);
+        return view;
+    }
 
-		// Cek jika activity exists
-		if(getActivity() != null){
-			// Connectivity manager untuk mengecek state dari network connectivity
-			ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-			// Network Info object untuk melihat ada data network yang aktif
-			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-			// Cek jika ada network connection
-			if(networkInfo != null && networkInfo.isConnected()){
-				// Dapatkan ViewModel yang tepat dari ViewModelProviders
-				tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
-				// Panggil method createObserver untuk return Observer object
-				tvShowObserver = createObserver();
-				// Tempelkan Observer ke LiveData object
-				tvShowViewModel.getTvShows().observe(this, tvShowObserver);
-			} else {
-				// Progress bar into gone and recycler view into invisible as the data finished on loading
-				progressBar.setVisibility(View.GONE);
-				recyclerView.setVisibility(View.INVISIBLE);
-				// Set empty view visibility into visible
-				emptyTextView.setVisibility(View.VISIBLE);
-				// Empty text view yg menunjukkan bahwa tidak ada internet yang sedang terhubung
-				emptyTextView.setText(getString(R.string.no_internet_connection));
-			}
-		}
+    /**
+     * Method ini di triggered pada saat view dari {@link Fragment} dibuat
+     * Method ini berguna untuk:
+     * - Set recyclerView layout manager
+     * - Set adapter ke recyclerView
+     * - Set border ke setiap recyclerView item
+     *
+     * @param view               View hasil dari onCreateView
+     * @param savedInstanceState bundle object untuk menghandle orientation change
+     */
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-		// Set event refresh listener untuk swipe to refresh layout
-		fragmentTvShowSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				// Cek jika activity exists
-				if(getActivity() != null){
-					// Connectivity manager untuk mengecek state dari network connectivity
-					ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-					// Network Info object untuk melihat ada data network yang aktif
-					NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-					// Cek jika ada network connection
-					if(networkInfo != null && networkInfo.isConnected()){
-						// Cek jika view model ada
-						if(tvShowViewModel != null){
-							// Panggil method createObserver untuk return Observer object
-							tvShowObserver = createObserver();
-							// Tempelkan Observer ke LiveData object
-							tvShowViewModel.getTvShows().observe(TvShowFragment.this, tvShowObserver);
-						} else {
-							// Dapatkan ViewModel yang tepat dari ViewModelProviders
-							tvShowViewModel = ViewModelProviders.of(TvShowFragment.this).get(TvShowViewModel.class);
-							// Panggil method createObserver untuk return Observer object
-							tvShowObserver = createObserver();
-							// Tempelkan Observer ke LiveData object
-							tvShowViewModel.getTvShows().observe(TvShowFragment.this, tvShowObserver);
-						}
-					} else {
-						// Progress bar into gone and recycler view into invisible as the data finished on loading
-						progressBar.setVisibility(View.GONE);
-						recyclerView.setVisibility(View.INVISIBLE);
-						// Set empty view visibility into visible
-						emptyTextView.setVisibility(View.VISIBLE);
-						// Empty text view yg menunjukkan bahwa tidak ada internet yang sedang terhubung
-						emptyTextView.setText(getString(R.string.no_internet_connection));
-					}
-				}
-				// Set refresh into false, menandakan bahwa proses refresh sudah selesai
-				fragmentTvShowSwipeRefreshLayout.setRefreshing(false);
-			}
-		});
+        tvShowAdapter = new TvShowAdapter(getContext());
+        tvShowAdapter.notifyDataSetChanged();
+
+        // Set LinearLayoutManager object value dengan memanggil LinearLayoutManager constructor
+        tvShowLinearLayoutManager = new LinearLayoutManager(getContext());
+        // Ukuran data recycler view sama
+        recyclerView.setHasFixedSize(true);
+        // Kita menggunakan LinearLayoutManager berorientasi vertical untuk RecyclerView
+        recyclerView.setLayoutManager(tvShowLinearLayoutManager);
+
+        // Set visibility dari LinearLayout jadi GONE supaya tidak memakan tempat + tidak ada keyword result
+        tvShowSearchKeywordResult.setVisibility(View.GONE);
+
+        // Set empty adapter agar dapat di rotate
+        recyclerView.setAdapter(tvShowAdapter);
+
+        // Set background color untuk RecyclerView
+        recyclerView.setBackgroundColor(getResources().getColor(android.R.color.white));
+
+        if (getContext() != null) {
+            // Buat object DividerItemDecoration dan set drawable untuk DividerItemDecoration
+            DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+            itemDecorator.setDrawable(Objects.requireNonNull(ContextCompat.getDrawable(getContext(), R.drawable.item_divider)));
+
+            // Set divider untuk RecyclerView items
+            recyclerView.addItemDecoration(itemDecorator);
+        }
+    }
+
+    /**
+     * Method ini di triggered ketika activity dibuat, method ini berguna untuk:
+     * - Save scroll position dari items dari object {@link Bundle}
+     * - load data for first time while checking for Internet Connectivity
+     * - Swipe to refresh for reload data or make it connected
+     *
+     * @param savedInstanceState bundle object untuk menghandle orientation change
+     */
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // Set visiblity of views ketika sedang dalam meretrieve data
+        recyclerView.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+        emptyTextView.setVisibility(View.GONE);
+        // Cek jika Bundle exist, jika iya maka kita metretrieve list state as well as
+        // list/item positions (scroll position)
+        if (savedInstanceState != null) {
+            mTvShowListState = savedInstanceState.getParcelable(TV_SHOW_LIST_STATE);
+        }
+
+        // Cek jika activity exists
+        if (getActivity() != null) {
+            // Connectivity manager untuk mengecek state dari network connectivity
+            ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+            // Network Info object untuk melihat ada data network yang aktif
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            // Cek jika ada network connection
+            if (networkInfo != null && networkInfo.isConnected()) {
+                // Dapatkan ViewModel yang tepat dari ViewModelProviders
+                tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
+                // Panggil method createObserver untuk return Observer object
+                tvShowObserver = createObserver();
+                // Tempelkan Observer ke LiveData object
+                tvShowViewModel.getTvShows().observe(this, tvShowObserver);
+            } else {
+                // Progress bar into gone and recycler view into invisible as the data finished on loading
+                progressBar.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.INVISIBLE);
+                // Set empty view visibility into visible
+                emptyTextView.setVisibility(View.VISIBLE);
+                // Empty text view yg menunjukkan bahwa tidak ada internet yang sedang terhubung
+                emptyTextView.setText(getString(R.string.no_internet_connection));
+            }
+        }
+
+        // Set event refresh listener untuk swipe to refresh layout
+        fragmentTvShowSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Cek jika activity exists
+                if (getActivity() != null) {
+                    // Connectivity manager untuk mengecek state dari network connectivity
+                    ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                    // Network Info object untuk melihat ada data network yang aktif
+                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                    // Cek jika ada network connection
+                    if (networkInfo != null && networkInfo.isConnected()) {
+                        // Cek jika view model ada
+                        if (tvShowViewModel != null) {
+                            // Panggil method createObserver untuk return Observer object
+                            tvShowObserver = createObserver();
+                            // Tempelkan Observer ke LiveData object
+                            tvShowViewModel.getTvShows().observe(TvShowFragment.this, tvShowObserver);
+                        } else {
+                            // Dapatkan ViewModel yang tepat dari ViewModelProviders
+                            tvShowViewModel = ViewModelProviders.of(TvShowFragment.this).get(TvShowViewModel.class);
+                            // Panggil method createObserver untuk return Observer object
+                            tvShowObserver = createObserver();
+                            // Tempelkan Observer ke LiveData object
+                            tvShowViewModel.getTvShows().observe(TvShowFragment.this, tvShowObserver);
+                        }
+                    } else {
+                        // Progress bar into gone and recycler view into invisible as the data finished on loading
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.INVISIBLE);
+                        // Set empty view visibility into visible
+                        emptyTextView.setVisibility(View.VISIBLE);
+                        // Empty text view yg menunjukkan bahwa tidak ada internet yang sedang terhubung
+                        emptyTextView.setText(getString(R.string.no_internet_connection));
+                    }
+                }
+                // Set refresh into false, menandakan bahwa proses refresh sudah selesai
+                fragmentTvShowSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
 
-	}
+    }
 
-	/**
-	 * Method tsb berguna untuk membawa value dari Intent ke {@link DetailActivity}
-	 * @param tvShowItem {@link TvShowItem} dari {@link android.support.v7.widget.RecyclerView item}
-	 * bedasarkan {@link TvShowItem}
-	 */
-	private void showSelectedTvShowItems(TvShowItem tvShowItem) {
-		// Dapatkan id dan title bedasarkan ListView item
-		int tvShowIdItem = tvShowItem.getId();
-		String tvShowNameItem = tvShowItem.getTvShowName();
-		int tvShowBooleanStateItem = 0;
-		Uri tvShowUriItem = null;
-		if(MainActivity.favoriteTvShowItemArrayList.size() > 0){
-			for(int i = 0; i < MainActivity.favoriteTvShowItemArrayList.size(); i++){
-				// Cek jika tvShowIdItem itu cocok dengan item id yg ada di ArrayList
-				if(tvShowIdItem == MainActivity.favoriteTvShowItemArrayList.get(i).getId()){
-					tvShowBooleanStateItem = MainActivity.favoriteTvShowItemArrayList.get(i).getFavoriteBooleanState();
-					tvShowUriItem = Uri.parse(TV_SHOW_FAVORITE_CONTENT_URI + "/" + tvShowIdItem);
-					break;
-				}
-			}
-		}
-		// Tentukan bahwa kita ingin membuka data TV Show
-		String modeItem = "open_tv_show_detail";
-		// Boolean variable untuk mengetahui apakah kita membuka data dari widget
-		boolean openFromWidget = false;
-		// Create intent object agar ke DetailActivity yg merupakan activity tujuan
-		Intent intentWithTvShowIdData = new Intent(getActivity(), DetailActivity.class);
-		// Bawa data untuk disampaikan ke {@link DetailActivity}
-		intentWithTvShowIdData.putExtra(TV_SHOW_ID_DATA, tvShowIdItem);
-		intentWithTvShowIdData.putExtra(TV_SHOW_NAME_DATA, tvShowNameItem);
-		intentWithTvShowIdData.putExtra(TV_SHOW_BOOLEAN_STATE_DATA, tvShowBooleanStateItem);
-		intentWithTvShowIdData.putExtra(MODE_INTENT, modeItem);
-		intentWithTvShowIdData.putExtra(OPEN_FROM_WIDGET, openFromWidget);
-		// Set Uri ke Intent
-		intentWithTvShowIdData.setData(tvShowUriItem);
-		// Start activity ke DetailActivity
-		startActivity(intentWithTvShowIdData);
-	}
+    /**
+     * Method tsb berguna untuk membawa value dari Intent ke {@link DetailActivity}
+     *
+     * @param tvShowItem {@link TvShowItem} dari {@link android.support.v7.widget.RecyclerView item}
+     *                   bedasarkan {@link TvShowItem}
+     */
+    private void showSelectedTvShowItems(TvShowItem tvShowItem) {
+        // Dapatkan id dan title bedasarkan ListView item
+        int tvShowIdItem = tvShowItem.getId();
+        String tvShowNameItem = tvShowItem.getTvShowName();
+        int tvShowBooleanStateItem = 0;
+        Uri tvShowUriItem = null;
+        if (MainActivity.favoriteTvShowItemArrayList.size() > 0) {
+            for (int i = 0; i < MainActivity.favoriteTvShowItemArrayList.size(); i++) {
+                // Cek jika tvShowIdItem itu cocok dengan item id yg ada di ArrayList
+                if (tvShowIdItem == MainActivity.favoriteTvShowItemArrayList.get(i).getId()) {
+                    tvShowBooleanStateItem = MainActivity.favoriteTvShowItemArrayList.get(i).getFavoriteBooleanState();
+                    tvShowUriItem = Uri.parse(TV_SHOW_FAVORITE_CONTENT_URI + "/" + tvShowIdItem);
+                    break;
+                }
+            }
+        }
+        // Tentukan bahwa kita ingin membuka data TV Show
+        String modeItem = "open_tv_show_detail";
+        // Boolean variable untuk mengetahui apakah kita membuka data dari widget
+        boolean openFromWidget = false;
+        // Create intent object agar ke DetailActivity yg merupakan activity tujuan
+        Intent intentWithTvShowIdData = new Intent(getActivity(), DetailActivity.class);
+        // Bawa data untuk disampaikan ke {@link DetailActivity}
+        intentWithTvShowIdData.putExtra(TV_SHOW_ID_DATA, tvShowIdItem);
+        intentWithTvShowIdData.putExtra(TV_SHOW_NAME_DATA, tvShowNameItem);
+        intentWithTvShowIdData.putExtra(TV_SHOW_BOOLEAN_STATE_DATA, tvShowBooleanStateItem);
+        intentWithTvShowIdData.putExtra(MODE_INTENT, modeItem);
+        intentWithTvShowIdData.putExtra(OPEN_FROM_WIDGET, openFromWidget);
+        // Set Uri ke Intent
+        intentWithTvShowIdData.setData(tvShowUriItem);
+        // Start activity ke DetailActivity
+        startActivity(intentWithTvShowIdData);
+    }
 
-	/**
-	 * Method tsb di triggered ketika activity melakukan orientation changes/activity dimulai lagi
-	 * Method tsb berguna untuk merestore state dari {@link LinearLayoutManager} dari
-	 * onSaveInstanceState() method
-	 */
-	@Override
-	public void onResume() {
-		super.onResume();
-		// Cek jika Parcelable itu exist, jika iya, maka update layout manager dengan memasukkan
-		// Parcelable sebagai input parameter
-		if(mTvShowListState != null) {
-			tvShowLinearLayoutManager.onRestoreInstanceState(mTvShowListState);
-		}
-	}
+    /**
+     * Method tsb di triggered ketika activity melakukan orientation changes/activity dimulai lagi
+     * Method tsb berguna untuk merestore state dari {@link LinearLayoutManager} dari
+     * onSaveInstanceState() method
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Cek jika Parcelable itu exist, jika iya, maka update layout manager dengan memasukkan
+        // Parcelable sebagai input parameter
+        if (mTvShowListState != null) {
+            tvShowLinearLayoutManager.onRestoreInstanceState(mTvShowListState);
+        }
+    }
 
-	/**
-	 * Method ini berguna untuk menyimpan scroll position dengan membawa state dari
-	 * {@link LinearLayoutManager} yang berguna saat orientation change
-	 * @param outState Bundle object untuk di bawa ke onActivityCreated (tempat untuk restore state)
-	 */
-	@Override
-	public void onSaveInstanceState(@NonNull Bundle outState) {
-		super.onSaveInstanceState(outState);
-		// Cek jika tvShowLinearLayoutManager itu ada, jika tidak maka tidak akan ngapa2in
-		// di onSaveInstanceState
-		if(tvShowLinearLayoutManager != null) {
-			// Save list state/ scroll position dari list
-			mTvShowListState = tvShowLinearLayoutManager.onSaveInstanceState();
-			outState.putParcelable(TV_SHOW_LIST_STATE, mTvShowListState);
-		}
-	}
+    /**
+     * Method ini berguna untuk menyimpan scroll position dengan membawa state dari
+     * {@link LinearLayoutManager} yang berguna saat orientation change
+     *
+     * @param outState Bundle object untuk di bawa ke onActivityCreated (tempat untuk restore state)
+     */
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Cek jika tvShowLinearLayoutManager itu ada, jika tidak maka tidak akan ngapa2in
+        // di onSaveInstanceState
+        if (tvShowLinearLayoutManager != null) {
+            // Save list state/ scroll position dari list
+            mTvShowListState = tvShowLinearLayoutManager.onSaveInstanceState();
+            outState.putParcelable(TV_SHOW_LIST_STATE, mTvShowListState);
+        }
+    }
 
-	/**
-	 * Method tsb berguna untuk membuat observer yang berhubungan dengan
-	 * {@link android.arch.lifecycle.LiveData}
-	 * @return Observer yang menampung {@link ArrayList<TvShowItem>}
-	 * (data dari {@link android.arch.lifecycle.LiveData})
-	 */
-	public Observer<ArrayList<TvShowItem>> createObserver() {
-		// Buat Observer yang gunanya untuk update UI
-		return new Observer<ArrayList<TvShowItem>>() {
-			@Override
-			public void onChanged(@Nullable final ArrayList<TvShowItem> tvShowItems) {
-				// Cek jika array tv show item exist
-				if(tvShowItems != null){
-					// Cek jika array tv show item ada data
-					if(tvShowItems.size() > 0){
-						// Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
-						// yang menandakan bahwa loadingnya sudah selesai
-						recyclerView.setVisibility(View.VISIBLE);
-						progressBar.setVisibility(View.GONE);
-						// Set empty view visibility into gone : doesnt take space and no content displayed
-						emptyTextView.setVisibility(View.GONE);
-						// Set data ke Adapter
-						tvShowAdapter.setTvShowData(tvShowItems);
-						// Set item click listener di dalam recycler view
-						ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-							@Override
-							public void onItemClicked(RecyclerView recyclerView, int position, View view) {
-								// Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
-								showSelectedTvShowItems(tvShowItems.get(position));
-							}
-						});
-					} else { // kondisi jika tidak ada data
-						// Set data into adapter
-						tvShowAdapter.setTvShowData(tvShowItems);
-						// Set progress bar visibility into gone, indicating that data finished on loading
-						progressBar.setVisibility(View.GONE);
-						// Set recycler view visibility into invisible: take space but doesnt display anything
-						recyclerView.setVisibility(View.INVISIBLE);
-						// Set empty view visibility into visible
-						emptyTextView.setVisibility(View.VISIBLE);
-						// Set empty view text
-						emptyTextView.setText(getString(R.string.no_tv_show_data_shown));
-					}
-				}
+    /**
+     * Method tsb berguna untuk membuat observer yang berhubungan dengan
+     * {@link android.arch.lifecycle.LiveData}
+     *
+     * @return Observer yang menampung {@link ArrayList<TvShowItem>}
+     * (data dari {@link android.arch.lifecycle.LiveData})
+     */
+    public Observer<ArrayList<TvShowItem>> createObserver() {
+        // Buat Observer yang gunanya untuk update UI
+        return new Observer<ArrayList<TvShowItem>>() {
+            @Override
+            public void onChanged(@Nullable final ArrayList<TvShowItem> tvShowItems) {
+                // Cek jika array tv show item exist
+                if (tvShowItems != null) {
+                    // Cek jika array tv show item ada data
+                    if (tvShowItems.size() > 0) {
+                        // Ketika data selesai di load, maka kita akan mendapatkan data dan menghilangkan progress bar
+                        // yang menandakan bahwa loadingnya sudah selesai
+                        recyclerView.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
+                        // Set empty view visibility into gone : doesnt take space and no content displayed
+                        emptyTextView.setVisibility(View.GONE);
+                        // Set data ke Adapter
+                        tvShowAdapter.setTvShowData(tvShowItems);
+                        // Set item click listener di dalam recycler view
+                        ItemClickSupport.addSupportToView(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                            @Override
+                            public void onItemClicked(RecyclerView recyclerView, int position, View view) {
+                                // Panggil method showSelectedMovieItems untuk mengakses DetailActivity bedasarkan data yang ada
+                                showSelectedTvShowItems(tvShowItems.get(position));
+                            }
+                        });
+                    } else { // kondisi jika tidak ada data
+                        // Set data into adapter
+                        tvShowAdapter.setTvShowData(tvShowItems);
+                        // Set progress bar visibility into gone, indicating that data finished on loading
+                        progressBar.setVisibility(View.GONE);
+                        // Set recycler view visibility into invisible: take space but doesnt display anything
+                        recyclerView.setVisibility(View.INVISIBLE);
+                        // Set empty view visibility into visible
+                        emptyTextView.setVisibility(View.VISIBLE);
+                        // Set empty view text
+                        emptyTextView.setText(getString(R.string.no_tv_show_data_shown));
+                    }
+                }
 
-			}
-		};
-	}
+            }
+        };
+    }
 }

@@ -10,6 +10,7 @@
         <!-- target android sdk versions < 26 and > 14 if theme other than AppCompat -->
     </style>
 
+    <!-- Progress bar style -->
     <style name="ProgressBar">
         <item name="android:layout_width">@dimen/progress_bar_width</item>
         <item name="android:layout_height">@dimen/progress_bar_height</item>
@@ -17,28 +18,33 @@
         <item name="android:layout_centerHorizontal">true</item>
     </style>
 
+    <!-- Item attribute untuk recycler view -->
     <style name="ItemText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <!-- Poster image untuk data -->
     <style name="PosterImage">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
     </style>
 
+    <!-- Keyword text untuk keyword tracker -->
     <style name="KeywordText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <!-- Text untuk custom tab item di TabLayout -->
     <style name="TextTab">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center_horizontal</item>
     </style>
 
+    <!-- String untuk representasi no data displayed -->
     <style name="NoDataText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -46,6 +52,7 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
 
+    <!-- Widget item yg merepresentasikan WidgetItemTitle -->
     <style name="WidgetItemTitleText">
         <item name="android:layout_width">170dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -56,6 +63,7 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
 
+    <!-- display info detail text -->
     <style name="DetailedText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -65,6 +73,7 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
 
+    <!-- display scroll view info title text -->
     <style name="DetailedScrollViewTitleText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -74,6 +83,7 @@
         <item name="android:layout_marginTop">@dimen/text_margin</item>
     </style>
 
+    <!-- display scroll view into content text -->
     <style name="DetailedScrollViewContentText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>

@@ -9,9 +9,9 @@ import android.widget.RemoteViewsService;
  * untuk membuat stack widget item
  */
 public class FavoriteMovieStackWidgetService extends RemoteViewsService {
-	
-	@Override
-	public RemoteViewsFactory onGetViewFactory(Intent intent) {
-		return new FavoriteMovieStackRemoteViewsFactory(this.getApplicationContext(), intent);
-	}
+
+    @Override
+    public RemoteViewsFactory onGetViewFactory(Intent intent) {
+        return new FavoriteMovieStackRemoteViewsFactory(this.getApplicationContext(), intent);
+    }
 }

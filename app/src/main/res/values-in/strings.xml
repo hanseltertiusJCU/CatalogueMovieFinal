@@ -24,7 +24,6 @@
     <string name="tv_show">Acara TV</string>
     <string name="favorite_movie">Film Favorit</string>
     <string name="favorite_tv_show">Acara TV Favorit</string>
-    <string name="favorite">Favorit</string>
     <string name="search_movie">Pencarian Movie</string>
     <string name="search_tv_show">Pencarian Acara TV</string>
     <string name="settings">Pengaturan</string>
@@ -53,7 +52,6 @@
     <string name="detailed_movie_unknown_runtime">Durasi Tidak Diketahui</string>
     <string name="detailed_movie_default_value_ratings">0</string>
     <string name="detailed_movie_default_value_ratings_vote">0</string>
-    <string name="detailed_movie_unknown_original_language">Bahasa Asli Tidak Diketahui</string>
     <string name="detailed_movie_unknown_language">Bahasa Tidak Diketahui</string>
     <string name="detailed_movie_unknown_genres">Jenis Film Tidak Diketahui</string>
     <string name="detailed_movie_unknown_release_date">Tanggal Rilis Tidak Diketahui</string>
@@ -69,10 +67,7 @@
     <string name="detailed_tv_show_unknown_name">Nama Tidak Diketahui</string>
     <string name="detailed_tv_show_unknown_seasons">Jumlah Musim Tidak Diketahui</string>
     <string name="detailed_tv_show_unknown_episodes">Jumlah Episode Tidak Diketahui</string>
-    <string name="detailed_tv_show_unknown_episodes_runtime">Durasi Tidak Diketahui</string>
-    <string name="detailed_tv_show_default_value_ratings">0</string>
     <string name="detailed_tv_show_default_value_ratings_vote">0</string>
-    <string name="detailed_tv_show_unknown_original_language">Bahasa Asli Tidak Diketahui</string>
     <string name="detailed_tv_show_unknown_networks">Channel Acara TV Tidak Diketahui</string>
     <string name="detailed_tv_show_unknown_genres">Jenis Acara TV Tidak Diketahui</string>
     <string name="detailed_tv_show_unknown_first_air_date">Tanggal Pertama Kali Mengudara Tidak Diketahui</string>
@@ -106,7 +101,6 @@
     <string name="span_tv_show_detail_votes">suara</string>
 
     <!-- Set Title for app menu -->
-    <string name="catalogue_movie_final">Catalogue Movie Final</string>
 
     <string name="change_language_settings">Ubah Pengaturan Bahasa</string>
 
@@ -140,7 +134,6 @@
     <string name="no_internet_connection">Tidak ada koneksi internet</string>
 
     <!-- String untuk label detail activity -->
-    <string name="detail_activity">Aktivitas Detil</string>
 
     <!-- String untuk snackbar message -->
     <string name="insert_movie_favorite_snackbar">Memasukkan film ke database</string>

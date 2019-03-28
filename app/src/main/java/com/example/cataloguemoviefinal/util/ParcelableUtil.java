@@ -10,10 +10,11 @@ public class ParcelableUtil {
 
     /**
      * Method ini berguna untuk convert {@link Parcelable} ke {@link byte[]} object
+     *
      * @param parcelable Parcelable object
      * @return byte[] object
      */
-    public static byte[] marshall(Parcelable parcelable){
+    public static byte[] marshall(Parcelable parcelable) {
         Parcel parcel = Parcel.obtain(); // obtain parcel object
         parcelable.writeToParcel(parcel, 0);
         byte[] bytes = parcel.marshall(); // memanggil marshall method dari object Parcel
@@ -24,10 +25,11 @@ public class ParcelableUtil {
     /**
      * Method ini berguna untuk convert {@link byte[]} ke {@link Parcel} object tanpa
      * {@link Parcelable.Creator} object
+     *
      * @param bytes byte[] object (input)
      * @return Parcel object (output)
      */
-    public static Parcel unmarshall(byte[] bytes){
+    public static Parcel unmarshall(byte[] bytes) {
         Parcel parcel = Parcel.obtain(); // obtain parcel object
         parcel.unmarshall(bytes, 0, bytes.length); // memanggil unmarshall method dari object Parcel
         parcel.setDataPosition(0);
@@ -37,12 +39,13 @@ public class ParcelableUtil {
     /**
      * Method ini berguna untuk convert {@link byte[]} ke {@link Parcel} object dengan
      * {@link Parcelable.Creator} object
-     * @param bytes byte[] object
+     *
+     * @param bytes   byte[] object
      * @param creator Parcelable creator
-     * @param <T> Class yg mengimplement Parcelable
+     * @param <T>     Class yg mengimplement Parcelable
      * @return <T> yaitu class yg implement Parcelable juga
      */
-    public static <T> T unmarshall(byte[] bytes, Parcelable.Creator<T> creator){
+    public static <T> T unmarshall(byte[] bytes, Parcelable.Creator<T> creator) {
         Parcel parcel = unmarshall(bytes);
         T result = creator.createFromParcel(parcel);
         parcel.recycle();

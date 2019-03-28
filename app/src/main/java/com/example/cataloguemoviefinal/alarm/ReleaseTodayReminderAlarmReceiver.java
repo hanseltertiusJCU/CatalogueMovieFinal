@@ -45,6 +45,7 @@ public class ReleaseTodayReminderAlarmReceiver extends BroadcastReceiver {
      * time di setReleaseTodayReminderAlarm() method, lalu memanggil {@link Notification} ke device
      * dengan ketentuan date dari device harus sama dengan release date hasil dari
      * {@link LoadMoviesDataAsync}
+     *
      * @param context
      * @param intent
      */
@@ -84,6 +85,7 @@ public class ReleaseTodayReminderAlarmReceiver extends BroadcastReceiver {
      * Method ini di triggered ketika user mengaktifkan release today reminder alarm dari
      * {@link com.example.cataloguemoviefinal.fragment.AlarmPreferenceFragment} dan
      * set release today alarm setiap jam 8 pagi
+     *
      * @param context
      */
     @SuppressLint("ObsoleteSdkInt")
@@ -105,9 +107,9 @@ public class ReleaseTodayReminderAlarmReceiver extends BroadcastReceiver {
         // Cek jika alarm manager object exist
         if (releaseTodayAlarmReminder != null) {
             // Line ini berguna untuk set alarm sesuai dengan versi device Android
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 releaseTodayAlarmReminder.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, releaseTodayReminderClock.getTimeInMillis(), releaseTodayPendingIntent);
-            } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 releaseTodayAlarmReminder.setRepeating(AlarmManager.RTC_WAKEUP, releaseTodayReminderClock.getTimeInMillis(), AlarmManager.INTERVAL_DAY, releaseTodayPendingIntent);
             } else {
                 releaseTodayAlarmReminder.set(AlarmManager.RTC_WAKEUP, releaseTodayReminderClock.getTimeInMillis(), releaseTodayPendingIntent);
@@ -119,6 +121,7 @@ public class ReleaseTodayReminderAlarmReceiver extends BroadcastReceiver {
      * Method ini di triggered ketika user menonaktifkan release today reminder alarm dari
      * {@link com.example.cataloguemoviefinal.fragment.AlarmPreferenceFragment} dan
      * batalkan existing alarm manager
+     *
      * @param context
      */
     public void cancelReleaseDateTodayAlarm(Context context) {
@@ -135,9 +138,10 @@ public class ReleaseTodayReminderAlarmReceiver extends BroadcastReceiver {
     /**
      * Method ini merupakan hasil panggilan dari onReceive dan menampilkan movie yang release pada
      * hari yang sama dengan device
+     *
      * @param context
      * @param notifId id dari movie item yang ditriggered
-     * @param title title dari movie item yang ditriggered
+     * @param title   title dari movie item yang ditriggered
      */
     private void showReleaseTodayReminderNotification(Context context, int notifId, String title) {
         String CHANNEL_ID = "Channel_2";

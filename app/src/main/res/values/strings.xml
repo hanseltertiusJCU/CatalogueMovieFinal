@@ -24,7 +24,6 @@
     <string name="tv_show">TV Show</string>
     <string name="favorite_movie">Favorite Movie</string>
     <string name="favorite_tv_show">Favorite TV Show</string>
-    <string name="favorite">Favorite</string>
     <string name="search_movie">Search Movie</string>
     <string name="search_tv_show">Search TV Show</string>
     <string name="settings">Settings</string>
@@ -53,7 +52,6 @@
     <string name="detailed_movie_unknown_runtime">Runtime Unknown</string>
     <string name="detailed_movie_default_value_ratings">0</string>
     <string name="detailed_movie_default_value_ratings_vote">0</string>
-    <string name="detailed_movie_unknown_original_language">Original Language Unknown</string>
     <string name="detailed_movie_unknown_language">Languages Unknown</string>
     <string name="detailed_movie_unknown_genres">Genres Unknown</string>
     <string name="detailed_movie_unknown_release_date">Release Date Unknown</string>
@@ -69,10 +67,7 @@
     <string name="detailed_tv_show_unknown_name">Name Unknown</string>
     <string name="detailed_tv_show_unknown_seasons">Seasons Unknown</string>
     <string name="detailed_tv_show_unknown_episodes">Episodes Unknown</string>
-    <string name="detailed_tv_show_unknown_episodes_runtime">Episodes Runtime Unknown</string>
-    <string name="detailed_tv_show_default_value_ratings">0</string>
     <string name="detailed_tv_show_default_value_ratings_vote">0</string>
-    <string name="detailed_tv_show_unknown_original_language">Original Language Unknown</string>
     <string name="detailed_tv_show_unknown_networks">Networks Unknown</string>
     <string name="detailed_tv_show_unknown_genres">Genres Unknown</string>
     <string name="detailed_tv_show_unknown_first_air_date">First Air Date Unknown</string>
@@ -109,7 +104,6 @@
     <string name="change_language_settings">Change Language Settings</string>
 
     <!-- Set Title for app menu -->
-    <string name="catalogue_movie_final">Catalogue Movie Final</string>
 
     <string name="mark_as_favorite">Mark as Favorite</string>
 
@@ -141,7 +135,6 @@
     <string name="no_internet_connection">There is no internet connection</string>
 
     <!-- String untuk label detail activity -->
-    <string name="detail_activity">Activity Detail</string>
 
     <!-- String untuk snackbar message -->
     <string name="insert_movie_favorite_snackbar">Insert movie item into database</string>

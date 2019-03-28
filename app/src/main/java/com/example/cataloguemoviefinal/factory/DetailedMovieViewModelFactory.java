@@ -12,22 +12,22 @@ import com.example.cataloguemoviefinal.model.DetailedMovieViewModel;
  * yang menampung lebih dari 1 parameter karena ada tambahan informasi yang penting
  */
 public class DetailedMovieViewModelFactory implements ViewModelProvider.Factory {
-	
-	// Initiate variable untuk dibawa
-	private Application mApplication;
-	private int mMovieId;
-	
-	// Constructor untuk membawa value dari variable bedasarkan parameter lalu di bawa ke
-	// {@link create()} method
-	public DetailedMovieViewModelFactory(Application application, int movieId) {
-		mApplication = application;
-		mMovieId = movieId;
-	}
 
-	// Buat ViewModel bedasarkan variables yang ada di ViewModelFactory
-	@NonNull
-	@Override
-	public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-		return (T) new DetailedMovieViewModel(mApplication, mMovieId);
-	}
+    // Initiate variable untuk dibawa
+    private Application mApplication;
+    private int mMovieId;
+
+    // Constructor untuk membawa value dari variable bedasarkan parameter lalu di bawa ke
+    // {@link create()} method
+    public DetailedMovieViewModelFactory(Application application, int movieId) {
+        mApplication = application;
+        mMovieId = movieId;
+    }
+
+    // Buat ViewModel bedasarkan variables yang ada di ViewModelFactory
+    @NonNull
+    @Override
+    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+        return (T) new DetailedMovieViewModel(mApplication, mMovieId);
+    }
 }
