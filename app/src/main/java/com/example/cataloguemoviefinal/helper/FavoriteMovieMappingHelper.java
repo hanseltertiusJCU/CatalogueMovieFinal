@@ -16,8 +16,9 @@ import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_TITLE_COLUMN;
 
 /**
- * Kelas ini berguna untuk convert Cursor ke ArrayList untuk bisa diolah datanya.
- * Hal ini terjadi karena query method untuk ContentProvider return Cursor, bukan ArrayList
+ * Kelas ini berguna untuk convert {@link Cursor} ke {@link ArrayList<MovieItem>} untuk bisa
+ * diolah datanya. Hal ini terjadi karena query method untuk
+ * {@link android.content.ContentProvider} return {@link Cursor}, bukan {@link ArrayList<MovieItem>}
  */
 public class FavoriteMovieMappingHelper {
 	public static ArrayList<MovieItem> mapCursorToFavoriteMovieArrayList(Cursor movieItemCursor){
@@ -37,6 +38,7 @@ public class FavoriteMovieMappingHelper {
 				String movieDateAddedFavorite = movieItemCursor.getString(movieItemCursor.getColumnIndexOrThrow(MOVIE_DATE_ADDED_FAVORITE_COLUMN));
 				int movieBooleanState = movieItemCursor.getInt(movieItemCursor.getColumnIndexOrThrow(MOVIE_FAVORITE_COLUMN));
 				// Add MovieItem to arraylist with using constructor that contain variables
+				// from column values
 				movieItemsList.add(new MovieItem(movieId, movieTitle, movieRatings, movieOriginalLanguage, movieReleaseDate, moviePosterPath, movieDateAddedFavorite, movieBooleanState));
 			}
 		}

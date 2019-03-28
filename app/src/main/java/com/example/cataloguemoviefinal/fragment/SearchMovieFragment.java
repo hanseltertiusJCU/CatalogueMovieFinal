@@ -2,6 +2,7 @@ package com.example.cataloguemoviefinal.fragment;
 
 
 import android.app.SearchManager;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -52,7 +53,10 @@ import static com.example.cataloguemoviefinal.BuildConfig.OPEN_FROM_WIDGET;
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Class tersebut berguna untuk:
+ * - menampilkan data berisi movie dari URL search movie ketika connected ke internet
+ * - menghandle search keyword change dengan memanggil kembali {@link LiveData}
+ * - membuat intent ke {@link DetailActivity} ketika view object dari {@link RecyclerView} di click
  */
 public class SearchMovieFragment extends Fragment{
 
@@ -85,7 +89,15 @@ public class SearchMovieFragment extends Fragment{
 	public SearchMovieFragment() {
 		// Required empty public constructor
 	}
-	
+
+	/**
+	 * Method ini di triggered pada saat {@link Fragment} pertama kali dibuat
+	 * Method ini berguna untuk membuat View bedasarkan layout xml fragment_tv_show
+	 * @param inflater LayoutInflater untuk inflate layout dari xml
+	 * @param container ViewGroup yang menampung fragment (root view dari xml possibly)
+	 * @param savedInstanceState Bundle object untuk dapat handle orientation changes
+	 * @return View object untuk onViewCreated()
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
@@ -95,7 +107,16 @@ public class SearchMovieFragment extends Fragment{
 		ButterKnife.bind(this, view);
 		return view;
 	}
-	
+
+	/**
+	 * Method ini di triggered pada saat view dari {@link Fragment} dibuat
+	 * Method ini berguna untuk:
+	 * - Set recyclerView layout manager
+	 * - Set adapter ke recyclerView
+	 * - Set border ke setiap recyclerView item
+	 * @param view View hasil dari onCreateView
+	 * @param savedInstanceState bundle object untuk menghandle orientation change
+	 */
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
@@ -126,7 +147,14 @@ public class SearchMovieFragment extends Fragment{
 			recyclerView.addItemDecoration(itemDecorator);
 		}
 	}
-	
+
+	/**
+	 * Method ini di triggered ketika activity dibuat, method ini berguna untuk:
+	 * - Save scroll position dari items dari object {@link Bundle}
+	 * - load data for first time while checking for Internet Connectivity
+	 * - Swipe to refresh for reload data or make it connected
+	 * @param savedInstanceState bundle object untuk menghandle orientation change
+	 */
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -215,7 +243,14 @@ public class SearchMovieFragment extends Fragment{
 		});
 		
 	}
-	
+
+	/**
+	 * Method ini berguna untuk:
+	 * - membuat option menu di {@link SearchMovieFragment}
+	 * - submit keyword di {@link SearchView} untuk load data bedasarkan keyword yg disubmit
+	 * @param menu Menu object
+	 * @param inflater Menu inflater untuk inflate Layout xml ke Menu object
+	 */
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// Inflate menu search movie
@@ -296,7 +331,12 @@ public class SearchMovieFragment extends Fragment{
 		
 		super.onCreateOptionsMenu(menu, inflater);
 	}
-	
+
+	/**
+	 * Method tsb berguna untuk membawa value dari Intent ke {@link DetailActivity}
+	 * @param movieItem {@link MovieItem} dari {@link android.support.v7.widget.RecyclerView item}
+	 * bedasarkan {@link MovieAdapter}
+	 */
 	private void showSelectedMovieItems(MovieItem movieItem){
 		// Dapatkan id dan title bedasarkan ListView item
 		int movieIdItem = movieItem.getId();
@@ -331,7 +371,12 @@ public class SearchMovieFragment extends Fragment{
 		// Start activity ke DetailActivity
 		startActivity(intentWithMovieIdData);
 	}
-	
+
+	/**
+	 * Method tsb di triggered ketika activity melakukan orientation changes/activity dimulai lagi
+	 * Method tsb berguna untuk merestore state dari {@link LinearLayoutManager} dari
+	 * onSaveInstanceState() method
+	 */
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -341,7 +386,12 @@ public class SearchMovieFragment extends Fragment{
 			searchMovieLinearLayoutManager.onRestoreInstanceState(mMovieListState);
 		}
 	}
-	
+
+	/**
+	 * Method ini berguna untuk menyimpan scroll position dengan membawa state dari
+	 * {@link LinearLayoutManager} yang berguna saat orientation change
+	 * @param outState Bundle object untuk di bawa ke onActivityCreated (tempat untuk restore state)
+	 */
 	@Override
 	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -354,7 +404,13 @@ public class SearchMovieFragment extends Fragment{
 		}
 		
 	}
-	
+
+	/**
+	 * Method tsb berguna untuk membuat observer yang berhubungan dengan
+	 * {@link android.arch.lifecycle.LiveData} dan handle empty data
+	 * @return Observer yang menampung {@link ArrayList<MovieItem>}
+	 * (data dari {@link android.arch.lifecycle.LiveData})
+	 */
 	public Observer<ArrayList<MovieItem>> createObserver(){
 		// Buat observer yg gunanya untuk update UI
 		return new Observer<ArrayList<MovieItem>>() {

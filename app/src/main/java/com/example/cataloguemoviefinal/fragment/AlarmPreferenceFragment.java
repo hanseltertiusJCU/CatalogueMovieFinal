@@ -10,7 +10,6 @@ import com.example.cataloguemoviefinal.R;
 import com.example.cataloguemoviefinal.alarm.DailyReminderAlarmReceiver;
 import com.example.cataloguemoviefinal.alarm.ReleaseTodayReminderAlarmReceiver;
 
-
 /**
  * Class ini berguna untuk:
  * - Mengatur daily alarm reminder apakah itu aktif atau tidak
@@ -62,6 +61,8 @@ public class AlarmPreferenceFragment extends PreferenceFragmentCompat implements
 	 * method tsb berguna untuk:
 	 * - Set daily alarm
 	 * - Set release date today alarm
+	 * - Cancel daily alarm
+	 * - Cancel release date today alarm
 	 * @param preference
 	 * @param object
 	 * @return boolean untuk update state value dari preference object

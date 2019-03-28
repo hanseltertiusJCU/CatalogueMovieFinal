@@ -23,6 +23,8 @@ import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.
  * - Mengatur isi dari stackview yang ada di widget
  * - Merefresh widget ketika terjadi perubahan data
  * - Membuat widget item dari stackview
+ * - Membawa data yang neccessary di widget item untuk dibawa ke onReceive di
+ * {@link FavoriteMovieItemWidget}
  */
 public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 	
@@ -47,7 +49,8 @@ public class FavoriteMovieStackRemoteViewsFactory implements RemoteViewsService.
 	}
 
 	/**
-	 * Method tsb berguna untuk melakukan refresh saat terjadi perubahan data
+	 * Method tsb di triggered oleh {@link AppWidgetManager} notifyAppWidgetViewDataChanged method
+	 * dan berguna untuk melakukan refresh saat terjadi perubahan data dengan query content provider
 	 */
 	@Override
 	public void onDataSetChanged() {

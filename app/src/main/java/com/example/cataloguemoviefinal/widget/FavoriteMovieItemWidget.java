@@ -3,6 +3,7 @@ package com.example.cataloguemoviefinal.widget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -41,7 +42,7 @@ public class FavoriteMovieItemWidget extends AppWidgetProvider{
 		Intent intent = new Intent(context, FavoriteMovieStackWidgetService.class);
 		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
 		intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-		
+
 		RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.favorite_movie_item_widget);
 		views.setRemoteAdapter(R.id.favorite_movie_stack_view, intent); // Set remote adapter untuk merespon terhadap perubahan data yang ada di {@link StackView}
 		views.setEmptyView(R.id.favorite_movie_stack_view, R.id.favorite_movie_item_empty_view); // Set empty view ketika tidak ada data
@@ -84,9 +85,11 @@ public class FavoriteMovieItemWidget extends AppWidgetProvider{
 	}
 
 	/**
-	 * Method ini di triggered ketika stack view item di click
+	 * Method ini di triggered ketika stack view item di click, alias fire {@link PendingIntent}
+	 * dari {@link android.widget.StackView} dan berguna untuk menampilkan {@link DetailActivity}
+	 * melalui {@link android.widget.StackView} item
 	 * @param context context dari widget
-	 * @param intent
+	 * @param intent untuk mengetahui action dari {@link PendingIntent}
 	 */
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -109,8 +112,6 @@ public class FavoriteMovieItemWidget extends AppWidgetProvider{
 				int favoriteMovieBooleanStateItem = selectedFavoriteMovieItem.getFavoriteBooleanState();
 				// Tentukan bahwa kita ingin membuka data Movie
 				String modeItem = "open_movie_detail";
-				// Variable ini mengetahui bahwa kita akan open data {@link DetailActivity} dari widget
-				boolean openFromWidget = true;
 				// Create URI untuk bawa URI ke data di intent dengan row id value
 				// content://com.example.cataloguemoviefinal/favorite_movies/id
 				Uri favoriteMovieUriItem = Uri.parse(MOVIE_FAVORITE_CONTENT_URI + "/" + favoriteMovieIdItem);
@@ -121,11 +122,19 @@ public class FavoriteMovieItemWidget extends AppWidgetProvider{
 				intentWithFavoriteMovieIdData.putExtra(BuildConfig.MOVIE_TITLE_DATA, favoriteMovieTitleItem);
 				intentWithFavoriteMovieIdData.putExtra(BuildConfig.MOVIE_BOOLEAN_STATE_DATA, favoriteMovieBooleanStateItem);
 				intentWithFavoriteMovieIdData.putExtra(BuildConfig.MODE_INTENT, modeItem);
-				intentWithFavoriteMovieIdData.putExtra(BuildConfig.OPEN_FROM_WIDGET, openFromWidget);
+				intentWithFavoriteMovieIdData.putExtra(BuildConfig.OPEN_FROM_WIDGET, true);
 				// Bawa URI untuk disampaikan ke {@link DetailActivity}
 				intentWithFavoriteMovieIdData.setData(favoriteMovieUriItem);
 				// Start activity ke {@link DetailActivity}
 				context.startActivity(intentWithFavoriteMovieIdData);
+			} else if(intent.getAction().equals("com.example.cataloguemoviefinal.ACTION_UPDATE_WIDGET_DATA")){ // get the action supposedly from broadcast receiver
+				// todo: do the action to update app widget
+				// Panggil AppWidgetManager class
+				AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+				// Get App widget ids dari FavoriteMovieItemWidget class
+				int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, FavoriteMovieItemWidget.class));
+				appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.favorite_movie_stack_view);
+
 			}
 		}
 	}

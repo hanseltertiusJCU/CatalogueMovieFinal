@@ -10,7 +10,14 @@ import java.lang.ref.WeakReference;
 
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_FAVORITE_CONTENT_URI;
 
-// Class tsb berguna untuk membaca data dari Database, specifically table tv shows, lalu mendisplay data yg ada di sana
+/**
+ * Class tsb berguna untuk membaca data dari {@link android.content.ContentProvider} dengan memanggil
+ * {@link android.content.ContentResolver}, lalu menampilkan result dengan memanggil
+ * postExecute method di {@link LoadFavoriteTvShowCallback} interface yang diggunakan di
+ * {@link com.example.cataloguemoviefinal.MainActivity} untuk mendapatkan data beserta
+ * {@link com.example.cataloguemoviefinal.fragment.FavoriteTvShowFragment} untuk menggunakan data
+ * dari {@link com.example.cataloguemoviefinal.MainActivity}
+ */
 public class LoadFavoriteTvShowAsync extends AsyncTask<Void, Void, Cursor> {
 	// WeakReference digunakan karena AsyncTask akan dibuat dan dieksekusi scr bersamaan di method onCreate().
 	// Selain itu, ketika Activity destroyed, Activity tsb dapat dikumpulkan oleh GarbageCollector, sehingga

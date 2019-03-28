@@ -1,5 +1,6 @@
 package com.example.cataloguemoviefinal.async;
 
+import android.content.ContentProvider;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -10,7 +11,14 @@ import java.lang.ref.WeakReference;
 
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteMovieItemColumns.MOVIE_FAVORITE_CONTENT_URI;
 
-// Class tsb berguna untuk membaca data dari Database, specifically table movies, lalu mendisplay data yg ada di sana
+/**
+ * Class tsb berguna untuk membaca data dari {@link ContentProvider} dengan memanggil
+ * {@link android.content.ContentResolver}, lalu menampilkan result dengan memanggil
+ * postExecute method di {@link LoadFavoriteMoviesCallback} interface yang diggunakan di
+ * {@link com.example.cataloguemoviefinal.MainActivity} untuk mendapatkan data beserta
+ * {@link com.example.cataloguemoviefinal.fragment.FavoriteMovieFragment} untuk menggunakan data
+ * dari {@link com.example.cataloguemoviefinal.MainActivity}
+ */
 public class LoadFavoriteMoviesAsync extends AsyncTask<Void, Void, Cursor> {
 	// WeakReference digunakan karena AsyncTask akan dibuat dan dieksekusi scr bersamaan di method onCreate().
 	// Selain itu, ketika Activity destroyed, Activity tsb dapat dikumpulkan oleh GarbageCollector, sehingga
@@ -26,7 +34,7 @@ public class LoadFavoriteMoviesAsync extends AsyncTask<Void, Void, Cursor> {
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		weakCallback.get().favoriteMoviePreExecute(); // memanggil method preExecute di interface
+		weakCallback.get().favoriteMoviePreExecute(); // memanggil method preExecute di interface untuk mempersiapkan data
 	}
 
 	@Override

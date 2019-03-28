@@ -418,8 +418,11 @@ public class MainActivity extends AppCompatActivity implements LoadFavoriteMovie
 	}
 
 	/**
-	 * Method ini berguna untuk menampilkan data Favorite movie array list
-	 * beserta detatch reattatch existing fragment (fav movie) yang ada di ViewPager
+	 * Method ini berguna untuk:
+	 * - menampilkan data Favorite movie array list
+	 * - Detatch reattatch existing fragment (fav movie) yang ada di ViewPager
+	 * - Mengupdate isi widget ketika data berganti karena onChanged dari
+	 * {@link FavoriteMovieDataObserver} load {@link LoadFavoriteMoviesAsync}
 	 */
 	@Override
 	public void favoriteMoviePostExecute(Cursor movieItems) {

@@ -24,15 +24,23 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * Class ini berguna untuk membuat RecyclerView item view yang menampung data2 penting di
+ * {@link TvShowItem}
+ */
 public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder> {
-	
+
+	// Initiate variable ArrayList<TvShowItem> utk data dan Context utk dapatin resources
+	// (guna untuk mengatur {@link Spannable} object)
 	private ArrayList<TvShowItem> mTvShowData = new ArrayList<>();
 	private Context context;
-	
+
+	// Constructor yg membawa Fragment TV Show classes
 	public TvShowAdapter(Context context) {
 		this.context = context;
 	}
-	
+
+	// Getter untuk return ArrayList<TvShowItem> variable beserta context variable
 	public ArrayList<TvShowItem> getTvShowData() {
 		return mTvShowData;
 	}
@@ -40,25 +48,30 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvShowView
 	public Context getContext() {
 		return context;
 	}
-	
+
+	/**
+	 * Method tsb berguna untuk set tv show data ke adapter dan notify bahwa data
+	 * yang ada itu berubah
+	 * @param mData ArrayList yang menampung TvShowItem object
+	 */
 	public void setTvShowData(ArrayList<TvShowItem> mData) {
-		
-		// Jika ada data di parameter, maka clear isi data di ArrayList global variable
-		if(mData.size() > 0) {
-			this.mTvShowData.clear();
-			// Add semua isi data ke global variable ArrayList
-			this.mTvShowData.addAll(mData);
-		} else {
-			this.mTvShowData.clear();
-		}
-		
-		
+
+		// Clear existing array list content
+		this.mTvShowData.clear();
+		// Add semua isi data ke global variable ArrayList
+		this.mTvShowData.addAll(mData);
 		
 		// Method tersebut berguna untuk memanggil adapter bahwa ada data yg bru, sehingga data tsb
 		// dpt ditampilkan pada RecyclerView yg berisi adapter yg berkaitan dengan RecyclerView
 		notifyDataSetChanged();
 	}
-	
+
+	/**
+	 * Method tsb berguna untuk inflate xml layout lalu membuat {@link TvShowViewHolder} object
+	 * @param viewGroup
+	 * @param i
+	 * @return {@link TvShowViewHolder} object
+	 */
 	@NonNull
 	@Override
 	public TvShowViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -68,7 +81,13 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvShowView
 		// parameter
 		return new TvShowViewHolder(tvShowItem);
 	}
-	
+
+	/**
+	 * Method ini berguna untuk bind view yang ada di ViewHolder lalu assign values bedasarkan
+	 * {@link TvShowItem} object to view
+	 * @param tvShowViewHolder {@link TvShowViewHolder} object bawaan dari onCreateViewHolder() method
+	 * @param position position dari ArrayList
+	 */
 	@Override
 	public void onBindViewHolder(@NonNull TvShowViewHolder tvShowViewHolder, int position) {
 		// Load image jika ada poster path
@@ -108,13 +127,20 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvShowView
 		// Return position dari sebuah item di RecyclerView
 		return position;
 	}
-	
+
 	@Override
 	public int getItemCount() {
+		// Return seberapa banyak data yg di tampung di ArrayList
 		return getTvShowData().size();
 	}
-	
+
+	/**
+	 * Kelas ini berguna untuk menampung view yang ada tanpa mendeclare view di sebuah Adapter.
+	 * Selain itu, kelas tsb berguna untuk assign view ke tv_show_items.xml dan sbg parameter dari
+	 * onBindView() method
+	 */
 	class TvShowViewHolder extends RecyclerView.ViewHolder {
+		// Bind Views by find view by id
 		@BindView(R.id.poster_image)
 		ImageView imageViewTvShowPoster;
 		@BindView(R.id.tv_show_name_text)
@@ -126,6 +152,7 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvShowView
 		@BindView(R.id.tv_show_language_text)
 		TextView textViewTvShowOriginalLanguage;
 		
+		// Assign views di dalam constructor
 		TvShowViewHolder(@NonNull View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);

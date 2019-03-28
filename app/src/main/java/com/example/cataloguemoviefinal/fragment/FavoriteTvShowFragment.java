@@ -47,7 +47,8 @@ import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.
 
 /**
  * Class tersebut berguna untuk:
- * - menampilkan data berisi favorite tv show ketika connected ke internet
+ * - menampilkan data berisi favorite tv show ketika connected ke internet bedasarkan data dari
+ * {@link LoadFavoriteTvShowAsync}
  * - membuat intent ke {@link DetailActivity} ketika view object dari {@link RecyclerView} di click
  */
 public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvShowCallback {
@@ -69,11 +70,12 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 	SwipeRefreshLayout fragmentTvShowSwipeRefreshLayout;
 
 	/**
-	 * Method ini
-	 * @param inflater
-	 * @param container
-	 * @param savedInstanceState
-	 * @return view dari layout xml
+	 * Method ini di triggered pada saat {@link Fragment} pertama kali dibuat
+	 * Method ini berguna untuk membuat View bedasarkan layout xml fragment_tv_show
+	 * @param inflater LayoutInflater untuk inflate layout dari xml
+	 * @param container ViewGroup yang menampung fragment (root view dari xml possibly)
+	 * @param savedInstanceState Bundle object untuk dapat handle orientation changes
+	 * @return View object untuk onViewCreated()
 	 */
 	@Nullable
 	@Override
@@ -86,9 +88,13 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 	}
 
 	/**
-	 * Method ini di triggered ketika view dibuat
-	 * @param view
-	 * @param savedInstanceState
+	 * Method ini di triggered pada saat view dari {@link Fragment} dibuat
+	 * Method ini berguna untuk:
+	 * - Set recyclerView layout manager
+	 * - Set adapter ke recyclerView
+	 * - Set border ke setiap recyclerView item
+	 * @param view View hasil dari onCreateView
+	 * @param savedInstanceState bundle object untuk menghandle orientation change
 	 */
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -123,8 +129,11 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 	}
 
 	/**
-	 * Method ini di trigger ketika activity dibuat
-	 * @param savedInstanceState
+	 * Method ini di triggered ketika activity dibuat, method ini berguna untuk:
+	 * - Save scroll position dari items dari object {@link Bundle}
+	 * - load data for first time while checking for Internet Connectivity
+	 * - Swipe to refresh for reload data or make it connected
+	 * @param savedInstanceState bundle object untuk menghandle orientation change
 	 */
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -237,7 +246,13 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 	}
 
 	/**
-	 * Method ini berguna untuk menampilkan data Favorite TV Show array list
+	 * Method ini berguna utk:
+	 * - mempersiapkan data yang ada di {@link ArrayList<TvShowItem>}
+	 * yang membuat setiap data dari ArrayList tsb menjadi {@link RecyclerView} item
+	 * - Ketika di click, panggil showSelectedTvShowItems() agar dapat dibawa ke
+	 * {@link DetailActivity}
+	 * - Menghandle empty data di Favorite TV Show
+	 * @param tvShowItems Cursor hasil dari doInBackground() method
 	 */
 	@Override
 	public void favoriteTvShowPostExecute(Cursor tvShowItems) {
@@ -275,9 +290,9 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 	}
 
 	/**
-	 * Method tsb berguna untuk membawa value dari Intent ke Activity tujuan
-	 * serta memanggil Activity tujuan untuk merubah data favorite state
-	 * @param tvShowItem tv show item yang akan dibawa ke {@link DetailActivity}
+	 * Method tsb berguna untuk membawa value dari Intent ke {@link DetailActivity}
+	 * @param tvShowItem {@link TvShowItem} dari {@link android.support.v7.widget.RecyclerView item}
+	 * bedasarkan {@link TvShowAdapter}
 	 */
 	private void showSelectedTvShowItems(TvShowItem tvShowItem) {
 		// Dapatkan id dan title bedasarkan item di ArrayList
@@ -304,8 +319,14 @@ public class FavoriteTvShowFragment extends Fragment implements LoadFavoriteTvSh
 		// Start activity ke activity tujuan
 		startActivity(intentWithTvShowIdData);
 	}
-	
-	
+
+
+	/**
+	 * Method ini berguna untuk menyimpan scroll position dengan membawa ArrayList parcelable
+	 * (kebetulan {@link TvShowItem} adalah {@link android.os.Parcelable} object) yang berguna pada
+	 * saat orientation change
+	 * @param outState Bundle object untuk di bawa ke onActivityCreated (tempat untuk restore state)
+	 */
 	@Override
 	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);

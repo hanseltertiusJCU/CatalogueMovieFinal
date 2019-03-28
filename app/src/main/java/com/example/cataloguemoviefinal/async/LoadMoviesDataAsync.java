@@ -14,7 +14,11 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-// Kelas ini berguna untuk load data dari URL
+/**
+ * Kelas ini berguna untuk load data dari URL Discover Movie untuk dapat digunakan oleh
+ * {@link com.example.cataloguemoviefinal.alarm.ReleaseTodayReminderAlarmReceiver} yang bertugas utk
+ * mengolah data bedasarkan release date yang di trigger notif ketika release date = tanggal system
+ */
 public class LoadMoviesDataAsync extends AsyncTask<Void, Void, ArrayList<MovieItem>> {
 	
 	// Initiate URL component dan juga
@@ -25,7 +29,12 @@ public class LoadMoviesDataAsync extends AsyncTask<Void, Void, ArrayList<MovieIt
 	// Empty constructor
 	public LoadMoviesDataAsync() {
 	}
-	
+
+	/**
+	 * Method ini berguna utk melakukan JSON Operation lalu memasukkan data yang ada
+	 * @param voids
+	 * @return ArrayList yang menampung data, hasil dari JSON Operation di URL discover movie
+	 */
 	@Override
 	protected ArrayList<MovieItem> doInBackground(Void... voids) {
 		
@@ -67,16 +76,16 @@ public class LoadMoviesDataAsync extends AsyncTask<Void, Void, ArrayList<MovieIt
 						
 						MovieItem movieItem = new MovieItem(movie, detailedItem);
 						
-						// Cek jika posterPath itu tidak "null" karena null dr JSON itu berupa
-						// String, sehingga perlu menggunakan "" di dalam null
+						// Cek jika posterPath itu tidak "null"/data ada poster imagenya.
+						// Di JSON, null nya itu berupa String sehingga perlu membungkus ""
 						if(!movieItem.getMoviePosterPath().equals("null")){
-							
+							// Add item ke ArrayList
 							movieItemArrayList.add(movieItem);
 						}
 					}
 					
 				} catch(Exception e){
-					e.printStackTrace();
+					e.printStackTrace(); // Print exception message di StackTrace
 				}
 			}
 			
@@ -86,7 +95,7 @@ public class LoadMoviesDataAsync extends AsyncTask<Void, Void, ArrayList<MovieIt
 			}
 		});
 		
-		return movieItemArrayList;
+		return movieItemArrayList; // Return ArrayList that shows MovieItem object based on URL discover
 	}
 	
 	@Override

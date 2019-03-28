@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 
 import com.example.cataloguemoviefinal.model.DetailedTvShowViewModel;
 
-
 /**
  * Class ini berguna untuk membuat {@link DetailedTvShowViewModel} object dan membuat view model
  * yang menampung lebih dari 1 parameter karena ada tambahan informasi yang penting

@@ -16,8 +16,9 @@ import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.
 import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.FavoriteTvShowItemColumns.TV_SHOW_RATINGS_COLUMN;
 
 /**
- * Kelas ini berguna untuk convert Cursor ke ArrayList untuk bisa diolah datanya.
- * Hal ini terjadi karena query method untuk ContentProvider return Cursor, bukan ArrayList
+ * Kelas ini berguna untuk convert {@link Cursor} ke {@link ArrayList<TvShowItem>} untuk bisa
+ * diolah datanya. Hal ini terjadi karena query method untuk
+ * {@link android.content.ContentProvider} return {@link Cursor}, bukan {@link ArrayList<TvShowItem>}
  */
 public class FavoriteTvShowMappingHelper {
 	public static ArrayList<TvShowItem> mapCursorToFavoriteTvShowArrayList(Cursor tvShowItemCursor){
@@ -36,6 +37,7 @@ public class FavoriteTvShowMappingHelper {
 				String tvShowDateAddedFavorite = tvShowItemCursor.getString(tvShowItemCursor.getColumnIndexOrThrow(TV_SHOW_DATE_ADDED_COLUMN));
 				int tvShowBooleanState = tvShowItemCursor.getInt(tvShowItemCursor.getColumnIndexOrThrow(TV_SHOW_FAVORITE_COLUMN));
 				// Add TvShow item to array list with using constructor that contain variables
+				// from column values
 				tvShowItemsList.add(new TvShowItem(tvShowId, tvShowName, tvShowRatings, tvShowOriginalLanguage, tvShowFirstAirDate, tvShowPosterPath, tvShowDateAddedFavorite, tvShowBooleanState));
 			}
 		}

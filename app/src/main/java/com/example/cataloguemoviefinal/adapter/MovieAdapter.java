@@ -35,12 +35,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     private ArrayList<MovieItem> mMovieData = new ArrayList<>();
 	private Context context;
 	
-	// Constructor yg membawa Fragment Movie class
+	// Constructor yg membawa Fragment Movie classes
 	public MovieAdapter(Context context) {
 		this.context = context;
 	}
 	
-	// Getter untuk variable
+	// Getter untuk return ArrayList<MovieItem> variable beserta context variable
 	public ArrayList<MovieItem> getMovieData() {
 		return mMovieData;
 	}
@@ -70,7 +70,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
      * Method tsb berguna untuk inflate xml layout lalu membuat {@link MovieViewHolder} object
      * @param viewGroup
      * @param i
-     * @return MovieViewHolder object
+     * @return {@link MovieViewHolder} object
      */
 	@NonNull
 	@Override
@@ -130,6 +130,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 	
 	@Override
 	public int getItemCount() {
+		// Return seberapa banyak data yg di tampung di ArrayList
 		return getMovieData().size();
 	}
 
@@ -139,6 +140,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
      * onBindView() method
 	 */
 	class MovieViewHolder extends RecyclerView.ViewHolder {
+		// Bind Views by find view by id
 		@BindView(R.id.poster_image)
 		ImageView imageViewMoviePoster;
 		@BindView(R.id.movie_title_text)
@@ -150,7 +152,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 		@BindView(R.id.movie_language_text)
 		TextView textViewMovieOriginalLanguage;
 		
-		// Assign view di dalam constructor
+		// Assign views di dalam constructor
 		MovieViewHolder(@NonNull View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);

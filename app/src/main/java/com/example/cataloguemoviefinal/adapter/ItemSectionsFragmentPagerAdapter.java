@@ -20,9 +20,15 @@ public class ItemSectionsFragmentPagerAdapter extends FragmentPagerAdapter {
 	private final List<String> mFragmentTitleList = new ArrayList<>();
 	// Create Context object
 	private Context mContext;
-	
-	// Constructor untuk FragmentPagerAdapter yang membawa
-	// super({@link FragmentManager} object dari getSupportFragmentManager() method)
+
+	/**
+	 * Constructor untuk membuat object {@link ItemSectionsFragmentPagerAdapter} yang membawa
+	 * {@link FragmentManager} object dari getSupportFragmentManager() method di
+	 * {@link com.example.cataloguemoviefinal.MainActivity}. Dalam fungsional,
+	 * ia memanggil {@link FragmentPagerAdapter} yang merupakan
+	 * @param context
+	 * @param fragmentManager
+	 */
 	public ItemSectionsFragmentPagerAdapter(Context context, FragmentManager fragmentManager) {
 		super(fragmentManager);
 		mContext = context;

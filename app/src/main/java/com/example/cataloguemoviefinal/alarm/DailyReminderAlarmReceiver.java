@@ -1,5 +1,6 @@
 package com.example.cataloguemoviefinal.alarm;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -20,18 +21,35 @@ import com.example.cataloguemoviefinal.R;
 
 import java.util.Calendar;
 
-// Class ini berguna utk mengatur daily reminder alarm
+/**
+ * Class ini berguna untuk:
+ * - Mengatur daily reminder alarm
+ * - Mengaktifkan alarm setiap jam 7 pagi dengan interval per hari
+ */
 public class DailyReminderAlarmReceiver extends BroadcastReceiver {
 
     // Request code pending intent
     private int REQUEST_CODE = 1;
 
+    /**
+     * Method ini di triggered ketika time di device matched dengan
+     * time di setDailyReminderAlarm() method, lalu memanggil {@link Notification} ke device
+     * @param context
+     * @param intent
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         showDailyReminderNotification(context); // Call notification method untuk DailyReminder
     }
 
-    // Set daily reminder alarm that goes into application Catalogue Movie (trigger every 7AM)
+    /**
+     * Method ini di triggered ketika user mengaktifkan daily reminder alarm dari
+     * {@link com.example.cataloguemoviefinal.fragment.AlarmPreferenceFragment} dan
+     * set alarm setiap jam 7 pagi dan launch MainActivity kembali jika di click
+     * @param context activity yang ada di AlarmPreferenceFragment, yaitu
+     * {@link com.example.cataloguemoviefinal.SettingsActivity}
+     */
+    @SuppressLint("ObsoleteSdkInt")
     public void setDailyReminderAlarm(Context context) {
         // Buat alarm manager object
         AlarmManager dailyReminderAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -68,7 +86,13 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
         }
     }
 
-    // Method ini berguna untuk cancel alarm yg ada di AlarmManager
+    /**
+     * Method ini di triggered ketika user menonaktifkan daily reminder alarm dari
+     * {@link com.example.cataloguemoviefinal.fragment.AlarmPreferenceFragment} dan
+     * batalkan existing alarm manager
+     * @param context activity yang ada di AlarmPreferenceFragment, yaitu
+     * {@link com.example.cataloguemoviefinal.SettingsActivity}
+     */
     public void cancelAlarm(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE); // Initiate alarm manager
         Intent intent = new Intent(context, DailyReminderAlarmReceiver.class);
@@ -81,7 +105,11 @@ public class DailyReminderAlarmReceiver extends BroadcastReceiver {
         }
     }
 
-    // Method ini berguna untuk notification di Daily Reminder
+    /**
+     * Method ini merupakan hasil panggilan dari onReceive dan launch {@link MainActivity}
+     * ketika {@link Notification} item di click
+     * @param context
+     */
     private void showDailyReminderNotification(Context context) {
         // Bikin channel for Daily alarm reminder
         String CHANNEL_ID = "Channel_1";

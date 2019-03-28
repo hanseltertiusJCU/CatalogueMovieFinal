@@ -78,7 +78,15 @@ public class TvShowFragment extends Fragment{
 	public TvShowFragment() {
 		// Required empty public constructor
 	}
-	
+
+	/**
+	 * Method ini di triggered pada saat {@link Fragment} pertama kali dibuat
+	 * Method ini berguna untuk membuat View bedasarkan layout xml fragment_tv_show
+	 * @param inflater LayoutInflater untuk inflate layout dari xml
+	 * @param container ViewGroup yang menampung fragment (root view dari xml possibly)
+	 * @param savedInstanceState Bundle object untuk dapat handle orientation changes
+	 * @return View object untuk onViewCreated()
+	 */
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
@@ -87,7 +95,16 @@ public class TvShowFragment extends Fragment{
 		ButterKnife.bind(this, view);
 		return view;
 	}
-	
+
+	/**
+	 * Method ini di triggered pada saat view dari {@link Fragment} dibuat
+	 * Method ini berguna untuk:
+	 * - Set recyclerView layout manager
+	 * - Set adapter ke recyclerView
+	 * - Set border ke setiap recyclerView item
+	 * @param view View hasil dari onCreateView
+	 * @param savedInstanceState bundle object untuk menghandle orientation change
+	 */
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
@@ -120,7 +137,14 @@ public class TvShowFragment extends Fragment{
 			recyclerView.addItemDecoration(itemDecorator);
 		}
 	}
-	
+
+	/**
+	 * Method ini di triggered ketika activity dibuat, method ini berguna untuk:
+	 * - Save scroll position dari items dari object {@link Bundle}
+	 * - load data for first time while checking for Internet Connectivity
+	 * - Swipe to refresh for reload data or make it connected
+	 * @param savedInstanceState bundle object untuk menghandle orientation change
+	 */
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -202,7 +226,12 @@ public class TvShowFragment extends Fragment{
 
 
 	}
-	
+
+	/**
+	 * Method tsb berguna untuk membawa value dari Intent ke {@link DetailActivity}
+	 * @param tvShowItem {@link TvShowItem} dari {@link android.support.v7.widget.RecyclerView item}
+	 * bedasarkan {@link TvShowItem}
+	 */
 	private void showSelectedTvShowItems(TvShowItem tvShowItem) {
 		// Dapatkan id dan title bedasarkan ListView item
 		int tvShowIdItem = tvShowItem.getId();
@@ -236,7 +265,12 @@ public class TvShowFragment extends Fragment{
 		// Start activity ke DetailActivity
 		startActivity(intentWithTvShowIdData);
 	}
-	
+
+	/**
+	 * Method tsb di triggered ketika activity melakukan orientation changes/activity dimulai lagi
+	 * Method tsb berguna untuk merestore state dari {@link LinearLayoutManager} dari
+	 * onSaveInstanceState() method
+	 */
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -246,7 +280,12 @@ public class TvShowFragment extends Fragment{
 			tvShowLinearLayoutManager.onRestoreInstanceState(mTvShowListState);
 		}
 	}
-	
+
+	/**
+	 * Method ini berguna untuk menyimpan scroll position dengan membawa state dari
+	 * {@link LinearLayoutManager} yang berguna saat orientation change
+	 * @param outState Bundle object untuk di bawa ke onActivityCreated (tempat untuk restore state)
+	 */
 	@Override
 	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -258,8 +297,13 @@ public class TvShowFragment extends Fragment{
 			outState.putParcelable(TV_SHOW_LIST_STATE, mTvShowListState);
 		}
 	}
-	
-	// Method tsb berguna untuk membuat observer
+
+	/**
+	 * Method tsb berguna untuk membuat observer yang berhubungan dengan
+	 * {@link android.arch.lifecycle.LiveData}
+	 * @return Observer yang menampung {@link ArrayList<TvShowItem>}
+	 * (data dari {@link android.arch.lifecycle.LiveData})
+	 */
 	public Observer<ArrayList<TvShowItem>> createObserver() {
 		// Buat Observer yang gunanya untuk update UI
 		return new Observer<ArrayList<TvShowItem>>() {

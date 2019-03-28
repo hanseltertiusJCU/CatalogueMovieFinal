@@ -47,7 +47,8 @@ import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.
 
 /**
  * Class tersebut berguna untuk:
- * - menampilkan data berisi favorite movie ketika connected ke internet
+ * - menampilkan data berisi favorite movie ketika connected ke internet bedasarkan data dari
+ * {@link LoadFavoriteMoviesAsync}
  * - membuat intent ke {@link DetailActivity} ketika view object dari {@link RecyclerView} di click
  */
 public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMoviesCallback {
@@ -68,15 +69,33 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 	@BindView(R.id.fragment_movie_swipe_refresh_layout)
 	SwipeRefreshLayout fragmentMovieSwipeRefreshLayout;
 
+	/**
+	 * Method ini di triggered pada saat {@link Fragment} pertama kali dibuat
+	 * Method ini berguna untuk membuat View bedasarkan layout xml fragment_movie
+	 * @param inflater LayoutInflater untuk inflate layout dari xml
+	 * @param container ViewGroup yang menampung fragment (root view dari xml possibly)
+	 * @param savedInstanceState Bundle object untuk dapat handle orientation changes
+	 * @return View object untuk onViewCreated()
+	 */
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_movie, container, false);
+		// Bind components to View
 		ButterKnife.bind(this, view);
 		return view;
 	}
-	
+
+	/**
+	 * Method ini di triggered pada saat view dari {@link Fragment} dibuat
+	 * Method ini berguna untuk:
+	 * - Set recyclerView layout manager
+	 * - Set adapter ke recyclerView
+	 * - Set border ke setiap recyclerView item
+	 * @param view View hasil dari onCreateView
+	 * @param savedInstanceState bundle object untuk menghandle orientation change
+	 */
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
@@ -108,7 +127,14 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 			recyclerView.addItemDecoration(itemDecorator);
 		}
 	}
-	
+
+	/**
+	 * Method ini di triggered ketika activity dibuat, method ini berguna untuk:
+	 * - Save scroll position dari items dari object {@link Bundle}
+	 * - load data for first time while checking for Internet Connectivity
+	 * - Swipe to refresh for reload data or make it connected
+	 * @param savedInstanceState bundle object untuk menghandle orientation change
+	 */
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -200,8 +226,12 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 			}
 		});
 	}
-	
-	// Method tsb berguna untuk membawa value dari Intent ke Activity tujuan serta memanggil Activity tujuan
+
+	/**
+	 * Method tsb berguna untuk membawa value dari Intent ke {@link DetailActivity}
+	 * @param movieItem {@link MovieItem} dari {@link android.support.v7.widget.RecyclerView item}
+	 * bedasarkan {@link MovieAdapter}
+	 */
 	private void showSelectedMovieItems(MovieItem movieItem) {
 		// Dapatkan id dan title bedasarkan item di ArrayList
 		int movieIdItem = movieItem.getId();
@@ -209,8 +239,6 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		int movieBooleanStateItem = movieItem.getFavoriteBooleanState();
 		// Tentukan bahwa kita ingin membuka data Movie
 		String modeItem = "open_movie_detail";
-		// Boolean variable untuk mengetahui apakah kita membuka data dari widget
-		boolean openFromWidget = false;
 		// Create URI untuk bawa URI ke data di intent dengan row id value
 		// content://com.example.cataloguemoviefinal/favorite_movies/id
 		Uri movieUriItem = Uri.parse(MOVIE_FAVORITE_CONTENT_URI + "/" + movieIdItem);
@@ -221,7 +249,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		intentWithMovieIdData.putExtra(MOVIE_TITLE_DATA, movieTitleItem);
 		intentWithMovieIdData.putExtra(MOVIE_BOOLEAN_STATE_DATA, movieBooleanStateItem);
 		intentWithMovieIdData.putExtra(MODE_INTENT, modeItem);
-		intentWithMovieIdData.putExtra(OPEN_FROM_WIDGET, openFromWidget);
+		intentWithMovieIdData.putExtra(OPEN_FROM_WIDGET, false);
 		intentWithMovieIdData.setData(movieUriItem);
 		// Start activity ke detail activity
 		startActivity(intentWithMovieIdData);
@@ -229,6 +257,9 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 
 	// Callback method dari Interface LoadFavoriteMoviesCallback
 
+	/**
+	 * Method tsb berguna untuk mempersiapkan data, sehingga merepresentasikan loading data
+	 */
 	@Override
 	public void favoriteMoviePreExecute() {
 		if(getActivity() != null){
@@ -244,6 +275,15 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 		}
 	}
 
+	/**
+	 * Method ini berguna utk:
+	 * - mempersiapkan data yang ada di {@link ArrayList<MovieItem>}
+	 * yang membuat setiap data dari ArrayList tsb menjadi {@link RecyclerView} item
+	 * - Ketika di click, panggil showSelectedMovieItems() agar dapat dibawa ke
+	 * {@link DetailActivity}
+	 * - Menghandle empty data di Favorite Movie
+	 * @param movieItems Cursor hasil dari doInBackground() method
+	 */
 	@Override
 	public void favoriteMoviePostExecute(Cursor movieItems) {
 		// cek jika array list favorite ada data
@@ -278,8 +318,14 @@ public class FavoriteMovieFragment extends Fragment implements LoadFavoriteMovie
 			emptyTextView.setText(getString(R.string.no_favorite_movie_data_shown));
 		}
 	}
-	
-	
+
+
+	/**
+	 * Method ini berguna untuk menyimpan scroll position dengan membawa ArrayList parcelable
+	 * (kebetulan {@link MovieItem} adalah {@link android.os.Parcelable} object) yang berguna pada
+	 * saat orientation change
+	 * @param outState Bundle object untuk di bawa ke onActivityCreated (tempat untuk restore state)
+	 */
 	@Override
 	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);

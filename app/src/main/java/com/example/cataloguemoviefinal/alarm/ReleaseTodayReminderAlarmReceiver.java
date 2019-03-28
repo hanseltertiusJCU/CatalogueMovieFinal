@@ -1,5 +1,6 @@
 package com.example.cataloguemoviefinal.alarm;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -27,15 +28,31 @@ import java.util.Date;
 import java.util.Locale;
 
 // Class ini berguna untuk mengatur release today movie reminder alarm
+
+/**
+ * Class ini berguna untuk:
+ * - Mengatur release today reminder alarm
+ * - Mengaktifkan alarm setiap jam 8 pagi dengan interval per hari dan
+ * menampilkan notif hanya ketika date dari system match dengan release date today di AsyncTask
+ */
 public class ReleaseTodayReminderAlarmReceiver extends BroadcastReceiver {
 
     // Request code pending intent
     private int RELEASE_TODAY_REQUEST_CODE = 2;
 
+    /**
+     * Method ini di triggered ketika time di device matched dengan
+     * time di setReleaseTodayReminderAlarm() method, lalu memanggil {@link Notification} ke device
+     * dengan ketentuan date dari device harus sama dengan release date hasil dari
+     * {@link LoadMoviesDataAsync}
+     * @param context
+     * @param intent
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        try { // Try code to face exception
+        try { // Try code to face exception made by AsyncTask get result method
+
             LoadMoviesDataAsync loadMoviesDataAsync = new LoadMoviesDataAsync(); // Create async task
             AsyncTask<Void, Void, ArrayList<MovieItem>> task = loadMoviesDataAsync.execute(); // Execute async task
 
@@ -63,7 +80,13 @@ public class ReleaseTodayReminderAlarmReceiver extends BroadcastReceiver {
 
     }
 
-    // Method ini berguna untuk mengeluarkan alarm yg berisi bahwa ada film yg kluar hari ini.
+    /**
+     * Method ini di triggered ketika user mengaktifkan release today reminder alarm dari
+     * {@link com.example.cataloguemoviefinal.fragment.AlarmPreferenceFragment} dan
+     * set release today alarm setiap jam 8 pagi
+     * @param context
+     */
+    @SuppressLint("ObsoleteSdkInt")
     public void setReleaseDateTodayReminderAlarm(Context context) {
         // Buat alarm manager object
         AlarmManager releaseTodayAlarmReminder = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -92,7 +115,12 @@ public class ReleaseTodayReminderAlarmReceiver extends BroadcastReceiver {
         }
     }
 
-    // Method ini berguna untuk cancel alarm yg ada di AlarmManager
+    /**
+     * Method ini di triggered ketika user menonaktifkan release today reminder alarm dari
+     * {@link com.example.cataloguemoviefinal.fragment.AlarmPreferenceFragment} dan
+     * batalkan existing alarm manager
+     * @param context
+     */
     public void cancelReleaseDateTodayAlarm(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, ReleaseTodayReminderAlarmReceiver.class);
@@ -104,8 +132,13 @@ public class ReleaseTodayReminderAlarmReceiver extends BroadcastReceiver {
         }
     }
 
-
-    // Method ini berguna untuk notification di Release Today Reminder
+    /**
+     * Method ini merupakan hasil panggilan dari onReceive dan menampilkan movie yang release pada
+     * hari yang sama dengan device
+     * @param context
+     * @param notifId id dari movie item yang ditriggered
+     * @param title title dari movie item yang ditriggered
+     */
     private void showReleaseTodayReminderNotification(Context context, int notifId, String title) {
         String CHANNEL_ID = "Channel_2";
         String CHANNEL_NAME = "ReleaseTodayReminder channel";

@@ -94,6 +94,10 @@ import static com.example.cataloguemoviefinal.database.FavoriteDatabaseContract.
  * - Memasukkan data {@link MovieItem} atau {@link TvShowItem} ke ContentProvider
  * - Mengetahui bahwa datanya itu dibuka dari {@link FavoriteMovieItemWidget} ataupun
  * {@link android.support.v4.app.Fragment} yang ada di {@link MainActivity}
+ * - Refresh data dengan menggunakan {@link SwipeRefreshLayout} untuk dapat
+ * menghandle connectivity changes
+ * - Menampilkan {@link Snackbar} melalui {@link CoordinatorLayout} yang menandakan bahwa data
+ * inserted/removed
  */
 public class DetailActivity extends AppCompatActivity {
 	// Setup views for informations in detailed movie/detailed tv show
@@ -875,7 +879,7 @@ public class DetailActivity extends AppCompatActivity {
 
 	/**
 	 * Method ini berguna untuk membuat menu icon bedasarkan value dari boolean state value favorite
-	 * @param menu
+	 * @param menu Menu object utk menampung XML
 	 * @return boolean value yg represent bahwa option menu itu dibuat
 	 */
 	@Override
@@ -957,12 +961,18 @@ public class DetailActivity extends AppCompatActivity {
 							snackbarMessage.show();
 							// Buat kondisi ketika data di buka dari widget
 							if(openDataFromWidget){
+
+								// Line ini berguna agar widget dapat diupdate ketika data diubah
+								// namun langsung quit app tanpa menggunakan up/back button
+
 								// Panggil AppWidgetManager class dengan memanggil application
 								// context (1 applikasi yaitu CatalogueMovieFinal)
 								AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
 								// Get App widget ids dari FavoriteMovieItemWidget class
 								int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(getApplicationContext(), FavoriteMovieItemWidget.class));
-								// Notify R.id.favorite_movie_stack_view {@link StackView di favorite_movie_item_widget.xml} agar dpt memanggil onDataSetChanged method
+								// Notify R.id.favorite_movie_stack_view
+								// {@link StackView di favorite_movie_item_widget.xml} agar dpt
+								// memanggil onDataSetChanged method
 								appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.favorite_movie_stack_view);
 							}
 						}
@@ -988,12 +998,18 @@ public class DetailActivity extends AppCompatActivity {
 								snackbarMessage.show();
 								// Buat kondisi ketika data di buka dari widget
 								if(openDataFromWidget){
+
+									// Line ini berguna agar widget dapat diupdate ketika data diubah
+									// namun langsung quit app tanpa menggunakan up/back button
+
 									// Panggil AppWidgetManager class dengan memanggil application
 									// context (1 applikasi yaitu CatalogueMovieFinal)
 									AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
 									// Get App widget ids dari FavoriteMovieItemWidget class
 									int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(getApplicationContext(), FavoriteMovieItemWidget.class));
-									// Notify R.id.favorite_movie_stack_view {@link StackView di favorite_movie_item_widget.xml} agar dpt memanggil onDataSetChanged method
+									// Notify R.id.favorite_movie_stack_view
+									// {@link StackView di favorite_movie_item_widget.xml} agar dpt
+									// memanggil onDataSetChanged method
 									appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.favorite_movie_stack_view);
 								}
 							}
