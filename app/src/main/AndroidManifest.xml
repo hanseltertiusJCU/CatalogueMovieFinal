@@ -17,8 +17,9 @@
 
     <!-- Permission declaration for updating widget content -->
     <permission
-        android:name="com.example.cataloguemoviefinal.widget.UPDATE_WIDGET_DATA"
-        android:protectionLevel="normal" />
+        android:name="com.example.cataloguemoviefinal.UPDATE_WIDGET_DATA" />
+
+    <uses-permission android:name="com.example.cataloguemoviefinal.UPDATE_WIDGET_DATA"/>
 
     <application
         android:allowBackup="true"
@@ -28,16 +29,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
+
         <!-- Custom Broadcast receiver -->
         <receiver
-            android:name="com.example.cataloguemoviefinal.receiver.UpdateWidgetDataReceiver"
+            android:name=".receiver.UpdateWidgetDataReceiver"
+            android:permission="com.example.cataloguemoviefinal.UPDATE_WIDGET_DATA"
             android:enabled="true"
-            android:exported="true"
-            android:permission="com.example.cataloguemoviefinal.widget.UPDATE_WIDGET_DATA">
+            android:exported="true">
             <intent-filter>
-                <action android:name="com.example.cataloguemoviefinal.widget.ACTION_UPDATE_WIDGET_DATA"/>
+                <action android:name="com.example.cataloguemoviefinal.ACTION_UPDATE_WIDGET_DATA"/>
             </intent-filter>
         </receiver>
+
         <!-- Broadcast receiver untuk widget -->
         <receiver
             android:name=".widget.FavoriteMovieItemWidget"
